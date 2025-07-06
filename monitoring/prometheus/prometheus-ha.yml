@@ -1,0 +1,266 @@
+# ====================================================================
+# Prometheus High Availability Configuration
+# Task 41.6: HA setup for 99.99% SLA compliance
+# ====================================================================
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    cluster: "skc-bi-dashboard"
+    environment: "production"
+    replica: '{{ .Values.replica | default "unknown" }}'
+
+# Alertmanager HA configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - alertmanager-1:9093
+            - alertmanager-2:9093
+    - path_prefix: /
+    - scheme: http
+    - timeout: 10s
+    - api_version: v2
+
+# Load rules with HA considerations
+rule_files:
+  - "rules/*.yml"
+
+# ====================================================================
+# HIGH AVAILABILITY SCRAPE CONFIGURATION
+# ====================================================================
+scrape_configs:
+  # ====================================================================
+  # PROMETHEUS CLUSTER MONITORING
+  # ====================================================================
+  - job_name: "prometheus-cluster"
+    static_configs:
+      - targets:
+          - "prometheus-1:9090"
+          - "prometheus-2:9090"
+    metrics_path: "/metrics"
+    scrape_interval: 10s
+    scrape_timeout: 5s
+
+  # ====================================================================
+  # ALERTMANAGER CLUSTER MONITORING
+  # ====================================================================
+  - job_name: "alertmanager-cluster"
+    static_configs:
+      - targets:
+          - "alertmanager-1:9093"
+          - "alertmanager-2:9093"
+    metrics_path: "/metrics"
+    scrape_interval: 30s
+
+  # ====================================================================
+  # HAPROXY LOAD BALANCER MONITORING
+  # ====================================================================
+  - job_name: "haproxy"
+    static_configs:
+      - targets: ["haproxy:8405"]
+    metrics_path: "/metrics"
+    scrape_interval: 30s
+
+  # ====================================================================
+  # GRAFANA HA MONITORING
+  # ====================================================================
+  - job_name: "grafana-ha"
+    static_configs:
+      - targets: ["grafana:3000"]
+    metrics_path: "/metrics"
+    scrape_interval: 30s
+
+  # ====================================================================
+  # ELASTICSEARCH CLUSTER MONITORING
+  # ====================================================================
+  - job_name: "elasticsearch-cluster"
+    static_configs:
+      - targets:
+          - "elasticsearch-master:9200"
+          - "elasticsearch-data1:9200"
+    metrics_path: "/_prometheus/metrics"
+    scrape_interval: 30s
+    scrape_timeout: 10s
+
+  # ====================================================================
+  # REDIS HA MONITORING
+  # ====================================================================
+  - job_name: "redis-grafana"
+    static_configs:
+      - targets: ["redis-grafana:6379"]
+    metrics_path: "/metrics"
+    scrape_interval: 30s
+
+  # ====================================================================
+  # SLA MONITORING WITH BLACKBOX EXPORTER
+  # ====================================================================
+
+  # Critical application endpoints
+  - job_name: "sla-critical-endpoints"
+    metrics_path: /probe
+    params:
+      module: [http_2xx_fast_sla]
+    static_configs:
+      - targets:
+          - http://localhost:3000 # Main application
+          - http://localhost:3000/api/health # Health endpoint
+          - http://haproxy:9090 # Load balanced Prometheus
+          - http://haproxy:9093 # Load balanced Alertmanager
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: sla-monitor:9115
+    scrape_interval: 15s
+    scrape_timeout: 3s
+
+  # Application API endpoints
+  - job_name: "sla-api-endpoints"
+    metrics_path: /probe
+    params:
+      module: [api_sla_check]
+    static_configs:
+      - targets:
+          - http://localhost:3000/api/status
+          - http://localhost:3000/api/admin/metrics
+          - http://grafana:3000/api/health
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: sla-monitor:9115
+    scrape_interval: 30s
+
+  # Database connectivity checks
+  - job_name: "sla-database-checks"
+    metrics_path: /probe
+    params:
+      module: [database_sla_check]
+    static_configs:
+      - targets:
+          - http://localhost:3000/api/admin/health/database
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: sla-monitor:9115
+    scrape_interval: 60s
+
+  # Monitoring stack health checks
+  - job_name: "sla-monitoring-stack"
+    metrics_path: /probe
+    params:
+      module: [prometheus_sla]
+    static_configs:
+      - targets:
+          - http://prometheus-1:9090/-/healthy
+          - http://prometheus-2:9090/-/healthy
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: sla-monitor:9115
+    scrape_interval: 30s
+
+  - job_name: "sla-alertmanager-stack"
+    metrics_path: /probe
+    params:
+      module: [alertmanager_sla]
+    static_configs:
+      - targets:
+          - http://alertmanager-1:9093/-/healthy
+          - http://alertmanager-2:9093/-/healthy
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: sla-monitor:9115
+    scrape_interval: 30s
+
+  # ====================================================================
+  # SYSTEM METRICS WITH HA CONSIDERATIONS
+  # ====================================================================
+  - job_name: "node-exporter-ha"
+    static_configs:
+      - targets: ["node-exporter:9100"]
+    scrape_interval: 10s
+    metrics_path: "/metrics"
+
+  - job_name: "cadvisor-ha"
+    static_configs:
+      - targets: ["cadvisor:8080"]
+    scrape_interval: 15s
+    metrics_path: "/metrics"
+
+  # ====================================================================
+  # EXTERNAL DEPENDENCY MONITORING
+  # ====================================================================
+
+  # External services monitoring
+  - job_name: "external-dependencies"
+    metrics_path: /probe
+    params:
+      module: [icmp_sla]
+    static_configs:
+      - targets:
+          - 8.8.8.8 # Google DNS
+          - 1.1.1.1 # Cloudflare DNS
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: sla-monitor:9115
+    scrape_interval: 60s
+
+  # ====================================================================
+  # PERFORMANCE AND LATENCY MONITORING
+  # ====================================================================
+
+  # Performance SLA monitoring
+  - job_name: "performance-sla"
+    metrics_path: /probe
+    params:
+      module: [performance_sla]
+    static_configs:
+      - targets:
+          - http://localhost:3000/api/quick-status
+          - http://haproxy:8080/health
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: sla-monitor:9115
+    scrape_interval: 15s
+    scrape_timeout: 2s
+# ====================================================================
+# ADDITIONAL HA CONFIGURATIONS
+# ====================================================================
+
+# Remote write for long-term storage (optional)
+# remote_write:
+#   - url: "https://prometheus-remote-storage/api/v1/write"
+#     queue_config:
+#       max_samples_per_send: 10000
+#       max_shards: 200
+#       capacity: 2500
+
+# Remote read for federated queries (optional)
+# remote_read:
+#   - url: "https://prometheus-remote-storage/api/v1/read"
+#     read_recent: true

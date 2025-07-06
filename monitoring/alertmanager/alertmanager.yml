@@ -1,0 +1,279 @@
+# ====================================================================
+# Alertmanager Configuration for SKC BI Dashboard
+# Task 41.5: Real-time alerting with PagerDuty and Slack integration
+# ====================================================================
+
+global:
+  # Global configuration for Alertmanager
+  smtp_smarthost: "localhost:587"
+  smtp_from: "alerts@skc-company.com"
+  smtp_auth_username: "alerts@skc-company.com"
+  smtp_auth_password: "your-smtp-password"
+  pagerduty_url: "https://events.pagerduty.com/v2/enqueue"
+  slack_api_url: "https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK"
+
+# Templates for alert formatting
+templates:
+  - "/etc/alertmanager/templates/*.tmpl"
+
+# Route configuration - defines how alerts are grouped, throttled, and sent
+route:
+  group_by: ["alertname", "cluster", "service"]
+  group_wait: 10s
+  group_interval: 10s
+  repeat_interval: 1h
+  receiver: "default-receiver"
+
+  # Routing rules based on alert labels and severity
+  routes:
+    # Critical alerts go to PagerDuty immediately
+    - match:
+        severity: critical
+      receiver: "pagerduty-critical"
+      group_wait: 0s
+      repeat_interval: 5m
+      continue: true
+
+    # SLA impacting alerts get special treatment
+    - match:
+        sla_impact: "true"
+      receiver: "sla-breach-alerts"
+      group_wait: 0s
+      repeat_interval: 2m
+      continue: true
+
+    # Warning alerts go to Slack
+    - match:
+        severity: warning
+      receiver: "slack-warnings"
+      group_wait: 30s
+      repeat_interval: 30m
+
+    # Infrastructure alerts
+    - match:
+        service: system
+      receiver: "infrastructure-team"
+      group_wait: 1m
+      repeat_interval: 1h
+
+    # Database alerts
+    - match:
+        service: postgresql
+      receiver: "database-team"
+      group_wait: 30s
+      repeat_interval: 30m
+
+    # Application-specific alerts
+    - match:
+        service: skc-bi-dashboard
+      receiver: "application-team"
+      group_wait: 30s
+      repeat_interval: 30m
+
+# Inhibit rules - suppress certain alerts when others are already firing
+inhibit_rules:
+  # If ApplicationDown is firing, suppress other application alerts
+  - source_match:
+      alertname: ApplicationDown
+    target_match:
+      service: skc-bi-dashboard
+    equal: ["instance"]
+
+  # If SLABreach is firing, suppress HighErrorRate
+  - source_match:
+      alertname: SLABreach
+    target_match:
+      alertname: HighErrorRate
+    equal: ["service"]
+
+  # If critical disk space alert, suppress warning
+  - source_match:
+      alertname: DiskSpaceCritical
+    target_match:
+      alertname: DiskSpaceLow
+    equal: ["instance", "mountpoint"]
+
+# Receiver definitions - where alerts are sent
+receivers:
+  # ====================================================================
+  # DEFAULT RECEIVER
+  # ====================================================================
+  - name: "default-receiver"
+    email_configs:
+      - to: "alerts@skc-company.com"
+        subject: "[SKC-BI] {{ .GroupLabels.alertname }} Alert"
+        body: |
+          {{ range .Alerts }}
+          Alert: {{ .Annotations.summary }}
+          Description: {{ .Annotations.description }}
+          Labels: {{ range .Labels.SortedPairs }}{{ .Name }}={{ .Value }} {{ end }}
+          {{ end }}
+
+  # ====================================================================
+  # PAGERDUTY CRITICAL ALERTS
+  # ====================================================================
+  - name: "pagerduty-critical"
+    pagerduty_configs:
+      - routing_key: "YOUR_PAGERDUTY_INTEGRATION_KEY"
+        severity: "critical"
+        client: "SKC BI Dashboard Alertmanager"
+        client_url: "http://alertmanager.localhost:9093"
+        description: "{{ .GroupLabels.alertname }}: {{ .CommonAnnotations.summary }}"
+        details:
+          firing: "{{ .Alerts.Firing | len }}"
+          resolved: "{{ .Alerts.Resolved | len }}"
+          alertname: "{{ .GroupLabels.alertname }}"
+          service: "{{ .GroupLabels.service }}"
+          instance: "{{ .GroupLabels.instance }}"
+          description: "{{ .CommonAnnotations.description }}"
+          runbook_url: "{{ .CommonAnnotations.runbook_url }}"
+
+  # ====================================================================
+  # SLA BREACH ALERTS (PagerDuty + Slack)
+  # ====================================================================
+  - name: "sla-breach-alerts"
+    pagerduty_configs:
+      - routing_key: "YOUR_PAGERDUTY_SLA_KEY"
+        severity: "critical"
+        client: "SKC BI Dashboard SLA Monitor"
+        description: "🚨 SLA BREACH: {{ .CommonAnnotations.summary }}"
+        details:
+          sla_impact: "true"
+          breach_details: "{{ .CommonAnnotations.description }}"
+          service: "{{ .GroupLabels.service }}"
+          timestamp: "{{ range .Alerts }}{{ .StartsAt }}{{ end }}"
+
+    slack_configs:
+      - api_url: "https://hooks.slack.com/services/YOUR/SLA/WEBHOOK"
+        channel: "#sla-alerts"
+        username: "SKC-SLA-Monitor"
+        icon_emoji: ":rotating_light:"
+        title: "🚨 SLA BREACH DETECTED"
+        text: |
+          *Service:* {{ .GroupLabels.service }}
+          *Alert:* {{ .CommonAnnotations.summary }}
+          *Description:* {{ .CommonAnnotations.description }}
+          *Impact:* This affects our 99.99% SLA commitment
+
+          <http://grafana.localhost:3000|View Grafana Dashboard> | <http://alertmanager.localhost:9093|View Alertmanager>
+        actions:
+          - type: button
+            text: "View Runbook"
+            url: "{{ .CommonAnnotations.runbook_url }}"
+          - type: button
+            text: "Acknowledge"
+            url: "http://alertmanager.localhost:9093/#/alerts"
+
+  # ====================================================================
+  # SLACK WARNING ALERTS
+  # ====================================================================
+  - name: "slack-warnings"
+    slack_configs:
+      - api_url: "https://hooks.slack.com/services/YOUR/WARNING/WEBHOOK"
+        channel: "#monitoring-warnings"
+        username: "SKC-Monitor"
+        icon_emoji: ":warning:"
+        title: "⚠️ {{ .GroupLabels.alertname }}"
+        text: |
+          *Service:* {{ .GroupLabels.service }}
+          *Summary:* {{ .CommonAnnotations.summary }}
+          *Details:* {{ .CommonAnnotations.description }}
+
+          <http://grafana.localhost:3000|📊 Dashboard> | <http://alertmanager.localhost:9093|🔔 Alerts>
+        fields:
+          - title: "Severity"
+            value: "{{ .GroupLabels.severity }}"
+            short: true
+          - title: "Instance"
+            value: "{{ .GroupLabels.instance }}"
+            short: true
+
+  # ====================================================================
+  # INFRASTRUCTURE TEAM ALERTS
+  # ====================================================================
+  - name: "infrastructure-team"
+    slack_configs:
+      - api_url: "https://hooks.slack.com/services/YOUR/INFRA/WEBHOOK"
+        channel: "#infrastructure-alerts"
+        username: "SKC-Infrastructure"
+        icon_emoji: ":computer:"
+        title: "🖥️ Infrastructure Alert: {{ .GroupLabels.alertname }}"
+        text: |
+          *System:* {{ .GroupLabels.instance }}
+          *Issue:* {{ .CommonAnnotations.summary }}
+          *Details:* {{ .CommonAnnotations.description }}
+
+          *Action Required:* Check system resources and performance
+
+    email_configs:
+      - to: "infrastructure@skc-company.com"
+        subject: "[INFRA] {{ .GroupLabels.alertname }} on {{ .GroupLabels.instance }}"
+        body: |
+          Infrastructure Alert Details:
+
+          Instance: {{ .GroupLabels.instance }}
+          Alert: {{ .GroupLabels.alertname }}
+          Summary: {{ .CommonAnnotations.summary }}
+          Description: {{ .CommonAnnotations.description }}
+
+          Time: {{ range .Alerts }}{{ .StartsAt }}{{ end }}
+
+  # ====================================================================
+  # DATABASE TEAM ALERTS
+  # ====================================================================
+  - name: "database-team"
+    slack_configs:
+      - api_url: "https://hooks.slack.com/services/YOUR/DB/WEBHOOK"
+        channel: "#database-alerts"
+        username: "SKC-Database"
+        icon_emoji: ":database:"
+        title: "🗄️ Database Alert: {{ .GroupLabels.alertname }}"
+        text: |
+          *Database:* {{ .GroupLabels.service }}
+          *Issue:* {{ .CommonAnnotations.summary }}
+          *Details:* {{ .CommonAnnotations.description }}
+
+          *Recommended Actions:*
+          - Check database performance metrics
+          - Review slow query logs
+          - Monitor connection pools
+
+  # ====================================================================
+  # APPLICATION TEAM ALERTS
+  # ====================================================================
+  - name: "application-team"
+    slack_configs:
+      - api_url: "https://hooks.slack.com/services/YOUR/APP/WEBHOOK"
+        channel: "#application-alerts"
+        username: "SKC-Application"
+        icon_emoji: ":desktop_computer:"
+        title: "💻 Application Alert: {{ .GroupLabels.alertname }}"
+        text: |
+          *Application:* SKC BI Dashboard
+          *Component:* {{ .GroupLabels.service }}
+          *Alert:* {{ .CommonAnnotations.summary }}
+          *Details:* {{ .CommonAnnotations.description }}
+
+          <http://localhost:3000|🌐 Application> | <http://grafana.localhost:3000|📊 Metrics>
+        fields:
+          - title: "Service"
+            value: "{{ .GroupLabels.service }}"
+            short: true
+          - title: "Severity"
+            value: "{{ .GroupLabels.severity }}"
+            short: true
+          - title: "Instance"
+            value: "{{ .GroupLabels.instance }}"
+            short: true
+          - title: "Time"
+            value: '{{ range .Alerts }}{{ .StartsAt.Format "2006-01-02 15:04:05" }}{{ end }}'
+            short: true
+# ====================================================================
+# CONFIGURATION VALIDATION AND TESTING
+# ====================================================================
+# To test this configuration:
+# 1. Start Alertmanager: docker-compose up -d alertmanager
+# 2. Validate config: docker exec alertmanager amtool config show
+# 3. Test routing: docker exec alertmanager amtool config routes test
+# 4. Send test alert: docker exec alertmanager amtool alert add test_alert
+# ====================================================================

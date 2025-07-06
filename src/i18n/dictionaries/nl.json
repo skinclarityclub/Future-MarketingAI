@@ -1,0 +1,1462 @@
+{
+  "common": {
+    "loading": "Laden...",
+    "error": "Fout",
+    "save": "Opslaan",
+    "cancel": "Annuleren",
+    "delete": "Verwijderen",
+    "edit": "Bewerken",
+    "create": "Maken",
+    "update": "Bijwerken",
+    "search": "Zoeken",
+    "filter": "Filter",
+    "export": "Exporteren",
+    "import": "Importeren",
+    "refresh": "Verversen",
+    "close": "Sluiten",
+    "open": "Openen",
+    "yes": "Ja",
+    "no": "Nee",
+    "submit": "Verzenden",
+    "reset": "Herstellen",
+    "clear": "Wissen",
+    "back": "Terug",
+    "next": "Volgende",
+    "previous": "Vorige",
+    "actions": "Acties",
+    "settings": "Instellingen",
+    "searchPlaceholder": "dashboards, statistieken, rapporten...",
+    "notifications": "Meldingen",
+    "new": "Nieuw",
+    "navigation": "Navigatie",
+    "needHelp": "Hulp nodig?",
+    "helpDescription": "Bekijk onze documentatie of neem contact op met ondersteuning",
+    "learnMore": "Meer informatie →",
+    "hoursAgo": "uur geleden",
+    "administrator": "Beheerder",
+    "minutesAgo": "minuten geleden",
+    "hourAgo": "uur geleden",
+    "dayAgo": "dag geleden",
+    "moreOptions": "Meer opties",
+    "enabled": "Ingeschakeld",
+    "disabled": "Uitgeschakeld",
+    "language": "Taal",
+    "desktop": "Desktop",
+    "sound": "Geluid",
+    "auto": "Automatisch",
+    "light": "Licht",
+    "dark": "Donker",
+    "animations": "Animaties",
+    "mode": "Modus",
+    "accuracy": "Nauwkeurigheid",
+    "processing": "Verwerken",
+    "processingTime": "Verwerkingstijd",
+    "daily": "Dagelijks",
+    "weekly": "Wekelijks",
+    "monthly": "Maandelijks",
+    "date": "Datum",
+    "metric": "Metriek",
+    "value": "Waarde",
+    "created": "Aangemaakt",
+    "visitPage": "Pagina Bezoeken",
+    "noDataAvailable": "Geen gegevens beschikbaar",
+    "errorLoadingChart": "Fout bij laden grafiek",
+    "overallHealth": "Algemene Gezondheid",
+    "status": "Status",
+    "connectionError": "Verbindingsfout",
+    "roi": "ROI",
+    "roas": "ROAS",
+    "cpa": "CPA",
+    "ctr": "CTR",
+    "with": "met",
+    "total": "Totaal"
+  },
+  "countries": {
+    "netherlands": "Nederland",
+    "belgium": "België",
+    "germany": "Duitsland"
+  },
+  "customerJourney": {
+    "awareness": {
+      "badge": "Marketing Machine Discovery • Voor Scale-Ups • €300k-€5M",
+      "title": "Herken U Deze Marketing Uitdagingen?",
+      "subtitle": "85% van de scale-ups kampt met deze problemen. Selecteer de uitdagingen die u herkent en ontdek hoe onze Marketing Machine deze oplost zonder extra headcount",
+      "problems": {
+        "contentCreation": {
+          "title": "Content Creatie Kost Te Veel Tijd",
+          "description": "Uw marketing team besteedt 80% van hun tijd aan content maken in plaats van strategie",
+          "impact": "€15k/maand verlies in productiviteit"
+        },
+        "inconsistentMessaging": {
+          "title": "Inconsistent Merk Messaging",
+          "description": "Verschillende platforms hebben verschillende toon en boodschap",
+          "impact": "40% verlies in merk herkenning"
+        },
+        "lowConversion": {
+          "title": "Lage Conversie Rates",
+          "description": "Uw content genereert traffic maar converteert niet naar leads of verkoop",
+          "impact": "60% gemiste revenue opportuniteit"
+        },
+        "scalingChallenges": {
+          "title": "Schaalbaarheid Problemen",
+          "description": "Groei betekent meer mensen inhuren, maar ROI daalt bij schaling",
+          "impact": "€25k/maand extra kosten bij groei"
+        },
+        "roiTracking": {
+          "title": "Geen ROI Inzicht",
+          "description": "U weet niet welke marketing inspanningen daadwerkelijk revenue genereren",
+          "impact": "30% budget verspilling"
+        },
+        "manualProcesses": {
+          "title": "Handmatige Processen",
+          "description": "Te veel handmatig werk belemmert schaalbaarheid en verhoogt fouten",
+          "impact": "85% tijdverlies op routine taken"
+        }
+      },
+      "solutions": {
+        "automation": {
+          "title": "Marketing Automatisering",
+          "subtitle": "Content op autopilot",
+          "description": "AI-gestuurde content generatie die 24/7 uw merk versterkt",
+          "stats": "+340% ROI",
+          "benefits": [
+            "24/7 content generatie",
+            "Consistent brand messaging",
+            "Multi-platform publishing",
+            "Performance optimalisatie"
+          ]
+        },
+        "intelligence": {
+          "title": "AI Marketing Intelligence",
+          "subtitle": "Slimme targeting",
+          "description": "Advanced analytics die uw ideale klanten identificeert en bereikt",
+          "stats": "85% tijdsbesparing",
+          "benefits": [
+            "Audience segmentatie",
+            "Behavioral targeting",
+            "Real-time optimalisatie",
+            "Predictive analytics"
+          ]
+        },
+        "roiOptimization": {
+          "title": "ROI Tracking & Optimization",
+          "subtitle": "Meetbare resultaten",
+          "description": "Real-time inzichten en ROI tracking voor elke marketing euro",
+          "stats": "€50k+ impact/maand",
+          "benefits": [
+            "Real-time ROI dashboard",
+            "Attribution modeling",
+            "Performance benchmarks",
+            "Revenue optimization"
+          ]
+        }
+      },
+      "cta": {
+        "title": "Klaar voor €50k+ Extra Revenue?",
+        "subtitle": "Ontdek hoe onze Marketing Machine uw problemen oplost",
+        "buttonText": "Zie Hoe Het Werkt",
+        "urgency": "Beperkte beschikbaarheid - Q1 2025"
+      }
+    }
+  },
+  "homepage": {
+    "hero": {
+      "badge": "Enterprise AI Marketing Platform",
+      "title": {
+        "part1": "Transformeer",
+        "part2": "Bedrijfsgroei",
+        "part3": "Fortune 500 Powered"
+      },
+      "description": "FutureMarketingAI levert enterprise-grade AI marketing automatisering met ongeëvenaarde geavanceerdheid. Plan een strategische consultatie om te ontdekken hoe ons premium platform Fortune 500-niveau groei revolutioneert.",
+      "cta": {
+        "primary": "Plan Strategische Consultatie",
+        "secondary": "Executive Demo"
+      },
+      "stats": {
+        "companies": {
+          "value": "500+",
+          "label": "Enterprise Klanten"
+        },
+        "roi": {
+          "value": "340%",
+          "label": "Gemiddelde ROI"
+        },
+        "automation": {
+          "value": "24/7",
+          "label": "AI Automatisering"
+        }
+      },
+      "features": {
+        "aiContent": {
+          "title": "AI Content Engine",
+          "description": "Enterprise-grade AI die 24/7 hoogwaardige content genereert en optimaliseert voor maximale impact."
+        },
+        "analytics": {
+          "title": "Voorspellende Analytics",
+          "description": "Geavanceerde business intelligence die toekomstige trends voorspelt en strategische beslissingen ondersteunt."
+        },
+        "automation": {
+          "title": "Marketing Automatisering",
+          "description": "Volledig geautomatiseerde workflows die uw marketing processen optimaliseren zonder handmatige interventie."
+        }
+      }
+    },
+    "sections": {
+      "platformDemo": {
+        "badge": "Enterprise Platform Demo",
+        "title": "Ervaar de Toekomst",
+        "subtitle": "Ervaar de complete AI-gedreven marketing transformatie die Fortune 500 ondernemingen verheft van content creatie tot voorspellende performance analytics."
+      },
+      "roiAssessment": {
+        "badge": "Executive ROI Assessment",
+        "title": "Kwantificeer Uw Investering",
+        "subtitle": "Ontdek de transformatieve financiële impact die FutureMarketingAI levert voor enterprise operaties met ons geavanceerde ROI assessment platform."
+      },
+      "selfLearningAI": {
+        "title": "Zelf-Lerende AI Engine",
+        "subtitle": "Onze AI leert continu van uw content performance en optimaliseert automatisch voor betere resultaten."
+      },
+      "testimonials": {
+        "title": "Vertrouwd door Marktleiders",
+        "subtitle": "Ontdek waarom toonaangevende bedrijven kiezen voor FutureMarketingAI en kies het plan dat bij u past."
+      }
+    },
+    "valuePropositions": {
+      "enterprises": {
+        "title": "Voor Enterprise Organisaties",
+        "benefits": [
+          "Fortune 500-niveau AI marketing automatisering",
+          "Executive dashboards met real-time performance inzichten",
+          "Enterprise-grade beveiliging en compliance",
+          "Dedicated success manager en 24/7 premium ondersteuning"
+        ]
+      },
+      "scaleups": {
+        "title": "Voor Scale-up Bedrijven",
+        "benefits": [
+          "Schaalbare marketing automatisering zonder extra headcount",
+          "ROI-gedreven content strategie met meetbare resultaten",
+          "Intelligente doelgroep segmentatie en targeting",
+          "Geïntegreerde analytics en performance tracking"
+        ]
+      },
+      "agencies": {
+        "title": "Voor Marketing Agencies",
+        "benefits": [
+          "White-label oplossing voor client success",
+          "Multi-client dashboard management",
+          "Automated reporting en client communicatie",
+          "Schaalbare workflows voor groeiende client base"
+        ]
+      }
+    },
+    "socialProof": {
+      "title": "Vertrouwd door 500+ Bedrijven Wereldwijd",
+      "metrics": {
+        "companiesServed": "500+ Bedrijven Geholpen",
+        "revenueGenerated": "€50M+ Extra Omzet Gegenereerd",
+        "contentPieces": "1M+ Content Stukken Geautomatiseerd",
+        "timesSaved": "10.000+ Uren Bespaard"
+      },
+      "testimonials": {
+        "enterprise": {
+          "quote": "FutureMarketingAI heeft onze marketing ROI met 340% verhoogd. De AI-gedreven inzichten zijn game-changing.",
+          "author": "Sarah van der Berg",
+          "company": "TechCorp Europe",
+          "position": "Chief Marketing Officer"
+        },
+        "scaleup": {
+          "quote": "We genereren nu 5x meer qualified leads met dezelfde marketing budget. Ongelooflijke resultaten.",
+          "author": "Mark Johnson",
+          "company": "GrowthScale B.V.",
+          "position": "Founder & CEO"
+        },
+        "agency": {
+          "quote": "Onze client retention is gestegen naar 95% sinds we FutureMarketingAI gebruiken. Clients zien direct resultaat.",
+          "author": "Lisa Chen",
+          "company": "Digital Masters Agency",
+          "position": "Managing Director"
+        }
+      }
+    },
+    "conversionPaths": {
+      "primary": {
+        "title": "Klaar om Uw Marketing te Transformeren?",
+        "subtitle": "Sluit u aan bij 500+ bedrijven die hun groei hebben geautomatiseerd",
+        "cta": "Start Gratis Consultatie",
+        "urgency": "Beperkte beschikbaarheid - Slechts 10 plekken deze maand"
+      },
+      "secondary": {
+        "title": "Zie FutureMarketingAI in Actie",
+        "subtitle": "Bekijk onze 15-minuten executive demo",
+        "cta": "Bekijk Demo",
+        "benefits": "Geen verplichtingen • Direct toegang • Enterprise showcases"
+      },
+      "enterprise": {
+        "title": "Enterprise-Ready Oplossing",
+        "subtitle": "Voor organisaties met complexe marketing behoeften",
+        "cta": "Plan Enterprise Gesprek",
+        "features": "Custom integraties • Dedicated support • SLA garanties"
+      }
+    },
+    "footer": {
+      "company": {
+        "name": "FutureMarketingAI",
+        "description": "Next-generation AI die content creatie en groei revolutioneert. Op autopilot. Geavanceerd Fortune 500-niveau marketing Intelligence Platform."
+      },
+      "links": {
+        "platform": {
+          "title": "Platform",
+          "items": {
+            "futureMarketingAI": "FutureMarketingAI",
+            "analyticsSuite": "Analytics Suite",
+            "automation": "Automatisering"
+          }
+        },
+        "resources": {
+          "title": "Resources",
+          "items": {
+            "watchDemo": "Bekijk Demo",
+            "caseStudies": "Case Studies",
+            "fortune500Demo": "Fortune 500 Demo"
+          }
+        },
+        "contact": {
+          "title": "Contact",
+          "items": {
+            "talkToSales": "Praat met Sales",
+            "support247": "24/7 Ondersteuning",
+            "globalCoverage": "Wereldwijde Dekking"
+          }
+        }
+      },
+      "legal": {
+        "copyright": "© 2024 FutureMarketingAI Intelligence Platform. Alle rechten voorbehouden.",
+        "privacy": "Privacybeleid",
+        "terms": "Algemene Voorwaarden"
+      }
+    }
+  },
+  "navigation": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "analytics": "Analytics",
+    "reports": "Rapporten",
+    "customers": "Klanten",
+    "settings": "Instellingen",
+    "help": "Hulp",
+    "logout": "Uitloggen",
+    "overview": "Overzicht",
+    "closeSidebar": "Sidebar sluiten",
+    "overviewDesc": "Managementsamenvatting en belangrijkste statistieken",
+    "revenueAnalytics": "Omzet Analytics",
+    "revenueAnalyticsDesc": "Omzettrends en voorspellingen",
+    "performanceMetrics": "Prestatiemetrieken",
+    "performanceMetricsDesc": "KPI's en bedrijfsprestaties",
+    "customerInsights": "Klantinzichten",
+    "customerInsightsDesc": "Klantanalyse en segmentatie",
+    "customerIntelligence": "Klantintelligentie",
+    "customerIntelligenceDesc": "360° klantenweergave en intelligentie",
+    "reportsDesc": "Rapporten genereren en exporteren",
+    "analyticsDesc": "Geavanceerde data-analyse",
+    "calendarDesc": "Planning en afspraken",
+    "advancedChatbot": "Geavanceerde Chatbot",
+    "advancedChatbotDesc": "AI chatbot met uitklapbare datapanelen",
+    "settingsDesc": "Dashboard configuratie",
+    "helpSupportDesc": "Documentatie en ondersteuning",
+    "smartNavigation": "Slimme Navigatie",
+    "noSmartSuggestionsAvailable": "Geen slimme suggesties beschikbaar",
+    "marketingAutomation": "Marketing Automatisering",
+    "controlCenter": "Controle Centrum",
+    "marketingAutomationControlCenter": "Marketing Automatisering Controle Centrum",
+    "openControlCenter": "Open Controle Centrum",
+    "liveMonitoring": "Live Monitoring",
+    "predictiveAnalytics": "Voorspellende Analytics",
+    "monitorWorkflows": "Monitor n8n workflows, voorspellende analytics en AI-gedreven inzichten",
+    "recommendationEngineDemo": "Aanbevelingsengine Demo",
+    "algorithms": "Algoritmes",
+    "results": "Resultaten",
+    "metrics": "Metrieken",
+    "collaborativeFiltering": "Collaboratieve Filtering",
+    "hybridApproach": "Hybride Benadering",
+    "userSimilarityThreshold": "Gebruikersovereenkomst Drempel",
+    "maxSimilarUsers": "Max Vergelijkbare Gebruikers",
+    "decayFactor": "Vervaging Factor",
+    "userSimilarities": "Gebruikersovereenkomsten",
+    "contentFeatures": "Content Kenmerken"
+  },
+  "pricing": {
+    "badge": "Progressive Pricing",
+    "title": "Build The Future Today",
+    "subtitle": "Sluit je aan bij visionaire ondernemers die de toekomst van marketing vormgeven.",
+    "priceIncrease": "Prijzen stijgen automatisch met elke 10 aanmeldingen.",
+    "billing": {
+      "monthly": "Maandelijks",
+      "yearly": "Jaarlijks",
+      "save": "Bespaar 16,67%"
+    },
+    "products": {
+      "marketingMachine": {
+        "name": "MarketingMachine",
+        "description": "Volledig geautomatiseerd AI marketing platform voor exponentiële groei"
+      },
+      "dashboard": {
+        "name": "Intelligence Hub",
+        "description": "Geavanceerde AI-analytics voor datagedreven besluitvorming"
+      },
+      "combo": {
+        "name": "Complete Suite",
+        "description": "De ultieme AI-gedreven marketingoplossing voor toekomstgerichte ondernemers"
+      }
+    },
+    "features": {
+      "included": "Inbegrepen Features",
+      "keyBenefits": "Belangrijkste Voordelen",
+      "marketingMachine": [
+        "AI Content Generatie",
+        "Multi-platform Publishing",
+        "Geavanceerde Analytics",
+        "24/7 Automatisering",
+        "Social Media Management",
+        "SEO Optimalisatie"
+      ],
+      "dashboard": [
+        "Real-time Analytics",
+        "Custom Dashboards",
+        "Voorspellende Inzichten",
+        "Data Integratie",
+        "Geavanceerde Rapportage",
+        "Business Intelligence"
+      ],
+      "combo": [
+        "Alles van beide platforms",
+        "Prioriteit Support",
+        "Geavanceerde Integraties",
+        "Custom Oplossingen",
+        "Toegewijde Account Manager",
+        "Enterprise Security"
+      ]
+    },
+    "benefits": {
+      "marketingMachine": [
+        "300% snellere content creatie",
+        "85% toename in engagement",
+        "24/7 geautomatiseerd publiceren",
+        "Cross-platform consistentie"
+      ],
+      "dashboard": [
+        "Real-time business inzichten",
+        "Datagedreven beslissingen",
+        "Performance optimalisatie",
+        "Revenue forecasting"
+      ],
+      "combo": [
+        "Complete marketing automatisering",
+        "Enterprise-grade beveiliging",
+        "Onbeperkte schaalbaarheid",
+        "Toekomstbestendige technologie"
+      ]
+    },
+    "pricing": {
+      "from": "Vanaf",
+      "month": "maand",
+      "year": "jaar",
+      "nextPrice": "Volgende prijs",
+      "spotsRemaining": "plekken over",
+      "signedUp": "aangemeld",
+      "filled": "gevuld"
+    },
+    "cta": {
+      "joinWaitlist": "Join Waitlist",
+      "guarantee": "Prijs Lock Garantie",
+      "guaranteeDescription": "Vergrendel de prijs van vandaag voor altijd. Geen prijsstijgingen voor early adopters. Uw investering is beschermd terwijl ons platform groeit."
+    }
+  },
+  "dashboard": {
+    "title": "Management Dashboard",
+    "subtitle": "Managementsamenvatting en belangrijkste statistieken",
+    "kpis": "Kernprestatie-indicatoren",
+    "revenue": "Omzet",
+    "customers": "Klanten",
+    "orders": "Bestellingen",
+    "growth": "Groei",
+    "totalRevenue": "Totale Omzet",
+    "monthlyGrowth": "Maandelijkse Groei",
+    "newCustomers": "Nieuwe Klanten",
+    "totalOrders": "Totaal Bestellingen",
+    "conversionRate": "Conversieratio",
+    "avgOrderValue": "Gemiddelde Bestelwaarde",
+    "customerLifetimeValue": "Customer Lifetime Value",
+    "topMetrics": "Prestatiemetrieken",
+    "topMetricsDesc": "KPI's en bedrijfsprestaties",
+    "revenueTrendDesc": "Omzettrends en voorspellingen",
+    "recentActivity": "Recente Activiteiten",
+    "recentActivityDesc": "Laatste updates en gebeurtenissen",
+    "quickActions": "Snelle Acties",
+    "quickActionsDesc": "Veelgebruikte acties en shortcuts",
+    "revenueTrend": "Omzettrend",
+    "growthRate": "Groeipercentage",
+    "customerSatisfaction": "Klanttevredenheid",
+    "marketShare": "Marktaandeel",
+    "revenueReportGenerated": "Omzetrapport gegenereerd",
+    "newCustomerMilestone": "Nieuwe klantmijlpaal bereikt",
+    "performanceMetricsUpdated": "Prestatiemetrieken bijgewerkt",
+    "systemMaintenanceCompleted": "Systeemonderhoud voltooid",
+    "viewAnalytics": "Bekijk Analytics",
+    "nlpNavigationDemo": "NLP Navigatie Demo",
+    "chartWillBeImplemented": "Grafiek wordt geïmplementeerd in volgende taak",
+    "realtimeOverview": "Real-time overzicht voor",
+    "liveData": "Live data",
+    "lastUpdate": "Laatste update",
+    "revenueOverview": "Omzet Overzicht",
+    "revenueTrendAnalysis": "Omzet Trend Analyse",
+    "monthlyDevelopment": "Maandelijkse Ontwikkeling",
+    "smartInsights": "Intelligente Inzichten",
+    "aiRecommendations": "AI-gedreven aanbevelingen en waarschuwingen",
+    "businessStatistics": "Bedrijfsstatistieken",
+    "businessStatisticsDesc": "Uitgebreide bedrijfsinzichten en prestatie-indicatoren",
+    "customerSegmentation": "Klant Segmentatie",
+    "customerSegmentationDesc": "Overzicht van klantgroepen en hun waarde",
+    "enterpriseCustomers": "Enterprise Klanten",
+    "smbCustomers": "SMB Klanten",
+    "individualCustomers": "Particulieren",
+    "conversionTrends": "Conversie Trends",
+    "conversionTrendsDesc": "Omzetting percentages per kanaal",
+    "website": "Website",
+    "emailMarketing": "Email Marketing",
+    "socialMedia": "Social Media",
+    "average": "Gemiddeld",
+    "regionalPerformance": "Regionale Prestaties",
+    "regionalPerformanceDesc": "Omzetverdeling per regio",
+    "monthlyTargets": "Maandelijkse Doelen",
+    "monthlyTargetsDesc": "Voortgang naar targets deze maand",
+    "revenueTarget": "Omzet Doel",
+    "retentionRate": "Retentie Rate",
+    "campaigns": "Campagnes",
+    "marketingOverview": "Marketing overzicht",
+    "deepAnalysis": "Diepgaande analyses",
+    "generateReports": "Genereer custom rapporten",
+    "manageCustomers": "Beheer klantgegevens",
+    "customerSegmentation": "Klant Segmentatie",
+    "customerSegmentationDesc": "Overzicht van klant groepen en hun waarde",
+    "enterpriseCustomers": "Enterprise Klanten",
+    "smbCustomers": "SMB Klanten",
+    "individualCustomers": "Particulieren",
+    "conversionTrends": "Conversie Trends",
+    "conversionTrendsDesc": "Omzetting rates per kanaal",
+    "website": "Website",
+    "emailMarketing": "Email Marketing",
+    "socialMedia": "Social Media",
+    "average": "Gemiddeld",
+    "regionalPerformance": "Regionale Prestaties",
+    "regionalPerformanceDesc": "Omzet verdeling per regio",
+    "monthlyTargets": "Maandelijkse Doelen",
+    "monthlyTargetsDesc": "Voortgang naar maandelijkse targets",
+    "revenueTarget": "Omzet Doel",
+    "retentionRate": "Retentie Rate",
+    "budgeted": "Gebudgetteerd",
+    "actual": "Werkelijk",
+    "variance": "Afwijking",
+    "forecast": "Prognose",
+    "varianceAmount": "Afwijkingsbedrag",
+    "onTrack": "Op Schema",
+    "underBudget": "Onder Budget",
+    "overBudget": "Boven Budget",
+    "netProfit": "Nettowinst",
+    "profitMargin": "Winstmarge",
+    "averageCPA": "Gemiddelde CPA",
+    "spend": "Uitgaven",
+    "conversions": "Conversies",
+    "optimizationRecommendations": "Optimalisatie Aanbevelingen",
+    "performanceMonitor": "Performance Monitor",
+    "performanceMonitorDesc": "Real-time systeem prestaties en gezondheid",
+    "serverUptime": "Server Uptime",
+    "apiResponseTime": "API Response Time",
+    "activeUsers": "Actieve Gebruikers",
+    "databaseLoad": "Database Load",
+    "lastCheck": "Laatste Check",
+    "justNow": "Zojuist",
+    "responseTime24h": "Response Time (24u)",
+    "netProfit": "Nettowinst",
+    "profitMargin": "Winstmarge",
+    "averageCPA": "Gemiddelde CPA",
+    "spend": "Uitgaven",
+    "conversions": "Conversies",
+    "optimizationRecommendations": "Optimalisatieaanbevelingen",
+    "campaignROIOverview": "Campagne ROI Overzicht",
+    "trackPerformanceDescription": "Volg prestaties en return on investment over alle marketingkanalen",
+    "noBudgetRecommendationsMessage": "Geen budget optimalisatie aanbevelingen beschikbaar voor de geselecteerde periode. Dit kan te wijten zijn aan onvoldoende gegevens of alle campagnes zijn al optimaal toegewezen.",
+    "avgConfidence": "Gem. Vertrouwen",
+    "aiPoweredRecommendationsDescription": "AI-gestuurde aanbevelingen gebaseerd op {attributionModel} attributiemodel",
+    "confidence": "vertrouwen",
+    "currentSpend": "Huidige Uitgaven",
+    "recommendedSpend": "Aanbevolen Uitgaven",
+    "expectedROIImprovement": "Verwachte ROI Verbetering",
+    "budgetChangeLabel": "Budget wijziging",
+    "increase": "verhoging",
+    "decrease": "verlaging",
+    "noChange": "geen wijziging",
+    "implementationNote": "Implementatie Opmerking",
+    "implementationWarning": "Deze aanbevelingen zijn gebaseerd op historische prestatiegegevens en voorspellende modellering. Overweeg altijd marktomstandigheden, seizoensgebondenheid en bedrijfsdoelstellingen voordat u budgetwijzigingen doorvoert. Begin met kleinere aanpassingen en monitor de prestaties nauwlettend."
+  },
+  "notifications": {
+    "revenueAlert": "Omzet Waarschuwing",
+    "monthlyIncreaseMessage": "Maandelijkse omzet steeg met 12%"
+  },
+  "user": {
+    "johnDoe": "Jan Jansen",
+    "sampleEmail": "jan@bedrijf.com"
+  },
+  "countries": {
+    "netherlands": "Nederland",
+    "belgium": "België",
+    "germany": "Duitsland"
+  },
+  "analytics": {
+    "analytics": "Analytics",
+    "totalGenerated": "Totaal gegenereerd",
+    "topPerformers": "Toppresteerders",
+    "gradeAContent": "Graad A content",
+    "overallAverage": "Totaal gemiddelde",
+    "successRate": "Succespercentage",
+    "totalValueCreated": "Totale Waarde Gecreëerd",
+    "roiEstimate": "ROI Schatting",
+    "implementationMetrics": "Implementatie Metrieken",
+    "impactMetrics": "Impact Metrieken",
+    "uptime": "Uptime",
+    "connectionDetails": "Verbindingsdetails",
+    "financialIntelligence": "Financiële Intelligentie Dashboard",
+    "financialIntelligenceDesc": "Real-time financiële prestaties en voorspellingen",
+    "general": "Algemeen",
+    "metrics": "Metrieken",
+    "analysis": "Analyse",
+    "categories": "Categorieën",
+    "details": "Details",
+    "totalExpenses": "Totale Uitgaven",
+    "expenses": "Uitgaven",
+    "profit": "Winst",
+    "healthy": "Gezond",
+    "monitor": "Monitor",
+    "revenueVsExpenses": "Omzet vs Uitgaven",
+    "financialPerformanceOverTime": "Financiële prestaties over tijd",
+    "categoryDistribution": "Categorieverdeling",
+    "breakdownByCategories": "Uitsplitsing per financiële categorieën",
+    "profitTrendAnalysis": "Winst Trend Analyse",
+    "trackProfitabilityOverTime": "Volg winstgevendheid over tijd",
+    "categoryPerformance": "Categorie Prestaties",
+    "financialMetricsByCategory": "Financiële metrieken per categorie",
+    "rawFinancialData": "Ruwe Financiële Data",
+    "showingRecords": "{count} records weergeven ({queryType})",
+    "lastUpdated": "Laatst bijgewerkt",
+    "never": "Nooit",
+    "queryType": "Query type",
+    "records": "Records"
+  },
+  "customers": {
+    "customers": "Klanten"
+  },
+  "reports": {
+    "title": "Rapporten",
+    "reports": "Rapporten",
+    "create": "Rapport Maken",
+    "export": "Rapport Exporteren",
+    "schedule": "Rapport Plannen",
+    "templates": "Rapportsjablonen",
+    "history": "Rapportgeschiedenis",
+    "settings": "Rapportinstellingen",
+    "generate": "Rapporten genereren en exporteren",
+    "csvDescription": "Kommagescheiden waarden voor spreadsheet-applicaties",
+    "jsonDescription": "Gestructureerd data formaat voor ontwikkelaars",
+    "pdfDescription": "Geformatteerd rapport voor delen en printen",
+    "exportData": "Data Exporteren",
+    "exportAll": "Alle Formaten Exporteren",
+    "exporting": "Exporteren...",
+    "exportSuccess": "export succesvol voltooid!",
+    "exportOptions": "Export Opties"
+  },
+  "analytics": {
+    "title": "Geavanceerde data-analyse",
+    "overview": "Analytics Overzicht",
+    "traffic": "Verkeer Analytics",
+    "conversions": "Klantanalyse en segmentatie",
+    "revenue": "Omzet Analytics",
+    "customers": "Klant Analytics",
+    "performance": "Prestatie Analytics",
+    "trends": "Trendanalyse",
+    "forecasting": "Voorspellingen",
+    "totalROI": "Totaal ROI",
+    "portfolioAverage": "Portfolio gemiddelde",
+    "totalGenerated": "Totaal gegenereerd",
+    "topPerformers": "Toppresteerders",
+    "gradeAContent": "Graad A content",
+    "overallAverage": "Totaal gemiddelde",
+    "successRate": "Succespercentage",
+    "totalValueCreated": "Totale Waarde Gecreëerd",
+    "roiEstimate": "ROI Schatting",
+    "implementationMetrics": "Implementatie Metrieken",
+    "impactMetrics": "Impact Metrieken",
+    "uptime": "Uptime",
+    "connectionDetails": "Verbindingsdetails"
+  },
+  "forms": {
+    "name": "Naam",
+    "email": "E-mail",
+    "password": "Wachtwoord",
+    "confirmPassword": "Wachtwoord Bevestigen",
+    "phone": "Telefoon",
+    "address": "Adres",
+    "city": "Stad",
+    "country": "Land",
+    "zipCode": "Postcode",
+    "company": "Bedrijf",
+    "jobTitle": "Functietitel",
+    "website": "Website",
+    "description": "Beschrijving",
+    "notes": "Notities",
+    "tags": "Tags",
+    "category": "Categorie",
+    "status": "Status",
+    "priority": "Prioriteit",
+    "dueDate": "Vervaldatum",
+    "startDate": "Startdatum",
+    "endDate": "Einddatum",
+    "content": "Content",
+    "platform": "Platform",
+    "searchCustomers": "Zoek klanten...",
+    "churnRisk": "Churn Risico",
+    "queryType": "Query Type",
+    "period": "Periode",
+    "department": "Afdeling",
+    "sortBy": "Sorteren op",
+    "attributionModel": "Attributiemodel",
+    "allRiskLevels": "Alle Risiconiveaus",
+    "highRisk": "Hoog Risico",
+    "mediumRisk": "Gemiddeld Risico",
+    "lowRisk": "Laag Risico",
+    "searchSegments": "Zoek segmenten...",
+    "totalSegments": "Totaal Segmenten",
+    "activeCustomerSegments": "Actieve klantsegmenten",
+    "largestSegment": "Grootste Segment",
+    "mostPopulatedSegment": "Meest bevolkte segment",
+    "avgSegmentValue": "Gem. Segment Waarde",
+    "averageCLVPerSegment": "Gemiddelde CLV per segment",
+    "growthSegments": "Groei Segmenten",
+    "segmentsWithPositiveGrowth": "Segmenten met positieve groei",
+    "segmentDistribution": "Segment Verdeling",
+    "customerCountBySegment": "Aantal klanten per segment",
+    "valueVsRiskAnalysis": "Waarde vs Risico Analyse",
+    "clvVsChurnRateBySegment": "CLV vs verloop percentage per segment",
+    "segmentPerformance": "Segment Prestaties",
+    "detailedSegmentAnalysis": "Gedetailleerde segment analyse",
+    "ofTotal": "van totaal",
+    "customers": "klanten",
+    "churnRate": "Verloop Percentage",
+    "averageLTV": "Gemiddelde LTV",
+    "fromLastQuarter": "van vorig kwartaal",
+    "fromLastMonth": "van vorige maand"
+  },
+  "dates": {
+    "today": "Vandaag",
+    "yesterday": "Gisteren",
+    "thisWeek": "Deze Week",
+    "lastWeek": "Vorige Week",
+    "thisMonth": "Deze Maand",
+    "lastMonth": "Vorige Maand",
+    "thisYear": "Dit Jaar",
+    "lastYear": "Vorig Jaar",
+    "custom": "Planning en afspraken",
+    "selectDate": "Datum Selecteren",
+    "selectTime": "Tijd Selecteren",
+    "dateRange": "Datumbereik",
+    "from": "Van",
+    "to": "Tot",
+    "startDate": "Startdatum",
+    "endDate": "Einddatum",
+    "sevenDays": "7 dagen",
+    "thirtyDays": "30 dagen",
+    "ninetyDays": "90 dagen"
+  },
+  "errors": {
+    "notFound": "Pagina niet gevonden",
+    "serverError": "Serverfout",
+    "networkError": "Netwerkfout",
+    "validationError": "Validatiefout",
+    "unauthorized": "Niet geautoriseerd",
+    "forbidden": "Verboden",
+    "timeout": "Verzoek time-out",
+    "unknown": "Onbekende fout",
+    "tryAgain": "Probeer opnieuw",
+    "contactSupport": "Neem contact op met ondersteuning als het probleem aanhoudt",
+    "connectionError": "Verbindingsfout",
+    "errorLoadingData": "Fout bij laden van gegevens",
+    "errorLoadingRecommendations": "Fout bij laden van aanbevelingen"
+  },
+  "marketing": {
+    "totalSpend": "Totale Uitgaven",
+    "totalRevenue": "Totale Omzet",
+    "averageROI": "Gemiddelde ROI",
+    "averageROAS": "Gemiddelde ROAS",
+    "roiPerformanceTrends": "ROI Prestatie Trends",
+    "spendVsRevenueTrends": "Uitgaven vs Omzet Trends",
+    "channelROIComparison": "Kanaal ROI Vergelijking",
+    "revenueDistribution": "Omzetverdeling",
+    "detailedChannelPerformance": "Gedetailleerde Kanaal Prestaties",
+    "revenueShare": "Omzetaandeel",
+    "campaignPerformance": "Campagne Prestaties",
+    "campaigns": "Campagnes",
+    "channels": "Kanalen",
+    "optimization": "Optimalisatie",
+    "firstTouch": "Eerste Aanraking",
+    "lastTouch": "Laatste Aanraking",
+    "linear": "Lineair",
+    "timeDecay": "Tijd Vervaging",
+    "positionBased": "Positie Gebaseerd",
+    "budgetOptimizationRecommendations": "Budget Optimalisatie Aanbevelingen",
+    "currentBudget": "Huidig Budget",
+    "recommendedBudget": "Aanbevolen Budget",
+    "budgetChange": "Budgetwijziging",
+    "campaignBudgetRecommendations": "Campagne Budget Aanbevelingen",
+    "audienceInsights": "Doelgroep Inzichten",
+    "bestPerformingChannel": "Best presterende kanaal:",
+    "topCampaigns": "Top Campagnes",
+    "conversions": "Conversies",
+    "campaignROIOverview": "Campagne ROI Overzicht",
+    "trackPerformanceDescription": "Volg prestaties en return on investment over alle marketingkanalen",
+    "noBudgetRecommendationsMessage": "Geen budget optimalisatie aanbevelingen beschikbaar voor de geselecteerde periode. Dit kan te wijten zijn aan onvoldoende gegevens of alle campagnes zijn al optimaal toegewezen."
+  },
+  "tracking": {
+    "userBehaviorTrackingDemo": "Gebruikersgedrag Tracking Demo",
+    "trackingStatus": "Tracking Status",
+    "trackingControls": "Tracking Bediening",
+    "searchTracking": "Zoek Tracking",
+    "modalTracking": "Modal Tracking",
+    "formTracking": "Formulier Tracking",
+    "eventQueue": "Event Wachtrij",
+    "enableTracking": "Tracking Inschakelen",
+    "disableTracking": "Tracking Uitschakelen",
+    "flushEvents": "Events Legen",
+    "navigationTracking": "Navigatie Tracking",
+    "featureUsageTracking": "Functie Gebruik Tracking",
+    "abTestingTracking": "A/B Testing Tracking",
+    "customEventsErrorTracking": "Aangepaste Events & Fout Tracking",
+    "exportData": "Data Exporteren",
+    "shareDashboard": "Dashboard Delen",
+    "filterData": "Data Filteren",
+    "trackExperimentView": "Experiment Weergave Tracken",
+    "trackConversion": "Conversie Tracken",
+    "trackCustomEvent": "Aangepaste Event Tracken",
+    "trackError": "Fout Tracken",
+    "trackLinkClick": "Link Klik Tracken",
+    "sessionID": "Sessie ID",
+    "pageViews": "Paginaweergaven",
+    "clicks": "Kliks"
+  },
+  "ui": {
+    "premiumUXSettings": "Premium UX Instellingen",
+    "notifications": "Meldingen",
+    "highContrast": "Hoog Contrast",
+    "largeText": "Grote Tekst",
+    "reduceMotion": "Beweging Verminderen"
+  },
+  "realTime": {
+    "liveForecasts": "Live Prognoses",
+    "activeAlerts": "Actieve Waarschuwingen",
+    "liveInsights": "Live Inzichten",
+    "memoryUsage": "Geheugengebruik",
+    "topTopics": "Top Onderwerpen"
+  },
+  "placeholders": {
+    "enterSearchQuery": "Voer zoekopdracht in...",
+    "askBusinessQuestion": "Stel een zakelijke vraag... (bijv. 'Analyseer onze verkoopprestaties' of 'Hoe kunnen we onze marketingcampagnes optimaliseren?')",
+    "shareYourThoughts": "Deel je gedachten...",
+    "enterQueryForContext": "Voer een query in voor context...",
+    "webhookUrl": "https://uw-domein.com/api/telegram/webhook",
+    "noMinimum": "Geen minimum",
+    "noMaximum": "Geen maximum",
+    "enterNavigationCommand": "Voer navigatiecommando in..."
+  },
+  "tabs": {
+    "overview": "Overzicht",
+    "segments": "Segmenten",
+    "budget": "Budget Optimalisatie",
+    "predictions": "Voorspellingen"
+  },
+  "components": {
+    "componentFlow": "Component Flow",
+    "keyFeatures": "Belangrijkste Functies",
+    "routeToAppropriateComponent": "Route naar Juiste Component",
+    "responseWithSuggestions": "Respons met Suggesties"
+  },
+  "audience": {
+    "audienceInsights": "Doelgroep Inzichten",
+    "segmentation": "Segmentatie",
+    "demographics": "Demografische gegevens",
+    "behavior": "Gedrag",
+    "preferences": "Voorkeuren",
+    "advancedAnalysisDescription": "Geavanceerde doelgroepanalyse en budgetoptimalisatie",
+    "totalSegments": "Totaal Segmenten",
+    "activeAudiences": "Actieve doelgroepen",
+    "averageClv": "Gem. CLV",
+    "customerLifetimeValue": "Customer Lifetime Value",
+    "bestPerformingSegment": "Best Presterende",
+    "highestClvSegment": "Hoogste CLV segment",
+    "growthTrend": "Groei Trend",
+    "averageGrowth": "Gemiddelde groei",
+    "segmentPerformance": "Segment Prestaties",
+    "clvVsConversionRate": "CLV vs Conversieratio per doelgroep",
+    "budgetAllocation": "Budget Allocatie",
+    "currentVsRecommended": "Huidige vs Aanbevolen verdeling",
+    "current": "Huidig",
+    "recommended": "Aanbevolen",
+    "customers": "klanten",
+    "conversionRate": "Conversieratio",
+    "primaryChannel": "Primair Kanaal",
+    "topChannels": "Top Kanalen",
+    "recommendations": "Aanbevelingen",
+    "budgetOptimization": "Budget Optimalisatie",
+    "aiDrivenRecommendations": "AI-gestuurde aanbevelingen voor betere ROI",
+    "currentBudget": "Huidig Budget",
+    "recommendedBudget": "Aanbevolen Budget",
+    "performancePredictions": "Prestatie Voorspellingen",
+    "machineLearningPredictions": "Machine learning voorspellingen voor toekomstige prestaties",
+    "predictionModelsLoading": "Voorspellingsmodellen worden geladen..."
+  },
+  "chart": {
+    "errorLoadingChart": "Fout bij laden grafiek",
+    "noDataAvailable": "Geen gegevens beschikbaar",
+    "loading": "Grafiek laden...",
+    "total": "Totaal",
+    "average": "Gemiddelde",
+    "minimum": "Minimum",
+    "maximum": "Maximum"
+  },
+  "budget": {
+    "budgetOptimization": "Budget Optimalisatie",
+    "budgetAllocation": "Budget Toewijzing",
+    "spendAnalysis": "Uitgavenanalyse",
+    "forecastAccuracy": "Prognose Nauwkeurigheid",
+    "varianceAnalysis": "Afwijkingsanalyse"
+  },
+  "tacticalAnalysis": {
+    "realTimeInsights": "Real-time Inzichten",
+    "liveForecasts": "Live Prognoses",
+    "activeAlerts": "Actieve Waarschuwingen",
+    "successRate": "Succespercentage",
+    "totalValueCreated": "Totale Waarde Gecreëerd",
+    "roiEstimate": "ROI Schatting",
+    "implementationMetrics": "Implementatie Metrieken",
+    "impactMetrics": "Impact Metrieken",
+    "memoryUsage": "Geheugengebruik",
+    "uptime": "Uptime",
+    "connectionDetails": "Verbindingsdetails"
+  },
+  "tableHeaders": {
+    "date": "Datum",
+    "metric": "Metriek",
+    "category": "Categorie",
+    "value": "Waarde",
+    "roi": "ROI",
+    "status": "Status",
+    "priority": "Prioriteit"
+  },
+  "buttons": {
+    "exportData": "Data Exporteren",
+    "shareDashboard": "Dashboard Delen",
+    "filterData": "Data Filteren",
+    "exportAll": "Alle Formaten Exporteren",
+    "enableTracking": "Tracking Inschakelen",
+    "disableTracking": "Tracking Uitschakelen",
+    "flushEvents": "Events Legen",
+    "trackExperimentView": "Experiment Weergave Tracken",
+    "trackConversion": "Conversie Tracken",
+    "trackCustomEvent": "Aangepaste Event Tracken",
+    "trackError": "Fout Tracken",
+    "trackLinkClick": "Link Klik Tracken"
+  },
+  "statusIndicators": {
+    "onTrack": "Op Schema",
+    "underBudget": "Onder Budget",
+    "overBudget": "Over Budget",
+    "active": "Actief",
+    "inactive": "Inactief",
+    "processing": "Verwerken",
+    "completed": "Voltooid",
+    "failed": "Mislukt"
+  },
+  "contentIdeation": {
+    "title": "Content Ideatie Engine",
+    "description": "AI-gestuurde content ideeën gebaseerd op trends en concurrentieanalyse",
+    "features": {
+      "aiPowered": "AI-Gestuurde Generatie",
+      "aiGeneration": "AI Generatie",
+      "aiGenerationDesc": "Geavanceerde AI algoritmes genereren contextuele content ideeën",
+      "trendAnalysis": "Trend Analyse",
+      "trendAnalysisDesc": "Real-time analyse van trending onderwerpen en trefwoorden",
+      "competitorGaps": "Concurrentie Gap Analyse",
+      "competitorGapsDesc": "Identificeer content kansen die je concurrenten missen",
+      "seoOptimization": "SEO Optimalisatie",
+      "seoOptimizationDesc": "Ideeën geoptimaliseerd voor zoekmachine zichtbaarheid",
+      "performance": "Prestatie Voorspelling",
+      "performanceDesc": "Voorspel engagement en virale potentie voor publicatie"
+    },
+    "generateIdeas": "Ideeën Genereren",
+    "contentIdeas": "Content Ideeën",
+    "strategy": "Strategie",
+    "generate": "Genereren",
+    "totalIdeas": "Totaal Ideeën",
+    "highPriority": "Hoge Prioriteit",
+    "trendingNow": "Nu Trending",
+    "avgConfidence": "Gem. Vertrouwen",
+    "searchPlaceholder": "Zoek ideeën, trefwoorden...",
+    "allCategories": "Alle Categorieën",
+    "allPriorities": "Alle Prioriteiten",
+    "blog": "Blog",
+    "social": "Sociaal",
+    "video": "Video",
+    "infographic": "Infographic",
+    "podcast": "Podcast",
+    "critical": "Kritiek",
+    "high": "Hoog",
+    "medium": "Gemiddeld",
+    "low": "Laag",
+    "clear": "Wissen",
+    "seoScore": "SEO Score",
+    "viralScore": "Virale Score",
+    "estTime": "Gesch. Tijd",
+    "views": "Weergaven",
+    "shares": "Delingen",
+    "easy": "Makkelijk",
+    "hard": "Moeilijk",
+    "immediate": "Onmiddellijk",
+    "soon": "Binnenkort",
+    "planned": "Gepland",
+    "gapOpportunity": "Gap Kans",
+    "bestTime": "Beste",
+    "noIdeasFound": "Geen Ideeën Gevonden",
+    "noIdeasMessage": "Probeer je filters aan te passen of genereer nieuwe content ideeën.",
+    "generateContentIdeas": "Content Ideeën Genereren",
+    "generateDescription": "Gebruik AI om gepersonaliseerde content ideeën te genereren op basis van jouw vereisten",
+    "keywords": "Trefwoorden (komma-gescheiden)",
+    "keywordsPlaceholder": "kunstmatige intelligentie, digitale transformatie",
+    "numberOfIdeas": "Aantal Ideeën",
+    "targetAudience": "Doelgroep",
+    "audiencePlaceholder": "B2B executives, tech professionals",
+    "timeframe": "Tijdsbestek",
+    "immediateTimeframe": "Onmiddellijk (nu trending)",
+    "shortTermTimeframe": "Korte termijn (volgende maand)",
+    "longTermTimeframe": "Lange termijn (evergreen)",
+    "includeCompetitorGaps": "Concurrentie gap analyse includeren",
+    "includeTrendingTopics": "Trending onderwerpen includeren",
+    "generatingIdeas": "Ideeën Genereren...",
+    "demo": "Demo",
+    "refresh": "Vernieuwen",
+    "export": "Exporteren",
+    "loadingStrategy": "Strategie laden...",
+    "keyThemes": "Hoofdthema's",
+    "gapOpportunities": "Gap Kansen",
+    "trendOpportunities": "Trend Kansen",
+    "contentMixStrategy": "Content Mix Strategie",
+    "contentMixDescription": "Aanbevolen balans van content types",
+    "competitorGaps": "Concurrentie Gaps",
+    "ideas5": "5 Ideeën",
+    "ideas10": "10 Ideeën",
+    "ideas15": "15 Ideeën",
+    "ideas20": "20 Ideeën",
+    "ideas25": "25 Ideeën"
+  },
+  "premiumCustomerJourney": {
+    "title": "Premium Interactieve Klantjourney",
+    "subtitle": "Transformeer Uw Marketing in 4 Stappen",
+    "tagline": "Zet Content Om in Groei Op Autopilot",
+    "description": "Ontdek hoe toonaangevende bedrijven hun marketing automatiseren voor 340% ROI",
+    "journey": {
+      "awareness": {
+        "title": "Bewustwording",
+        "subtitle": "Herkenning & Interesse",
+        "description": "Ideale klanten ontdekken uw oplossingen",
+        "benefits": [
+          "24/7 automatische lead generatie",
+          "AI-gestuurde content creatie",
+          "Multi-platform bereik",
+          "Gepersonaliseerde messaging"
+        ],
+        "metrics": [
+          { "label": "Reach", "value": "500K+ per maand", "growth": "+180%" },
+          { "label": "Engagement Rate", "value": "8.4%", "growth": "+240%" },
+          { "label": "Brand Awareness", "value": "67%", "growth": "+120%" }
+        ],
+        "cta": "Ontdek Uw Potentieel"
+      },
+      "consideration": {
+        "title": "Overweging",
+        "subtitle": "Evaluatie & Vergelijking",
+        "description": "Prospects evalueren uw oplossing vs alternatieven",
+        "features": [
+          "Intelligente lead scoring",
+          "Geautomatiseerde nurturing campagnes",
+          "Concurrentie-analyse dashboard",
+          "ROI calculators en tools"
+        ],
+        "metrics": [
+          {
+            "label": "Lead Quality Score",
+            "value": "9.2/10",
+            "growth": "+150%"
+          },
+          { "label": "Conversion Rate", "value": "23%", "growth": "+180%" },
+          { "label": "Sales Cycle", "value": "-40 dagen", "growth": "-35%" }
+        ],
+        "cta": "Zie Live Demo"
+      },
+      "decision": {
+        "title": "Beslissing",
+        "subtitle": "Keuze & Commitment",
+        "description": "Klanten maken de finale beslissing tot aankoop",
+        "offers": [
+          "€15.000 Marketing Machine pakket",
+          "€15.000 Intelligence Hub systeem",
+          "€25.000 Complete Bundle (besparing: €5.000)",
+          "Geld-terug-garantie binnen 90 dagen"
+        ],
+        "metrics": [
+          { "label": "Close Rate", "value": "67%", "growth": "+200%" },
+          { "label": "Deal Size", "value": "€18.750", "growth": "+85%" },
+          { "label": "Sales Velocity", "value": "45 dagen", "growth": "-50%" }
+        ],
+        "cta": "Start Vandaag"
+      },
+      "action": {
+        "title": "Actie",
+        "subtitle": "Implementatie & Succes",
+        "description": "Klanten behalen meetbare resultaten met uw oplossing",
+        "benefits": [
+          "Volledige implementatie binnen 30 dagen",
+          "24/7 support en training",
+          "Gegarandeerde ROI binnen 90 dagen",
+          "Continue optimalisatie"
+        ],
+        "metrics": [
+          { "label": "Implementatie Succes", "value": "98%", "growth": "+25%" },
+          {
+            "label": "Customer Satisfaction",
+            "value": "4.9/5",
+            "growth": "+18%"
+          },
+          { "label": "Gemiddelde ROI", "value": "340%", "growth": "+120%" }
+        ],
+        "cta": "Ontdek Resultaten"
+      }
+    },
+    "roiCalculator": {
+      "title": "ROI Calculator",
+      "subtitle": "Bereken Uw Potentiële Rendement",
+      "inputs": {
+        "monthlyRevenue": {
+          "label": "Maandelijkse Omzet",
+          "placeholder": "€50.000",
+          "suffix": "per maand"
+        },
+        "marketingSpend": {
+          "label": "Marketing Budget",
+          "placeholder": "€5.000",
+          "suffix": "per maand"
+        },
+        "teamSize": {
+          "label": "Marketing Team",
+          "placeholder": "3",
+          "suffix": "mensen"
+        },
+        "contentPieces": {
+          "label": "Content per Maand",
+          "placeholder": "20",
+          "suffix": "stuks"
+        },
+        "leadGoal": {
+          "label": "Leads Doelstelling",
+          "placeholder": "100",
+          "suffix": "per maand"
+        }
+      },
+      "results": {
+        "timeSavings": {
+          "label": "Tijdsbesparing",
+          "description": "Uren per maand bespaard door automatisering"
+        },
+        "costReduction": {
+          "label": "Kostenbesparing",
+          "description": "Maandelijkse besparingen op operationele kosten"
+        },
+        "revenueIncrease": {
+          "label": "Omzet Toename",
+          "description": "Extra maandelijkse omzet door betere conversie"
+        },
+        "totalRoi": {
+          "label": "Totale ROI",
+          "description": "Return on Investment over 12 maanden"
+        },
+        "paybackPeriod": {
+          "label": "Terugverdientijd",
+          "description": "Maanden tot break-even punt"
+        },
+        "yearlyValue": {
+          "label": "Jaarlijkse Waarde",
+          "description": "Totale waardecreatie per jaar"
+        }
+      },
+      "cta": "Claim Mijn ROI",
+      "disclaimer": "Berekeningen gebaseerd op gemiddelde klantresultaten"
+    },
+    "testimonials": [
+      {
+        "quote": "Onze marketingkosten daalden met 60% terwijl leads met 340% stegen. Ongelofelijk!",
+        "author": "Sarah van der Berg",
+        "company": "TechScale Amsterdam",
+        "role": "Marketing Director",
+        "metrics": {
+          "roi": "340%",
+          "leadIncrease": "+340%",
+          "costReduction": "-60%"
+        }
+      },
+      {
+        "quote": "Marketing Machine automatiseerde ons volledige content proces. 80 uur per maand bespaard.",
+        "author": "Mark Janssen",
+        "company": "GrowthCorp Rotterdam",
+        "role": "CEO",
+        "metrics": {
+          "timeSaved": "80u/maand",
+          "contentIncrease": "+500%",
+          "teamEfficiency": "+280%"
+        }
+      },
+      {
+        "quote": "Van €2M naar €8M omzet in 18 maanden. De Intelligence Hub gaf ons de inzichten die we nodig hadden.",
+        "author": "Lisa de Vries",
+        "company": "DataDriven Utrecht",
+        "role": "Head of Growth",
+        "metrics": {
+          "revenueGrowth": "300%",
+          "dataAccuracy": "+95%",
+          "decisionSpeed": "+200%"
+        }
+      }
+    ],
+    "socialProof": {
+      "customers": "10.000+ tevreden klanten",
+      "contentGenerated": "1M+ content stukken gegenereerd",
+      "timeSaved": "500K+ uren bespaard",
+      "averageRoi": "340% gemiddelde ROI"
+    },
+    "features": [
+      "AI Content Engine - Automatische content creatie",
+      "Multi-Platform Publishing - Publiceer overal tegelijk",
+      "Performance Analytics - Meet wat werkt",
+      "Lead Automation - Automatiseer leadgeneratie",
+      "A/B Testing - Optimaliseer continue",
+      "CRM Integration - Verbind met uw systemen"
+    ],
+    "cta": {
+      "primary": "Start Gratis Trial",
+      "secondary": "Boek Demo",
+      "urgency": "Beperkte tijd: 50% korting Q1 2025",
+      "guarantee": "30-dagen geld-terug-garantie",
+      "noCommitment": "Geen verplichtingen, stop wanneer u wilt"
+    },
+    "navigation": {
+      "previous": "Vorige",
+      "next": "Volgende",
+      "skip": "Overslaan",
+      "back": "Terug",
+      "continue": "Doorgaan",
+      "getStarted": "Aan de Slag",
+      "learnMore": "Meer Informatie"
+    },
+    "forms": {
+      "personalInfo": {
+        "firstName": "Voornaam",
+        "lastName": "Achternaam",
+        "email": "E-mailadres",
+        "phone": "Telefoonnummer",
+        "company": "Bedrijfsnaam",
+        "jobTitle": "Functietitel"
+      },
+      "companyDetails": {
+        "industry": "Branche",
+        "companySize": "Bedrijfsgrootte",
+        "monthlyRevenue": "Maandelijkse Omzet",
+        "currentTools": "Huidige Tools",
+        "marketingBudget": "Marketing Budget"
+      },
+      "goals": {
+        "primaryGoal": "Hoofddoel",
+        "timeline": "Tijdslijn",
+        "expectedRoi": "Verwachte ROI",
+        "challenges": "Uitdagingen"
+      },
+      "validation": {
+        "required": "Dit veld is verplicht",
+        "invalidEmail": "Ongeldig e-mailadres",
+        "invalidPhone": "Ongeldig telefoonnummer",
+        "tooShort": "Te kort",
+        "tooLong": "Te lang"
+      }
+    },
+    "demo": {
+      "title": "Boek Uw Persoonlijke Demo",
+      "subtitle": "Zie hoe Marketing Machine uw bedrijf kan transformeren",
+      "benefits": [
+        "Gepersonaliseerde demo voor uw branche",
+        "Live ROI berekening voor uw situatie",
+        "Directe toegang tot exclusieve features",
+        "30-minuten strategiesessie inbegrepen"
+      ],
+      "timeSlots": [
+        "9:00 - 10:00",
+        "11:00 - 12:00",
+        "14:00 - 15:00",
+        "16:00 - 17:00"
+      ],
+      "confirmationTitle": "Demo Geboekt!",
+      "confirmationMessage": "We nemen binnen 24 uur contact met u op om de details te bespreken."
+    }
+  },
+  "customerIntelligence": {
+    "title": "Klantintelligentie Dashboard",
+    "description": "360° klantenweergave, analytics en inzichten voor datagedreven beslissingen",
+    "tabs": {
+      "overview": "Overzicht",
+      "analytics": "Analytics",
+      "churn": "Churn Voorspelling",
+      "segments": "Segmenten",
+      "journey": "Klantreis Tracking"
+    },
+    "overview": {
+      "totalCustomers": "Totaal Klanten",
+      "totalCustomersDesc": "Alle geregistreerde klanten",
+      "activeCustomers": "Actieve Klanten",
+      "activeCustomersDesc": "Momenteel actieve gebruikers",
+      "avgLifetimeValue": "Gem. Levensduurwaarde",
+      "avgLifetimeValueDesc": "Gemiddelde klantwaarde",
+      "churnRisk": "Churn Risico",
+      "churnRiskDesc": "Klanten met risico",
+      "fromLastMonth": "van vorige maand"
+    },
+    "segments": {
+      "title": "Klantsegmenten",
+      "description": "Klantverdeling op waarde",
+      "highValue": "Hoge Waarde",
+      "mediumValue": "Gemiddelde Waarde",
+      "lowValue": "Lage Waarde",
+      "atRisk": "Risico"
+    },
+    "journey": {
+      "title": "Klantreis",
+      "description": "Conversietrechter analyse",
+      "customers": "klanten",
+      "stages": {
+        "awareness": "Bewustwording",
+        "interest": "Interesse",
+        "consideration": "Overweging",
+        "purchase": "Aankoop",
+        "retention": "Behoud"
+      }
+    },
+    "analytics": {
+      "title": "Geavanceerde Analytics",
+      "description": "Gedetailleerde klantgedraganalyse",
+      "comingSoon": "Geavanceerde analytics functies komen binnenkort..."
+    },
+    "development": {
+      "title": "Ontwikkelingsstatus",
+      "description": "Voortgang functie-implementatie",
+      "complete": "✅ Voltooid",
+      "inProgress": "🔄 Bezig",
+      "planned": "🤖 Gepland",
+      "features": {
+        "overviewMetrics": "Klantoverzicht statistieken",
+        "churnPrediction": "Churn voorspelling algoritmes",
+        "realtimeSync": "Real-time data synchronisatie",
+        "segmentation": "Geavanceerde segmentatie",
+        "journeyTracking": "Klantreis tracking",
+        "mlOptimization": "ML model optimalisatie"
+      }
+    }
+  },
+  "monitoring": {
+    "title": "Monitoring Dashboard",
+    "subtitle": "Real-time systeem monitoring en prestatie analytics",
+    "infrastructure": {
+      "title": "Infrastructuur Monitoring",
+      "subtitle": "Systeem prestaties en gezondheid in real-time",
+      "systemMetrics": "Systeem Metrieken",
+      "serviceHealth": "Service Gezondheid",
+      "alerts": "Waarschuwingen",
+      "networkMonitoring": "Netwerk Monitoring",
+      "cpuUsage": "CPU Gebruik",
+      "memoryUsage": "Geheugen Gebruik",
+      "diskUsage": "Schijf Gebruik",
+      "networkTraffic": "Netwerk Verkeer",
+      "uptime": "Uptime",
+      "responseTime": "Reactietijd",
+      "errorRate": "Fout Rate",
+      "throughput": "Doorvoer",
+      "healthy": "Gezond",
+      "warning": "Waarschuwing",
+      "critical": "Kritiek",
+      "offline": "Offline",
+      "online": "Online",
+      "lastUpdate": "Laatste Update",
+      "performance": "Prestaties",
+      "availability": "Beschikbaarheid"
+    },
+    "workflows": {
+      "title": "Workflow Monitoring",
+      "subtitle": "N8N workflow monitoring en beheer",
+      "workflowOverview": "Workflow Overzicht",
+      "executionHistory": "Uitvoeringsgeschiedenis",
+      "analytics": "Analytics",
+      "settings": "Instellingen",
+      "activeWorkflows": "Actieve Workflows",
+      "totalExecutions": "Totaal Uitvoeringen",
+      "successRate": "Succespercentage",
+      "avgExecutionTime": "Gem. Uitvoeringstijd",
+      "workflowName": "Workflow Naam",
+      "status": "Status",
+      "lastExecution": "Laatste Uitvoering",
+      "actions": "Acties",
+      "execute": "Uitvoeren",
+      "activate": "Activeren",
+      "deactivate": "Deactiveren",
+      "view": "Bekijken",
+      "edit": "Bewerken",
+      "active": "Actief",
+      "inactive": "Inactief",
+      "running": "Bezig",
+      "success": "Succesvol",
+      "error": "Fout",
+      "canceled": "Geannuleerd",
+      "waiting": "Wachtend",
+      "executionId": "Uitvoering ID",
+      "startTime": "Starttijd",
+      "endTime": "Eindtijd",
+      "duration": "Duur",
+      "workflowId": "Workflow ID",
+      "executionsOverTime": "Uitvoeringen Over Tijd",
+      "successFailureRate": "Succes/Fout Rate",
+      "executionTimes": "Uitvoeringstijden",
+      "workflowPerformance": "Workflow Prestaties",
+      "recentExecutions": "Recente Uitvoeringen",
+      "noExecutions": "Geen uitvoeringen gevonden",
+      "loading": "Laden...",
+      "refreshData": "Data Verversen",
+      "autoRefresh": "Automatisch Verversen",
+      "filterByStatus": "Filter op Status",
+      "searchWorkflows": "Zoek Workflows",
+      "exportData": "Data Exporteren",
+      "webhookUrl": "Webhook URL",
+      "triggerWorkflow": "Workflow Triggeren",
+      "workflowHealth": "Workflow Gezondheid",
+      "systemHealth": "Systeem Gezondheid"
+    }
+  }
+}

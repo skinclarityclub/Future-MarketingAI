@@ -1,0 +1,351 @@
+{
+  "name": "Competitor Monitoring & Alerting Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "value": "0 */4 * * *"
+            }
+          ]
+        }
+      },
+      "name": "Schedule Competitor Scraping",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "id": "schedule-scraping"
+    },
+    {
+      "parameters": {
+        "resource": "database",
+        "operation": "select",
+        "table": "competitor_data",
+        "returnAll": true,
+        "where": {
+          "conditions": [
+            {
+              "field": "status",
+              "operation": "equal",
+              "value": "active"
+            }
+          ]
+        }
+      },
+      "name": "Get Active Competitors",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [460, 300],
+      "id": "get-competitors",
+      "credentials": {
+        "supabaseApi": {
+          "id": "supabase-creds",
+          "name": "Supabase Credentials"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "// Competitor data scraping logic\nconst items = $input.all();\nconst scrapedData = [];\n\nfor (const item of items) {\n  const competitor = item.json;\n  \n  try {\n    // Simulate scraping competitor data\n    const scrapedMetrics = {\n      id: competitor.id,\n      name: competitor.name,\n      platform: competitor.platform,\n      url: competitor.url,\n      metrics: {\n        followers: Math.floor(Math.random() * 100000) + competitor.metrics?.followers || 10000,\n        engagement_rate: Math.random() * 10 + 2,\n        avg_likes: Math.floor(Math.random() * 2000) + 100,\n        avg_comments: Math.floor(Math.random() * 200) + 10,\n        avg_shares: Math.floor(Math.random() * 100) + 5,\n        post_frequency: Math.floor(Math.random() * 7) + 1,\n        content_performance: Math.random() * 100\n      },\n      last_scraped: new Date().toISOString(),\n      status: 'active',\n      previous_metrics: competitor.metrics\n    };\n    \n    scrapedData.push(scrapedMetrics);\n  } catch (error) {\n    console.error(`Error scraping ${competitor.name}:`, error);\n    \n    // Mark competitor as error status\n    scrapedData.push({\n      ...competitor,\n      status: 'error',\n      last_scraped: new Date().toISOString(),\n      error_message: error.message\n    });\n  }\n}\n\nreturn scrapedData.map(data => ({ json: data }));"
+      },
+      "name": "Scrape Competitor Data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [680, 300],
+      "id": "scrape-data"
+    },
+    {
+      "parameters": {
+        "functionCode": "// Analyze performance changes and generate alerts\nconst items = $input.all();\nconst alerts = [];\nconst thresholds = {\n  engagement_spike: 50, // 50% increase\n  engagement_drop: 30,  // 30% decrease\n  follower_spike: 20,   // 20% increase\n  performance_variance: 25 // 25% variance\n};\n\nfor (const item of items) {\n  const current = item.json;\n  const previous = current.previous_metrics;\n  \n  if (previous && current.metrics) {\n    // Calculate percentage changes\n    const engagementChange = ((current.metrics.engagement_rate - previous.engagement_rate) / previous.engagement_rate) * 100;\n    const followerChange = ((current.metrics.followers - previous.followers) / previous.followers) * 100;\n    const performanceChange = ((current.metrics.content_performance - previous.content_performance) / previous.content_performance) * 100;\n    \n    // Check for engagement spikes\n    if (engagementChange > thresholds.engagement_spike) {\n      alerts.push({\n        id: `alert-${Date.now()}-${current.id}`,\n        competitor_id: current.id,\n        competitor_name: current.name,\n        alert_type: 'performance_spike',\n        severity: engagementChange > 75 ? 'critical' : 'high',\n        message: `${current.name} heeft een engagement spike van ${engagementChange.toFixed(1)}% op ${current.platform}`,\n        threshold_value: thresholds.engagement_spike,\n        current_value: current.metrics.engagement_rate,\n        previous_value: previous.engagement_rate,\n        percentage_change: engagementChange,\n        platform: current.platform,\n        created_at: new Date().toISOString(),\n        acknowledged: false,\n        metadata: {\n          url: current.url,\n          followers: current.metrics.followers,\n          avg_likes: current.metrics.avg_likes\n        }\n      });\n    }\n    \n    // Check for engagement drops\n    if (engagementChange < -thresholds.engagement_drop) {\n      alerts.push({\n        id: `alert-${Date.now()}-${current.id}-drop`,\n        competitor_id: current.id,\n        competitor_name: current.name,\n        alert_type: 'performance_drop',\n        severity: engagementChange < -50 ? 'medium' : 'low',\n        message: `${current.name} toont een engagement daling van ${Math.abs(engagementChange).toFixed(1)}% op ${current.platform}`,\n        threshold_value: thresholds.engagement_drop,\n        current_value: current.metrics.engagement_rate,\n        previous_value: previous.engagement_rate,\n        percentage_change: engagementChange,\n        platform: current.platform,\n        created_at: new Date().toISOString(),\n        acknowledged: false,\n        metadata: {\n          url: current.url,\n          followers: current.metrics.followers\n        }\n      });\n    }\n    \n    // Check for significant follower changes\n    if (Math.abs(followerChange) > thresholds.follower_spike) {\n      alerts.push({\n        id: `alert-${Date.now()}-${current.id}-followers`,\n        competitor_id: current.id,\n        competitor_name: current.name,\n        alert_type: 'engagement_change',\n        severity: Math.abs(followerChange) > 50 ? 'high' : 'medium',\n        message: `${current.name} heeft een ${followerChange > 0 ? 'toename' : 'afname'} van ${Math.abs(followerChange).toFixed(1)}% followers`,\n        threshold_value: thresholds.follower_spike,\n        current_value: current.metrics.followers,\n        previous_value: previous.followers,\n        percentage_change: followerChange,\n        platform: current.platform,\n        created_at: new Date().toISOString(),\n        acknowledged: false,\n        metadata: {\n          url: current.url,\n          engagement_rate: current.metrics.engagement_rate\n        }\n      });\n    }\n  }\n}\n\n// Return both updated competitor data and alerts\nconst output = {\n  competitors: items.map(item => item.json),\n  alerts: alerts,\n  summary: {\n    competitors_analyzed: items.length,\n    alerts_generated: alerts.length,\n    critical_alerts: alerts.filter(a => a.severity === 'critical').length,\n    high_alerts: alerts.filter(a => a.severity === 'high').length,\n    timestamp: new Date().toISOString()\n  }\n};\n\nreturn [{ json: output }];"
+      },
+      "name": "Analyze & Generate Alerts",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [900, 300],
+      "id": "analyze-alerts"
+    },
+    {
+      "parameters": {
+        "resource": "database",
+        "operation": "upsert",
+        "table": "competitor_data",
+        "fieldsToMatch": "id",
+        "fieldsToMatchOutput": "id",
+        "values": "={{ $json.competitors }}"
+      },
+      "name": "Update Competitor Data",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [1120, 200],
+      "id": "update-competitors",
+      "credentials": {
+        "supabaseApi": {
+          "id": "supabase-creds",
+          "name": "Supabase Credentials"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "database",
+        "operation": "insert",
+        "table": "competitor_alerts",
+        "values": "={{ $json.alerts }}"
+      },
+      "name": "Store Alerts",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [1120, 400],
+      "id": "store-alerts",
+      "credentials": {
+        "supabaseApi": {
+          "id": "supabase-creds",
+          "name": "Supabase Credentials"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "leftValue": "={{ $json.alerts.length }}",
+            "operation": "larger",
+            "rightValue": 0
+          }
+        }
+      },
+      "name": "Check if Alerts Exist",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [1340, 300],
+      "id": "check-alerts"
+    },
+    {
+      "parameters": {
+        "functionCode": "// Prepare dashboard notification\nconst data = $json;\nconst criticalAlerts = data.alerts.filter(a => a.severity === 'critical');\nconst highAlerts = data.alerts.filter(a => a.severity === 'high');\n\nconst notification = {\n  type: 'competitor_alert',\n  title: `🚨 Concurrentie Alert: ${data.alerts.length} nieuwe waarschuwing${data.alerts.length > 1 ? 'en' : ''}`,\n  message: `${criticalAlerts.length} kritieke en ${highAlerts.length} hoge prioriteit alerts gedetecteerd`,\n  alerts: data.alerts.slice(0, 5), // Top 5 alerts\n  summary: data.summary,\n  timestamp: new Date().toISOString(),\n  urgency: criticalAlerts.length > 0 ? 'critical' : highAlerts.length > 0 ? 'high' : 'medium'\n};\n\nreturn [{ json: notification }];"
+      },
+      "name": "Prepare Dashboard Notification",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [1560, 240],
+      "id": "prepare-notification"
+    },
+    {
+      "parameters": {
+        "url": "={{ $env.WEBHOOK_URL || 'https://skc-bi-dashboard.vercel.app' }}/api/webhooks/competitor-alerts",
+        "sendBody": true,
+        "bodyContentType": "json",
+        "jsonBody": "={{ $json }}",
+        "options": {
+          "headers": {
+            "Authorization": "Bearer {{ $env.WEBHOOK_SECRET || 'default-secret' }}",
+            "Content-Type": "application/json"
+          }
+        }
+      },
+      "name": "Send Dashboard Notification",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [1560, 360],
+      "id": "send-notification"
+    },
+    {
+      "parameters": {
+        "functionCode": "// Prepare email alert for critical issues\nconst data = $json;\nconst criticalAlerts = data.alerts.filter(a => a.severity === 'critical');\n\nif (criticalAlerts.length === 0) {\n  return [];\n}\n\nconst emailContent = {\n  to: $env.ALERT_EMAIL || 'admin@skc-company.com',\n  subject: `🚨 KRITIEKE Concurrentie Alert - ${criticalAlerts.length} waarschuwing${criticalAlerts.length > 1 ? 'en' : ''}`,\n  html: `\n    <h2>Kritieke Concurrentie Alerts</h2>\n    <p>Er zijn ${criticalAlerts.length} kritieke waarschuwingen gedetecteerd:</p>\n    <ul>\n      ${criticalAlerts.map(alert => `\n        <li>\n          <strong>${alert.competitor_name}</strong> (${alert.platform})<br>\n          ${alert.message}<br>\n          <em>Verandering: ${alert.percentage_change.toFixed(1)}%</em>\n        </li>\n      `).join('')}\n    </ul>\n    <p><a href=\"https://skc-bi-dashboard.vercel.app/nl/competitor-monitoring\">Bekijk in Dashboard</a></p>\n    <p>Timestamp: ${new Date().toLocaleString('nl-NL')}</p>\n  `,\n  urgency: 'high'\n};\n\nreturn [{ json: emailContent }];"
+      },
+      "name": "Prepare Critical Email Alert",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [1780, 240],
+      "id": "prepare-email"
+    },
+    {
+      "parameters": {
+        "resource": "send",
+        "to": "={{ $json.to }}",
+        "subject": "={{ $json.subject }}",
+        "emailType": "html",
+        "message": "={{ $json.html }}"
+      },
+      "name": "Send Critical Alert Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [1780, 360],
+      "id": "send-email",
+      "credentials": {
+        "smtp": {
+          "id": "smtp-creds",
+          "name": "SMTP Credentials"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "// Log workflow execution summary\nconst data = $json;\n\nconst logEntry = {\n  workflow_id: 'competitor-monitoring',\n  execution_id: $execution.id,\n  log_level: 'info',\n  message: `Competitor monitoring completed - ${data.summary.competitors_analyzed} competitors analyzed, ${data.summary.alerts_generated} alerts generated`,\n  metadata: {\n    competitors_analyzed: data.summary.competitors_analyzed,\n    alerts_generated: data.summary.alerts_generated,\n    critical_alerts: data.summary.critical_alerts,\n    high_alerts: data.summary.high_alerts,\n    execution_time: new Date().toISOString()\n  }\n};\n\nreturn [{ json: logEntry }];"
+      },
+      "name": "Log Execution Summary",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [1340, 500],
+      "id": "log-summary"
+    },
+    {
+      "parameters": {
+        "url": "https://skc-bi-dashboard.vercel.app/api/workflows/monitoring?type=log",
+        "sendBody": true,
+        "bodyContentType": "json",
+        "jsonBody": "={{ $json }}",
+        "options": {
+          "headers": {
+            "Authorization": "Bearer {{ $env.API_SECRET || 'default-secret' }}",
+            "Content-Type": "application/json"
+          }
+        }
+      },
+      "name": "Store Execution Log",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [1560, 500],
+      "id": "store-log"
+    },
+    {
+      "parameters": {
+        "functionCode": "// Error handling and recovery\nconst error = $json.error || $json;\n\nconst errorLog = {\n  workflow_id: 'competitor-monitoring',\n  execution_id: $execution.id,\n  error_type: 'system',\n  error_message: error.message || 'Unknown error in competitor monitoring',\n  error_stack: error.stack || '',\n  severity: 'high',\n  metadata: {\n    timestamp: new Date().toISOString(),\n    node_id: $node.name\n  }\n};\n\nreturn [{ json: errorLog }];"
+      },
+      "name": "Handle Errors",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [900, 500],
+      "id": "handle-errors"
+    }
+  ],
+  "connections": {
+    "Schedule Competitor Scraping": {
+      "main": [
+        [
+          {
+            "node": "Get Active Competitors",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Active Competitors": {
+      "main": [
+        [
+          {
+            "node": "Scrape Competitor Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scrape Competitor Data": {
+      "main": [
+        [
+          {
+            "node": "Analyze & Generate Alerts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze & Generate Alerts": {
+      "main": [
+        [
+          {
+            "node": "Update Competitor Data",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Store Alerts",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Check if Alerts Exist",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Log Execution Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check if Alerts Exist": {
+      "main": [
+        [
+          {
+            "node": "Prepare Dashboard Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Dashboard Notification": {
+      "main": [
+        [
+          {
+            "node": "Send Dashboard Notification",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Prepare Critical Email Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Critical Email Alert": {
+      "main": [
+        [
+          {
+            "node": "Send Critical Alert Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Execution Summary": {
+      "main": [
+        [
+          {
+            "node": "Store Execution Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": "error-handling-workflow"
+  },
+  "staticData": {},
+  "tags": [
+    {
+      "createdAt": "2024-12-22T20:00:00.000Z",
+      "updatedAt": "2024-12-22T20:00:00.000Z",
+      "id": "competitor-monitoring",
+      "name": "Competitor Monitoring"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2024-12-22T20:00:00.000Z",
+  "versionId": "1"
+}

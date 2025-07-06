@@ -1,0 +1,74 @@
+# Task ID: 73
+# Title: Ontwikkel Universal n8n AI/ML Workflow Orchestration Platform met Master Workflow Controller
+# Status: done
+# Dependencies: 33, 67, 71, 72
+# Priority: high
+# Description: Bouw voort op de bestaande geavanceerde n8n infrastructuur en integreer bestaande AI/ML workflows (zoals Fortune 500 AI Agent Marketing Intelligence Platform, Webhook Orchestrator, PostBuilder/CarouselBuilder/ReelBuilder/StoryBuilder, Social Media Post Team, MarketingManager) in een universeel n8n orchestration platform. Upgrade de bestaande Webhook Orchestrator tot een centrale Master Workflow Controller die alle AI/ML systemen binnen het SKC BI Dashboard project coördineert, uitbreidt met intelligente orchestration, cross-platform learning, geautomatiseerde optimalisatie feedback loops, intelligent scheduling, A/B testing, en ontbrekende automation zoals model retraining, anomaly detection en performance monitoring.
+# Details:
+Ontwerp en implementeer een modulair n8n platform dat bestaande workflows en infrastructuur benut:
+- Upgrade de bestaande Webhook Orchestrator tot Master Workflow Controller met AI/ML orchestration, dynamische aansturing, monitoring, herstart bij falen, en workflow dependency management.
+- Integreer bestaande Fortune 500 AI Agent ensemble en breid uit met cross-platform learning en nieuwe gespecialiseerde agents.
+- Koppel bestaande content creation workflows (PostBuilder, CarouselBuilder, etc.) aan geautomatiseerde optimalisatie feedback loops.
+- Versterk bestaande Blotato publishing met intelligent scheduling en A/B testing.
+- Implementeer ontbrekende automation: automatische ML model retraining, anomaly detection, performance monitoring.
+- Gebruik bestaande enterprise classification voor workflow routing, Supabase storage/tables voor orchestration data, Blotato API voor publishing, OpenRouter/OpenAI integraties voor AI, Telegram bot voor enhanced notifications met AI insights, en content workflow registry voor workflow management.
+- Implementeer visuele workflow monitoring, replay functionaliteit, disaster recovery en workflow analytics modules.
+- Gebruik n8n’s agentic en declaratieve workflow capabilities, custom nodes, en event-driven architectuur voor maximale flexibiliteit en schaalbaarheid.
+
+# Test Strategy:
+1. Test de geüpgradede Master Workflow Controller (voorheen Webhook Orchestrator) op correcte aansturing, monitoring en herstart van alle geïntegreerde AI/ML sub-workflows met gesimuleerde en live data.
+2. Verifieer real-time status updates, logging, intelligente alerts en AI insights in het dashboard en via Telegram.
+3. Test automatische triggers, webhook integraties en cross-platform API calls met bestaande en nieuwe AI-systemen.
+4. Valideer automatische ML model retraining, anomaly detection, performance monitoring en failover scenarios.
+5. Controleer workflow analytics, replay en disaster recovery functionaliteit door geforceerde fouten en herstelacties te simuleren.
+6. Test schaalbaarheid en performance onder hoge workflow loads, inclusief intelligent scheduling en A/B testing van content publishing.
+
+# Subtasks:
+## 1. Analyseer en ontwerp de modulaire n8n architectuur [done]
+### Dependencies: None
+### Description: Stel de architectuur op voor een modulair n8n platform dat als centrale orchestrator fungeert voor alle AI/ML workflows binnen het SKC BI Dashboard project. Neem bestaande workflows en infrastructuur als uitgangspunt.
+### Details:
+Bepaal de benodigde modules, workflowstructuren, integratiepunten voor bestaande AI/ML systemen (zoals Fortune 500 AI Agent, Webhook Orchestrator, content builders, Blotato API, Supabase, Telegram bot, etc.). Leg de basis voor schaalbaarheid, herbruikbaarheid en onderhoudbaarheid van workflows.
+
+## 2. Ontwikkel de Master Workflow Controller node [done]
+### Dependencies: 73.1
+### Description: Upgrade de bestaande Webhook Orchestrator tot een centrale Master Workflow Controller node die alle sub-workflows dynamisch aanstuurt, monitort, en herstart bij falen, met AI/ML orchestration.
+### Details:
+De node moet workflow dependencies en execution order beheren, integreren met n8n’s event-driven architectuur, en bestaande enterprise classification gebruiken voor workflow routing. Implementeer hooks voor cross-platform learning, feedback loops en intelligent scheduling.
+
+## 3. Implementeer real-time status monitoring, logging en alerts [done]
+### Dependencies: 73.2
+### Description: Bouw een dashboardmodule die real-time status, logs, intelligente alerts en AI insights biedt voor alle AI/ML workflows, inclusief Telegram notificaties.
+### Details:
+Gebruik n8n’s logging en audit mogelijkheden, integreer met bestaande Telegram bot voor enhanced notifications, en koppel aan Supabase voor opslag van workflow status/logs.
+
+## 4. Integreer automatische triggers en webhook support [done]
+### Dependencies: 73.2
+### Description: Implementeer automatische triggers en webhook integraties voor het starten van workflows door externe AI-systemen, gebruikmakend van bestaande enterprise request classification en state-based callback handling.
+### Details:
+Gebruik n8n’s webhook nodes en event-driven capabilities om externe systemen te koppelen en workflows automatisch te starten. Implementeer state management en callback handling.
+
+## 5. Implementeer schaalbare microservice architectuur [done]
+### Dependencies: 73.1
+### Description: Zorg voor een schaalbare microservice architectuur met load balancing en failover voor het orchestratieplatform, gebruikmakend van bestaande Supabase storage en workflow registry.
+### Details:
+Implementeer containerization (bijv. Docker), load balancers, health checks en gebruik Supabase tables voor orchestratie data en workflow registry.
+
+## 6. Faciliteer cross-platform API integraties en bi-directionele webhooks [done]
+### Dependencies: 73.4
+### Description: Implementeer integraties met externe platforms (social, analytics, CRM) via API’s en bi-directionele webhooks, gebruikmakend van bestaande Blotato API en OpenRouter/OpenAI integraties.
+### Details:
+Gebruik n8n’s HTTP Request nodes, bestaande Blotato API integraties en custom nodes voor koppelingen met externe systemen. Implementeer intelligent scheduling en A/B testing voor content publishing.
+
+## 7. Orkestreer automatische ML model retraining, anomaly detection en performance monitoring [done]
+### Dependencies: 73.2
+### Description: Implementeer workflow modules voor automatische retraining van ML modellen, anomaly detection en performance monitoring, aanvullend op bestaande AI agent ensemble.
+### Details:
+Gebruik custom nodes, bestaande ML tools en breid de Fortune 500 AI Agent uit met nieuwe gespecialiseerde agents. Koppel monitoring en feedback loops terug naar het dashboard.
+
+## 8. Integreer disaster recovery en workflow analytics modules [done]
+### Dependencies: 73.3, 73.5
+### Description: Bouw modules voor disaster recovery en workflow analytics, inclusief visuele monitoring en replay functionaliteit, gebruikmakend van bestaande Supabase storage en workflow registry.
+### Details:
+Implementeer backup/restore procedures, workflow history, visuele replay voor debugging en optimalisatie, en analytics op basis van bestaande workflow data.
+

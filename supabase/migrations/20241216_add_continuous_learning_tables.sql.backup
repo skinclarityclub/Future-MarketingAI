@@ -1,0 +1,219 @@
+-- Continuous Learning Tables
+-- Task 67.5: Implementeer en Test de Continue Learning Loop
+
+-- Performance feedback table for storing actual vs predicted performance
+CREATE TABLE IF NOT EXISTS performance_feedback (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    content_id VARCHAR(255) NOT NULL,
+    platform VARCHAR(100) NOT NULL,
+    predicted_engagement DECIMAL(8,6) NOT NULL,
+    actual_engagement DECIMAL(8,6) NOT NULL,
+    predicted_reach INTEGER NOT NULL DEFAULT 0,
+    actual_reach INTEGER NOT NULL DEFAULT 0,
+    predicted_conversion DECIMAL(8,6) NOT NULL DEFAULT 0,
+    actual_conversion DECIMAL(8,6) NOT NULL DEFAULT 0,
+    optimization_applied BOOLEAN DEFAULT false,
+    optimization_type TEXT[] DEFAULT '{}',
+    feedback_timestamp TIMESTAMP WITH TIME ZONE NOT NULL,
+    user_satisfaction_score DECIMAL(3,2),
+    business_impact_score DECIMAL(3,2),
+    processed BOOLEAN DEFAULT false,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Learning metrics history for tracking model performance over time
+CREATE TABLE IF NOT EXISTS learning_performance_history (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    metrics JSONB NOT NULL,
+    recorded_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Learning insights for storing AI-discovered patterns and recommendations
+CREATE TABLE IF NOT EXISTS learning_insights (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    insight_id VARCHAR(255) UNIQUE NOT NULL,
+    insight_type VARCHAR(100) NOT NULL CHECK (insight_type IN ('pattern_discovery', 'performance_drift', 'optimization_opportunity', 'anomaly_detection')),
+    confidence_score DECIMAL(5,4) NOT NULL CHECK (confidence_score >= 0 AND confidence_score <= 1),
+    impact_level VARCHAR(50) NOT NULL CHECK (impact_level IN ('low', 'medium', 'high', 'critical')),
+    description TEXT NOT NULL,
+    recommended_actions TEXT[] NOT NULL DEFAULT '{}',
+    affected_models TEXT[] NOT NULL DEFAULT '{}',
+    data_evidence JSONB,
+    discovery_timestamp TIMESTAMP WITH TIME ZONE NOT NULL,
+    status VARCHAR(50) DEFAULT 'active' CHECK (status IN ('active', 'resolved', 'dismissed')),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Model updates for tracking retraining cycles and deployments
+CREATE TABLE IF NOT EXISTS model_updates (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    update_id VARCHAR(255) UNIQUE NOT NULL,
+    model_version VARCHAR(100) NOT NULL,
+    performance_improvement DECIMAL(8,6) NOT NULL,
+    accuracy_delta DECIMAL(8,6) NOT NULL,
+    training_data_size INTEGER NOT NULL,
+    update_timestamp TIMESTAMP WITH TIME ZONE NOT NULL,
+    validation_metrics JSONB NOT NULL,
+    deployment_status VARCHAR(50) NOT NULL CHECK (deployment_status IN ('pending', 'deployed', 'failed', 'rollback')),
+    deployment_notes TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Learning metrics for storing current learning state
+CREATE TABLE IF NOT EXISTS learning_metrics (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    metrics JSONB NOT NULL,
+    recorded_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    is_current BOOLEAN DEFAULT true,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Learning configuration for storing system settings
+CREATE TABLE IF NOT EXISTS learning_configuration (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    config_key VARCHAR(255) UNIQUE NOT NULL,
+    config_value JSONB NOT NULL,
+    description TEXT,
+    updated_by VARCHAR(255),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Feedback processing queue for batch processing
+CREATE TABLE IF NOT EXISTS feedback_processing_queue (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    batch_id VARCHAR(255) UNIQUE NOT NULL,
+    feedback_items JSONB NOT NULL,
+    processing_status VARCHAR(50) DEFAULT 'pending' CHECK (processing_status IN ('pending', 'processing', 'completed', 'failed')),
+    processing_started_at TIMESTAMP WITH TIME ZONE,
+    processing_completed_at TIMESTAMP WITH TIME ZONE,
+    error_message TEXT,
+    retry_count INTEGER DEFAULT 0,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Create indexes for continuous learning tables
+CREATE INDEX IF NOT EXISTS idx_performance_feedback_content ON performance_feedback(content_id);
+CREATE INDEX IF NOT EXISTS idx_performance_feedback_platform ON performance_feedback(platform);
+CREATE INDEX IF NOT EXISTS idx_performance_feedback_timestamp ON performance_feedback(feedback_timestamp);
+CREATE INDEX IF NOT EXISTS idx_performance_feedback_processed ON performance_feedback(processed);
+CREATE INDEX IF NOT EXISTS idx_performance_feedback_optimization ON performance_feedback(optimization_applied);
+
+CREATE INDEX IF NOT EXISTS idx_learning_performance_recorded ON learning_performance_history(recorded_at);
+
+CREATE INDEX IF NOT EXISTS idx_learning_insights_type ON learning_insights(insight_type);
+CREATE INDEX IF NOT EXISTS idx_learning_insights_impact ON learning_insights(impact_level);
+CREATE INDEX IF NOT EXISTS idx_learning_insights_confidence ON learning_insights(confidence_score);
+CREATE INDEX IF NOT EXISTS idx_learning_insights_timestamp ON learning_insights(discovery_timestamp);
+CREATE INDEX IF NOT EXISTS idx_learning_insights_status ON learning_insights(status);
+
+CREATE INDEX IF NOT EXISTS idx_model_updates_version ON model_updates(model_version);
+CREATE INDEX IF NOT EXISTS idx_model_updates_timestamp ON model_updates(update_timestamp);
+CREATE INDEX IF NOT EXISTS idx_model_updates_status ON model_updates(deployment_status);
+CREATE INDEX IF NOT EXISTS idx_model_updates_improvement ON model_updates(performance_improvement);
+
+CREATE INDEX IF NOT EXISTS idx_learning_metrics_recorded ON learning_metrics(recorded_at);
+CREATE INDEX IF NOT EXISTS idx_learning_metrics_current ON learning_metrics(is_current);
+
+CREATE INDEX IF NOT EXISTS idx_learning_configuration_key ON learning_configuration(config_key);
+
+CREATE INDEX IF NOT EXISTS idx_feedback_processing_batch ON feedback_processing_queue(batch_id);
+CREATE INDEX IF NOT EXISTS idx_feedback_processing_status ON feedback_processing_queue(processing_status);
+CREATE INDEX IF NOT EXISTS idx_feedback_processing_created ON feedback_processing_queue(created_at);
+
+-- Create triggers for updating timestamps
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = CURRENT_TIMESTAMP;
+    RETURN NEW;
+END;
+$$ language 'plpgsql';
+
+CREATE TRIGGER update_performance_feedback_updated_at 
+    BEFORE UPDATE ON performance_feedback 
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_learning_insights_updated_at 
+    BEFORE UPDATE ON learning_insights 
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_model_updates_updated_at 
+    BEFORE UPDATE ON model_updates 
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_learning_configuration_updated_at 
+    BEFORE UPDATE ON learning_configuration 
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_feedback_processing_queue_updated_at 
+    BEFORE UPDATE ON feedback_processing_queue 
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- Row Level Security (RLS) policies
+ALTER TABLE performance_feedback ENABLE ROW LEVEL SECURITY;
+ALTER TABLE learning_performance_history ENABLE ROW LEVEL SECURITY;
+ALTER TABLE learning_insights ENABLE ROW LEVEL SECURITY;
+ALTER TABLE model_updates ENABLE ROW LEVEL SECURITY;
+ALTER TABLE learning_metrics ENABLE ROW LEVEL SECURITY;
+ALTER TABLE learning_configuration ENABLE ROW LEVEL SECURITY;
+ALTER TABLE feedback_processing_queue ENABLE ROW LEVEL SECURITY;
+
+-- Basic RLS policies (adjust based on your auth requirements)
+CREATE POLICY "Enable read access for all users" ON performance_feedback FOR SELECT USING (true);
+CREATE POLICY "Enable insert access for authenticated users" ON performance_feedback FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+CREATE POLICY "Enable update access for authenticated users" ON performance_feedback FOR UPDATE USING (auth.role() = 'authenticated');
+
+CREATE POLICY "Enable read access for all users" ON learning_performance_history FOR SELECT USING (true);
+CREATE POLICY "Enable insert access for authenticated users" ON learning_performance_history FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+
+CREATE POLICY "Enable read access for all users" ON learning_insights FOR SELECT USING (true);
+CREATE POLICY "Enable insert access for authenticated users" ON learning_insights FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+CREATE POLICY "Enable update access for authenticated users" ON learning_insights FOR UPDATE USING (auth.role() = 'authenticated');
+
+CREATE POLICY "Enable read access for all users" ON model_updates FOR SELECT USING (true);
+CREATE POLICY "Enable insert access for authenticated users" ON model_updates FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+CREATE POLICY "Enable update access for authenticated users" ON model_updates FOR UPDATE USING (auth.role() = 'authenticated');
+
+CREATE POLICY "Enable read access for all users" ON learning_metrics FOR SELECT USING (true);
+CREATE POLICY "Enable insert access for authenticated users" ON learning_metrics FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+CREATE POLICY "Enable update access for authenticated users" ON learning_metrics FOR UPDATE USING (auth.role() = 'authenticated');
+
+CREATE POLICY "Enable read access for all users" ON learning_configuration FOR SELECT USING (true);
+CREATE POLICY "Enable insert access for authenticated users" ON learning_configuration FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+CREATE POLICY "Enable update access for authenticated users" ON learning_configuration FOR UPDATE USING (auth.role() = 'authenticated');
+
+CREATE POLICY "Enable read access for all users" ON feedback_processing_queue FOR SELECT USING (true);
+CREATE POLICY "Enable insert access for authenticated users" ON feedback_processing_queue FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+CREATE POLICY "Enable update access for authenticated users" ON feedback_processing_queue FOR UPDATE USING (auth.role() = 'authenticated');
+
+-- Insert default learning configuration
+INSERT INTO learning_configuration (config_key, config_value, description) VALUES
+('retraining_threshold', '0.05', 'Minimum accuracy drop to trigger retraining'),
+('feedback_batch_size', '100', 'Number of feedback items to process in batch'),
+('update_frequency', '"daily"', 'How often to run learning cycles'),
+('min_training_samples', '500', 'Minimum samples required for retraining'),
+('validation_split', '0.2', 'Percentage of data to use for validation'),
+('early_stopping_patience', '10', 'Number of epochs to wait before early stopping'),
+('performance_monitoring_window', '7', 'Days to look back for performance monitoring'),
+('auto_deployment_threshold', '0.03', 'Minimum improvement for auto-deployment')
+ON CONFLICT (config_key) DO NOTHING;
+
+-- Insert initial learning metrics
+INSERT INTO learning_metrics (metrics, recorded_at, is_current) VALUES
+('{
+  "model_accuracy": 0.85,
+  "improvement_rate": 0.0,
+  "prediction_confidence": 0.8,
+  "engagement_improvement": 0.0,
+  "roi_improvement": 0.0,
+  "learning_velocity": 0.0,
+  "data_quality_score": 0.9,
+  "adaptation_speed": 0.0
+}', CURRENT_TIMESTAMP, true)
+ON CONFLICT DO NOTHING; 

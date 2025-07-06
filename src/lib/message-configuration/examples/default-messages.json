@@ -1,0 +1,387 @@
+{
+  "version": "1.0.0",
+  "schemaVersion": "1.0.0",
+  "configuration": {
+    "localization": {
+      "defaultLocale": "en-US",
+      "supportedLocales": ["en-US", "nl-NL", "es-ES", "fr-FR"],
+      "fallbackStrategy": "default",
+      "rtlLocales": [],
+      "dateFormats": {
+        "en-US": {
+          "short": "MM/dd/yyyy",
+          "medium": "MMM dd, yyyy",
+          "long": "MMMM dd, yyyy"
+        },
+        "nl-NL": {
+          "short": "dd-MM-yyyy",
+          "medium": "dd MMM yyyy",
+          "long": "dd MMMM yyyy"
+        }
+      },
+      "numberFormats": {
+        "en-US": {
+          "currency": "USD",
+          "decimal": 2,
+          "thousand": ","
+        },
+        "nl-NL": {
+          "currency": "EUR",
+          "decimal": 2,
+          "thousand": "."
+        }
+      }
+    },
+    "environment": {
+      "environment": "production",
+      "settings": {
+        "enableCaching": true,
+        "cacheTimeout": 3600,
+        "fallbackLocale": "en-US",
+        "debugMode": false,
+        "logLevel": "info"
+      }
+    },
+    "categories": {
+      "error": {
+        "defaultPriority": "high",
+        "allowedRoles": ["admin", "user"],
+        "maxRetention": 30,
+        "auditRequired": true,
+        "approvalRequired": false
+      },
+      "success": {
+        "defaultPriority": "medium",
+        "allowedRoles": ["admin", "user"],
+        "maxRetention": 7,
+        "auditRequired": false,
+        "approvalRequired": false
+      },
+      "warning": {
+        "defaultPriority": "medium",
+        "allowedRoles": ["admin", "user"],
+        "maxRetention": 14,
+        "auditRequired": true,
+        "approvalRequired": false
+      },
+      "notification": {
+        "defaultPriority": "low",
+        "allowedRoles": ["admin", "user"],
+        "maxRetention": 3,
+        "auditRequired": false,
+        "approvalRequired": false
+      }
+    },
+    "cache": {
+      "enabled": true,
+      "strategy": "memory",
+      "ttl": 3600,
+      "maxSize": 1000,
+      "preloadStrategies": {
+        "commonMessages": true,
+        "userSpecificMessages": false,
+        "contextualMessages": true
+      },
+      "invalidationRules": {
+        "onTemplateUpdate": true,
+        "onUserRoleChange": true,
+        "onContextChange": false
+      }
+    }
+  },
+  "templates": [
+    {
+      "id": "welcome_dashboard",
+      "key": "dashboard.welcome",
+      "category": "notification",
+      "priority": "medium",
+      "content": {
+        "en-US": {
+          "title": "Welcome to SKC BI Dashboard",
+          "message": "Get started with your business intelligence journey. Explore real-time analytics and insights.",
+          "description": "Your dashboard is ready with personalized metrics and reports.",
+          "actionLabel": "Explore Dashboard"
+        },
+        "nl-NL": {
+          "title": "Welkom bij SKC BI Dashboard",
+          "message": "Begin uw business intelligence reis. Ontdek real-time analyses en inzichten.",
+          "description": "Uw dashboard is klaar met gepersonaliseerde statistieken en rapporten.",
+          "actionLabel": "Dashboard Verkennen"
+        }
+      },
+      "variables": {
+        "userName": {
+          "type": "string",
+          "required": true,
+          "description": "Name of the logged-in user"
+        },
+        "lastLogin": {
+          "type": "date",
+          "required": false,
+          "description": "User's last login timestamp"
+        }
+      },
+      "context": {
+        "userRoles": ["admin", "user"],
+        "pageRoutes": ["/", "/dashboard"],
+        "deviceTypes": ["desktop", "tablet", "mobile"]
+      },
+      "display": {
+        "type": "banner",
+        "duration": 5000,
+        "dismissible": true,
+        "position": "top",
+        "style": {
+          "theme": "auto",
+          "color": "blue",
+          "icon": "welcome",
+          "animation": "slideDown"
+        }
+      },
+      "version": "1.0.0",
+      "metadata": {
+        "created": "2024-01-15T10:00:00Z",
+        "updated": "2024-01-15T10:00:00Z",
+        "createdBy": "system",
+        "updatedBy": "system",
+        "description": "Welcome message for new dashboard users",
+        "tags": ["welcome", "onboarding"],
+        "status": "active"
+      }
+    },
+    {
+      "id": "data_loading_error",
+      "key": "dashboard.error.data_loading",
+      "category": "error",
+      "priority": "high",
+      "content": {
+        "en-US": {
+          "title": "Data Loading Failed",
+          "message": "Unable to load dashboard data. Please check your connection and try again.",
+          "description": "Error occurred while fetching data from the server.",
+          "actionLabel": "Retry"
+        },
+        "nl-NL": {
+          "title": "Gegevens Laden Mislukt",
+          "message": "Kan dashboard gegevens niet laden. Controleer uw verbinding en probeer opnieuw.",
+          "description": "Er is een fout opgetreden bij het ophalen van gegevens van de server.",
+          "actionLabel": "Opnieuw Proberen"
+        }
+      },
+      "variables": {
+        "errorCode": {
+          "type": "string",
+          "required": false,
+          "description": "Technical error code for debugging"
+        },
+        "retryCount": {
+          "type": "number",
+          "required": false,
+          "default": 0,
+          "description": "Number of retry attempts"
+        }
+      },
+      "context": {
+        "userRoles": ["admin", "user"],
+        "pageRoutes": ["/dashboard", "/analytics", "/reports"],
+        "systemStates": {
+          "networkError": true,
+          "serverError": true
+        }
+      },
+      "display": {
+        "type": "modal",
+        "duration": 0,
+        "dismissible": true,
+        "position": "center",
+        "style": {
+          "theme": "auto",
+          "color": "red",
+          "icon": "error",
+          "animation": "fadeIn"
+        }
+      },
+      "version": "1.0.0",
+      "metadata": {
+        "created": "2024-01-15T10:00:00Z",
+        "updated": "2024-01-15T10:00:00Z",
+        "createdBy": "system",
+        "updatedBy": "system",
+        "description": "Error message for data loading failures",
+        "tags": ["error", "data", "loading"],
+        "status": "active"
+      }
+    },
+    {
+      "id": "report_generated",
+      "key": "reports.success.generated",
+      "category": "success",
+      "priority": "medium",
+      "content": {
+        "en-US": {
+          "title": "Report Generated Successfully",
+          "message": "Your {{reportType}} report has been generated and is ready for download.",
+          "description": "Report contains data from {{startDate}} to {{endDate}}.",
+          "actionLabel": "Download Report"
+        },
+        "nl-NL": {
+          "title": "Rapport Succesvol Gegenereerd",
+          "message": "Uw {{reportType}} rapport is gegenereerd en klaar voor download.",
+          "description": "Rapport bevat gegevens van {{startDate}} tot {{endDate}}.",
+          "actionLabel": "Rapport Downloaden"
+        }
+      },
+      "variables": {
+        "reportType": {
+          "type": "string",
+          "required": true,
+          "description": "Type of report generated",
+          "validation": {
+            "enum": ["revenue", "customer", "performance", "analytics"]
+          }
+        },
+        "startDate": {
+          "type": "date",
+          "required": true,
+          "description": "Report start date"
+        },
+        "endDate": {
+          "type": "date",
+          "required": true,
+          "description": "Report end date"
+        },
+        "fileSize": {
+          "type": "string",
+          "required": false,
+          "description": "Generated file size"
+        }
+      },
+      "context": {
+        "userRoles": ["admin", "manager"],
+        "pageRoutes": ["/reports", "/analytics"]
+      },
+      "display": {
+        "type": "toast",
+        "duration": 4000,
+        "dismissible": true,
+        "position": "top-right",
+        "style": {
+          "theme": "auto",
+          "color": "green",
+          "icon": "checkCircle",
+          "animation": "slideIn"
+        }
+      },
+      "version": "1.0.0",
+      "metadata": {
+        "created": "2024-01-15T10:00:00Z",
+        "updated": "2024-01-15T10:00:00Z",
+        "createdBy": "system",
+        "updatedBy": "system",
+        "description": "Success message for report generation",
+        "tags": ["success", "report", "generation"],
+        "status": "active"
+      }
+    },
+    {
+      "id": "maintenance_warning",
+      "key": "system.warning.maintenance",
+      "category": "warning",
+      "priority": "high",
+      "content": {
+        "en-US": {
+          "title": "Scheduled Maintenance",
+          "message": "System maintenance is scheduled for {{maintenanceDate}} at {{maintenanceTime}}.",
+          "description": "The system will be unavailable for approximately {{duration}} minutes.",
+          "actionLabel": "Learn More"
+        },
+        "nl-NL": {
+          "title": "Gepland Onderhoud",
+          "message": "Systeem onderhoud is gepland voor {{maintenanceDate}} om {{maintenanceTime}}.",
+          "description": "Het systeem zal ongeveer {{duration}} minuten niet beschikbaar zijn.",
+          "actionLabel": "Meer Informatie"
+        }
+      },
+      "variables": {
+        "maintenanceDate": {
+          "type": "date",
+          "required": true,
+          "description": "Scheduled maintenance date"
+        },
+        "maintenanceTime": {
+          "type": "string",
+          "required": true,
+          "description": "Scheduled maintenance time"
+        },
+        "duration": {
+          "type": "number",
+          "required": true,
+          "description": "Maintenance duration in minutes",
+          "validation": {
+            "min": 1,
+            "max": 480
+          }
+        }
+      },
+      "context": {
+        "userRoles": ["admin", "user"],
+        "timeConditions": {
+          "startTime": "09:00",
+          "endTime": "17:00",
+          "timezone": "UTC",
+          "daysOfWeek": [1, 2, 3, 4, 5]
+        }
+      },
+      "display": {
+        "type": "banner",
+        "duration": 0,
+        "dismissible": true,
+        "position": "top",
+        "style": {
+          "theme": "auto",
+          "color": "orange",
+          "icon": "warning",
+          "animation": "slideDown"
+        }
+      },
+      "version": "1.0.0",
+      "metadata": {
+        "created": "2024-01-15T10:00:00Z",
+        "updated": "2024-01-15T10:00:00Z",
+        "createdBy": "admin",
+        "updatedBy": "admin",
+        "description": "System maintenance notification",
+        "tags": ["maintenance", "system", "warning"],
+        "status": "active"
+      }
+    }
+  ],
+  "analytics": {
+    "enabled": true,
+    "events": {
+      "messageShown": true,
+      "messageClicked": true,
+      "messageDismissed": true,
+      "actionTaken": true
+    },
+    "customEvents": {
+      "reportDownloaded": {
+        "description": "User downloaded a report after seeing success message",
+        "parameters": ["reportType", "userId", "timestamp"]
+      },
+      "maintenanceInfoViewed": {
+        "description": "User clicked to learn more about maintenance",
+        "parameters": ["maintenanceDate", "userId", "timestamp"]
+      }
+    }
+  },
+  "metadata": {
+    "name": "SKC BI Dashboard Messages",
+    "description": "Message configuration for the SKC Business Intelligence Dashboard application",
+    "created": "2024-01-15T10:00:00Z",
+    "updated": "2024-01-15T10:00:00Z",
+    "author": "SKC Development Team",
+    "lastModifiedBy": "system",
+    "tags": ["dashboard", "messages", "configuration"]
+  }
+}

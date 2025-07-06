@@ -1,0 +1,351 @@
+# ====================================================================
+# Advanced Observability Stack - Docker Compose Configuration
+# Task 41: Enterprise-grade monitoring and observability
+# ====================================================================
+
+version: "3.8"
+
+networks:
+  monitoring:
+    driver: bridge
+  elastic:
+    driver: bridge
+
+volumes:
+  prometheus_data:
+  grafana_data:
+  elasticsearch_data:
+  kibana_data:
+  jaeger_data:
+  filebeat_data:
+
+services:
+  # ====================================================================
+  # PROMETHEUS - Metrics Collection and Storage
+  # ====================================================================
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./monitoring/prometheus/rules:/etc/prometheus/rules
+      - prometheus_data:/prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--storage.tsdb.retention.time=30d"
+      - "--web.console.libraries=/etc/prometheus/console_libraries"
+      - "--web.console.templates=/etc/prometheus/consoles"
+      - "--web.enable-lifecycle"
+      - "--web.enable-admin-api"
+    networks:
+      - monitoring
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.prometheus.rule=Host(`prometheus.localhost`)"
+      - "traefik.http.services.prometheus.loadbalancer.server.port=9090"
+
+  # ====================================================================
+  # GRAFANA - Metrics Visualization and Dashboards
+  # ====================================================================
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3001:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/grafana.ini:/etc/grafana/grafana.ini
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin123
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_INSTALL_PLUGINS=grafana-piechart-panel,grafana-worldmap-panel
+    depends_on:
+      - prometheus
+    networks:
+      - monitoring
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.grafana.rule=Host(`grafana.localhost`)"
+      - "traefik.http.services.grafana.loadbalancer.server.port=3000"
+
+  # ====================================================================
+  # ALERTMANAGER - Alert Management and Routing
+  # ====================================================================
+  alertmanager:
+    image: prom/alertmanager:v0.25.0
+    container_name: skc-alertmanager
+    restart: unless-stopped
+    ports:
+      - "9093:9093"
+    volumes:
+      - ./monitoring/alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml
+    command:
+      - "--config.file=/etc/alertmanager/alertmanager.yml"
+      - "--storage.path=/alertmanager"
+      - "--web.external-url=http://alertmanager.localhost"
+      - "--log.level=info"
+    networks:
+      - monitoring
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.alertmanager.rule=Host(`alertmanager.localhost`)"
+      - "traefik.http.services.alertmanager.loadbalancer.server.port=9093"
+
+  # ====================================================================
+  # NODE EXPORTER - System Metrics Collection
+  # ====================================================================
+  node-exporter:
+    image: prom/node-exporter:v1.6.0
+    container_name: skc-node-exporter
+    restart: unless-stopped
+    ports:
+      - "9100:9100"
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - "--path.procfs=/host/proc"
+      - "--path.rootfs=/rootfs"
+      - "--path.sysfs=/host/sys"
+      - "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)"
+    networks:
+      - monitoring
+
+  # ====================================================================
+  # ELASTICSEARCH - Log Storage and Search
+  # ====================================================================
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.10.0
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+      - ./monitoring/elasticsearch/templates:/usr/share/elasticsearch/config/templates
+    networks:
+      - monitoring
+    healthcheck:
+      test:
+        ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # ====================================================================
+  # KIBANA - Log Visualization and Analysis
+  # ====================================================================
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.10.0
+    container_name: kibana
+    ports:
+      - "5601:5601"
+    volumes:
+      - ./monitoring/kibana/kibana.yml:/usr/share/kibana/config/kibana.yml
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    depends_on:
+      - elasticsearch
+    networks:
+      - monitoring
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.kibana.rule=Host(`kibana.localhost`)"
+      - "traefik.http.services.kibana.loadbalancer.server.port=5601"
+
+  # ====================================================================
+  # LOGSTASH - Log Processing and Forwarding
+  # ====================================================================
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.10.0
+    container_name: logstash
+    ports:
+      - "5044:5044"
+      - "9600:9600"
+    volumes:
+      - ./monitoring/logstash/pipeline:/usr/share/logstash/pipeline
+      - ./monitoring/logstash/config:/usr/share/logstash/config
+    environment:
+      - "LS_JAVA_OPTS=-Xms256m -Xmx256m"
+    depends_on:
+      - elasticsearch
+    networks:
+      - monitoring
+
+  # ====================================================================
+  # FILEBEAT - Log Shipping
+  # ====================================================================
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:8.10.0
+    container_name: filebeat
+    user: root
+    volumes:
+      - ./monitoring/filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - filebeat_data:/usr/share/filebeat/data
+    depends_on:
+      - logstash
+    networks:
+      - monitoring
+
+  # ====================================================================
+  # JAEGER - Distributed Tracing
+  # ====================================================================
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: jaeger
+    ports:
+      - "16686:16686" # Jaeger UI
+      - "14268:14268" # HTTP collector
+      - "14250:14250" # gRPC collector
+      - "6831:6831/udp" # UDP collector
+      - "6832:6832/udp" # UDP collector
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+      - COLLECTOR_ZIPKIN_HOST_PORT=:9411
+    volumes:
+      - jaeger_data:/tmp
+    networks:
+      - monitoring
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jaeger.rule=Host(`jaeger.localhost`)"
+      - "traefik.http.services.jaeger.loadbalancer.server.port=16686"
+
+  # ====================================================================
+  # OTEL COLLECTOR - OpenTelemetry Data Collection
+  # ====================================================================
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:latest
+    container_name: otel-collector
+    ports:
+      - "4317:4317" # OTLP gRPC receiver
+      - "4318:4318" # OTLP HTTP receiver
+      - "8888:8888" # Prometheus metrics
+      - "8889:8889" # Prometheus exporter metrics
+    volumes:
+      - ./monitoring/otel/otel-collector-config.yaml:/etc/otelcol-contrib/otel-collector-config.yaml
+    command: ["--config=/etc/otelcol-contrib/otel-collector-config.yaml"]
+    depends_on:
+      - jaeger
+      - prometheus
+    networks:
+      - monitoring
+
+  # ====================================================================
+  # BLACKBOX EXPORTER - External Service Monitoring
+  # ====================================================================
+  blackbox-exporter:
+    image: prom/blackbox-exporter:v0.24.0
+    container_name: skc-blackbox-exporter
+    restart: unless-stopped
+    ports:
+      - "9115:9115"
+    volumes:
+      - ./monitoring/blackbox/blackbox.yml:/etc/blackbox_exporter/config.yml
+    networks:
+      - monitoring
+
+  # ====================================================================
+  # CADVISOR - Container Metrics
+  # ====================================================================
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.47.2
+    container_name: skc-cadvisor
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    devices:
+      - /dev/kmsg
+    privileged: true
+    networks:
+      - monitoring
+
+  # ====================================================================
+  # POSTGRES EXPORTER - Database Metrics
+  # ====================================================================
+  postgres-exporter:
+    image: prometheuscommunity/postgres-exporter:v0.13.2
+    container_name: skc-postgres-exporter
+    restart: unless-stopped
+    ports:
+      - "9187:9187"
+    environment:
+      - DATA_SOURCE_NAME=postgresql://postgres:your-password@your-postgres-host:5432/postgres?sslmode=disable
+      - PG_EXPORTER_EXTEND_QUERY_PATH=/etc/postgres_exporter/queries.yaml
+    volumes:
+      - ./monitoring/postgres/queries.yaml:/etc/postgres_exporter/queries.yaml
+    networks:
+      - monitoring
+
+  # ====================================================================
+  # REDIS EXPORTER - Cache Metrics
+  # ====================================================================
+  redis-exporter:
+    image: oliver006/redis_exporter:v1.53.0
+    container_name: skc-redis-exporter
+    restart: unless-stopped
+    ports:
+      - "9121:9121"
+    environment:
+      - REDIS_ADDR=redis://your-redis-host:6379
+      - REDIS_PASSWORD=your-redis-password
+    networks:
+      - monitoring
+
+  # ====================================================================
+  # TRAEFIK - Load Balancer and Reverse Proxy with Metrics
+  # ====================================================================
+  traefik:
+    image: traefik:v3.0
+    container_name: skc-traefik
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8081:8080" # Traefik dashboard
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./monitoring/traefik/traefik.yml:/etc/traefik/traefik.yml
+      - ./monitoring/traefik/dynamic:/etc/traefik/dynamic
+    networks:
+      - monitoring
+      - elastic
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.localhost`)"
+      - "traefik.http.services.traefik.loadbalancer.server.port=8080"
+
+  # ====================================================================
+  # UPTIME KUMA - Uptime Monitoring (Alternative to Blackbox)
+  # ====================================================================
+  uptime-kuma:
+    image: louislam/uptime-kuma:1.23.0
+    container_name: skc-uptime-kuma
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./monitoring/uptime-kuma:/app/data
+    networks:
+      - monitoring
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.uptime-kuma.rule=Host(`uptime.localhost`)"
+      - "traefik.http.services.uptime-kuma.loadbalancer.server.port=3001"

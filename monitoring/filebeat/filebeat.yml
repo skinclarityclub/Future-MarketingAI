@@ -1,0 +1,72 @@
+# Filebeat Configuration for SKC BI Dashboard
+# Task 41.3: Log collection and shipping to Logstash
+
+filebeat.inputs:
+  # Application logs
+  - type: log
+    enabled: true
+    paths:
+      - /var/log/nextjs/*.log
+      - /var/log/applications/*.log
+      - /app/logs/*.log
+    fields:
+      service: nextjs
+      environment: production
+      log_type: application
+    fields_under_root: false
+    multiline.pattern: '^\d{4}-\d{2}-\d{2}'
+    multiline.negate: true
+    multiline.match: after
+    json.keys_under_root: false
+    json.add_error_key: true
+
+  # Container logs
+  - type: container
+    enabled: true
+    paths:
+      - "/var/lib/docker/containers/*/*.log"
+    fields:
+      service: docker
+      log_type: container
+
+  # System logs
+  - type: log
+    enabled: true
+    paths:
+      - /var/log/syslog
+      - /var/log/auth.log
+    fields:
+      service: system
+      log_type: syslog
+
+# Processors
+processors:
+  - add_host_metadata:
+      when.not.contains.tags: forwarded
+  - add_docker_metadata:
+      host: "unix:///var/run/docker.sock"
+  - add_tags:
+      tags: [production, skc-bi-dashboard]
+
+# Output to Logstash
+output.logstash:
+  hosts: ["logstash:5044"]
+  loadbalance: true
+  bulk_max_size: 2048
+
+# Logging
+logging.level: info
+logging.to_files: true
+logging.files:
+  path: /var/log/filebeat
+  name: filebeat
+  keepfiles: 7
+
+# Monitoring
+http.enabled: true
+http.host: "0.0.0.0"
+http.port: 5066
+
+# General settings
+name: "skc-bi-dashboard-filebeat"
+tags: ["skc-bi-dashboard", "production"]

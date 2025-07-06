@@ -1,0 +1,455 @@
+{
+  "name": "Content Optimization Distribution Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "content-optimization-distribution",
+        "responseMode": "responseNode",
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "id": "content-optimization-webhook",
+      "name": "Content Optimization Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "webhookId": "content-optimization-distribution",
+      "description": "Receives new content optimization suggestions for distribution"
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "DASHBOARD_URL",
+              "value": "http://localhost:3000"
+            },
+            {
+              "name": "API_TOKEN",
+              "value": "{{$env.N8N_API_TOKEN}}"
+            },
+            {
+              "name": "CONTENT_TEAM_EMAIL",
+              "value": "{{$env.CONTENT_TEAM_EMAIL}}"
+            },
+            {
+              "name": "MARKETING_TEAM_EMAIL",
+              "value": "{{$env.MARKETING_TEAM_EMAIL}}"
+            },
+            {
+              "name": "SLACK_CONTENT_CHANNEL",
+              "value": "{{$env.SLACK_CONTENT_CHANNEL}}"
+            },
+            {
+              "name": "SLACK_MARKETING_CHANNEL",
+              "value": "{{$env.SLACK_MARKETING_CHANNEL}}"
+            },
+            {
+              "name": "SLACK_WEBHOOK_URL",
+              "value": "{{$env.SLACK_WEBHOOK_URL}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "environment-config",
+      "name": "Environment Config",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [440, 300],
+      "description": "Environment configuration and variables"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse and validate incoming suggestion data\nconst incomingData = $input.first().json;\n\n// Validate required fields\nif (!incomingData.suggestions || !Array.isArray(incomingData.suggestions)) {\n  throw new Error('Invalid suggestion data: suggestions array required');\n}\n\n// Process suggestions and categorize by priority\nconst suggestions = incomingData.suggestions;\nconst contentId = incomingData.content_id || 'unknown';\nconst contentTitle = incomingData.content_title || 'Content Optimization';\n\n// Categorize suggestions by priority\nconst criticalSuggestions = suggestions.filter(s => s.priority === 'critical');\nconst highSuggestions = suggestions.filter(s => s.priority === 'high');\nconst mediumSuggestions = suggestions.filter(s => s.priority === 'medium');\nconst lowSuggestions = suggestions.filter(s => s.priority === 'low');\n\n// Create distribution data\nconst distributionData = {\n  content_id: contentId,\n  content_title: contentTitle,\n  total_suggestions: suggestions.length,\n  critical_count: criticalSuggestions.length,\n  high_count: highSuggestions.length,\n  medium_count: mediumSuggestions.length,\n  low_count: lowSuggestions.length,\n  critical_suggestions: criticalSuggestions,\n  high_suggestions: highSuggestions,\n  medium_suggestions: mediumSuggestions,\n  low_suggestions: lowSuggestions,\n  all_suggestions: suggestions,\n  timestamp: new Date().toISOString(),\n  distribution_type: criticalSuggestions.length > 0 ? 'urgent' : \n                    highSuggestions.length > 0 ? 'priority' : 'standard',\n  estimated_impact: {\n    engagement: Math.round(suggestions.reduce((sum, s) => sum + (s.estimated_impact?.engagement_increase || 0), 0) / suggestions.length),\n    reach: Math.round(suggestions.reduce((sum, s) => sum + (s.estimated_impact?.reach_increase || 0), 0) / suggestions.length),\n    roi: Math.round(suggestions.reduce((sum, s) => sum + (s.estimated_impact?.roi_improvement || 0), 0) / suggestions.length)\n  }\n};\n\nreturn [{ json: distributionData }];"
+      },
+      "id": "process-suggestions",
+      "name": "Process Suggestions",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [640, 300],
+      "description": "Process and categorize optimization suggestions"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "urgent-path",
+              "leftValue": "={{ $json.distribution_type }}",
+              "rightValue": "urgent",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "priority-path",
+              "leftValue": "={{ $json.distribution_type }}",
+              "rightValue": "priority",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "id": "distribution-router",
+      "name": "Distribution Router",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [840, 300],
+      "description": "Route based on suggestion priority"
+    },
+    {
+      "parameters": {
+        "to": "={{$node['Environment Config'].json['CONTENT_TEAM_EMAIL']}}, {{$node['Environment Config'].json['MARKETING_TEAM_EMAIL']}}",
+        "subject": "🚨 URGENT: Critical Content Optimization Suggestions - {{$json.content_title}}",
+        "emailFormat": "html",
+        "message": "=<div style=\"font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;\">\n  <div style=\"background: linear-gradient(135deg, #ff6b6b, #ee5a24); color: white; padding: 20px; border-radius: 10px 10px 0 0;\">\n    <h1 style=\"margin: 0; font-size: 24px;\">🚨 URGENT Content Optimization Alert</h1>\n    <p style=\"margin: 10px 0 0 0; opacity: 0.9;\">Critical suggestions require immediate attention</p>\n  </div>\n  \n  <div style=\"background: #f8f9fa; padding: 20px; border-radius: 0 0 10px 10px;\">\n    <h2 style=\"color: #2c3e50; margin-top: 0;\">Content: {{$json.content_title}}</h2>\n    \n    <div style=\"background: white; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #e74c3c;\">\n      <h3 style=\"color: #e74c3c; margin-top: 0;\">Critical Suggestions ({{$json.critical_count}})</h3>\n      {{#each $json.critical_suggestions}}\n      <div style=\"margin: 10px 0; padding: 10px; background: #ffebee; border-radius: 5px;\">\n        <strong>{{this.suggestion}}</strong><br>\n        <small style=\"color: #666;\">Confidence: {{(this.confidence_score * 100).toFixed(0)}}% | Impact: +{{this.estimated_impact.engagement_increase}}% engagement</small><br>\n        <em style=\"color: #555;\">{{this.reasoning}}</em>\n      </div>\n      {{/each}}\n    </div>\n    \n    {{#if $json.high_suggestions.length}}\n    <div style=\"background: white; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #f39c12;\">\n      <h3 style=\"color: #f39c12; margin-top: 0;\">High Priority Suggestions ({{$json.high_count}})</h3>\n      {{#each $json.high_suggestions}}\n      <div style=\"margin: 10px 0; padding: 10px; background: #fff3cd; border-radius: 5px;\">\n        <strong>{{this.suggestion}}</strong><br>\n        <small style=\"color: #666;\">Confidence: {{(this.confidence_score * 100).toFixed(0)}}% | Impact: +{{this.estimated_impact.engagement_increase}}% engagement</small><br>\n        <em style=\"color: #555;\">{{this.reasoning}}</em>\n      </div>\n      {{/each}}\n    </div>\n    {{/if}}\n    \n    <div style=\"background: white; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #27ae60;\">\n      <h3 style=\"color: #27ae60; margin-top: 0;\">Estimated Impact</h3>\n      <div style=\"display: flex; justify-content: space-between;\">\n        <span><strong>Engagement:</strong> +{{$json.estimated_impact.engagement}}%</span>\n        <span><strong>Reach:</strong> +{{$json.estimated_impact.reach}}%</span>\n        <span><strong>ROI:</strong> +{{$json.estimated_impact.roi}}%</span>\n      </div>\n    </div>\n    \n    <div style=\"text-align: center; margin: 20px 0;\">\n      <a href=\"{{$node['Environment Config'].json['DASHBOARD_URL']}}/[locale]/content-optimization?content_id={{$json.content_id}}\" \n         style=\"background: #3498db; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; display: inline-block;\">View Full Dashboard</a>\n    </div>\n    \n    <hr style=\"border: none; height: 1px; background: #eee; margin: 20px 0;\">\n    <p style=\"color: #666; font-size: 12px; margin: 0;\">Generated: {{$json.timestamp}} | Content ID: {{$json.content_id}}</p>\n  </div>\n</div>",
+        "options": {}
+      },
+      "id": "urgent-email-notification",
+      "name": "Urgent Email Notification",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [1040, 140],
+      "description": "Send urgent email for critical suggestions"
+    },
+    {
+      "parameters": {
+        "to": "={{$node['Environment Config'].json['CONTENT_TEAM_EMAIL']}}, {{$node['Environment Config'].json['MARKETING_TEAM_EMAIL']}}",
+        "subject": "📈 High Priority Content Optimization Suggestions - {{$json.content_title}}",
+        "emailFormat": "html",
+        "message": "=<div style=\"font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;\">\n  <div style=\"background: linear-gradient(135deg, #f39c12, #e67e22); color: white; padding: 20px; border-radius: 10px 10px 0 0;\">\n    <h1 style=\"margin: 0; font-size: 24px;\">📈 Content Optimization Suggestions</h1>\n    <p style=\"margin: 10px 0 0 0; opacity: 0.9;\">High priority improvements available</p>\n  </div>\n  \n  <div style=\"background: #f8f9fa; padding: 20px; border-radius: 0 0 10px 10px;\">\n    <h2 style=\"color: #2c3e50; margin-top: 0;\">Content: {{$json.content_title}}</h2>\n    \n    <div style=\"background: white; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #f39c12;\">\n      <h3 style=\"color: #f39c12; margin-top: 0;\">High Priority Suggestions ({{$json.high_count}})</h3>\n      {{#each $json.high_suggestions}}\n      <div style=\"margin: 10px 0; padding: 10px; background: #fff3cd; border-radius: 5px;\">\n        <strong>{{this.suggestion}}</strong><br>\n        <small style=\"color: #666;\">Confidence: {{(this.confidence_score * 100).toFixed(0)}}% | Impact: +{{this.estimated_impact.engagement_increase}}% engagement</small><br>\n        <em style=\"color: #555;\">{{this.reasoning}}</em>\n      </div>\n      {{/each}}\n    </div>\n    \n    {{#if $json.medium_suggestions.length}}\n    <div style=\"background: white; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #3498db;\">\n      <h3 style=\"color: #3498db; margin-top: 0;\">Medium Priority Suggestions ({{$json.medium_count}})</h3>\n      {{#each $json.medium_suggestions}}\n      <div style=\"margin: 10px 0; padding: 10px; background: #e3f2fd; border-radius: 5px;\">\n        <strong>{{this.suggestion}}</strong><br>\n        <small style=\"color: #666;\">Confidence: {{(this.confidence_score * 100).toFixed(0)}}% | Impact: +{{this.estimated_impact.engagement_increase}}% engagement</small><br>\n        <em style=\"color: #555;\">{{this.reasoning}}</em>\n      </div>\n      {{/each}}\n    </div>\n    {{/if}}\n    \n    <div style=\"background: white; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #27ae60;\">\n      <h3 style=\"color: #27ae60; margin-top: 0;\">Estimated Impact</h3>\n      <div style=\"display: flex; justify-content: space-between;\">\n        <span><strong>Engagement:</strong> +{{$json.estimated_impact.engagement}}%</span>\n        <span><strong>Reach:</strong> +{{$json.estimated_impact.reach}}%</span>\n        <span><strong>ROI:</strong> +{{$json.estimated_impact.roi}}%</span>\n      </div>\n    </div>\n    \n    <div style=\"text-align: center; margin: 20px 0;\">\n      <a href=\"{{$node['Environment Config'].json['DASHBOARD_URL']}}/[locale]/content-optimization?content_id={{$json.content_id}}\" \n         style=\"background: #3498db; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; display: inline-block;\">View Full Dashboard</a>\n    </div>\n    \n    <hr style=\"border: none; height: 1px; background: #eee; margin: 20px 0;\">\n    <p style=\"color: #666; font-size: 12px; margin: 0;\">Generated: {{$json.timestamp}} | Content ID: {{$json.content_id}}</p>\n  </div>\n</div>",
+        "options": {}
+      },
+      "id": "priority-email-notification",
+      "name": "Priority Email Notification",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [1040, 300],
+      "description": "Send priority email for high-priority suggestions"
+    },
+    {
+      "parameters": {
+        "to": "={{$node['Environment Config'].json['CONTENT_TEAM_EMAIL']}}, {{$node['Environment Config'].json['MARKETING_TEAM_EMAIL']}}",
+        "subject": "💡 Content Optimization Suggestions Available - {{$json.content_title}}",
+        "emailFormat": "html",
+        "message": "=<div style=\"font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;\">\n  <div style=\"background: linear-gradient(135deg, #3498db, #2980b9); color: white; padding: 20px; border-radius: 10px 10px 0 0;\">\n    <h1 style=\"margin: 0; font-size: 24px;\">💡 Content Optimization Suggestions</h1>\n    <p style=\"margin: 10px 0 0 0; opacity: 0.9;\">New optimization opportunities available</p>\n  </div>\n  \n  <div style=\"background: #f8f9fa; padding: 20px; border-radius: 0 0 10px 10px;\">\n    <h2 style=\"color: #2c3e50; margin-top: 0;\">Content: {{$json.content_title}}</h2>\n    \n    <div style=\"background: white; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #3498db;\">\n      <h3 style=\"color: #3498db; margin-top: 0;\">Summary</h3>\n      <p>We've identified <strong>{{$json.total_suggestions}} optimization suggestions</strong> for your content:</p>\n      <ul style=\"margin: 10px 0; padding-left: 20px;\">\n        {{#if $json.high_count}}<li><strong>{{$json.high_count}} high priority</strong> suggestions</li>{{/if}}\n        {{#if $json.medium_count}}<li>{{$json.medium_count}} medium priority suggestions</li>{{/if}}\n        {{#if $json.low_count}}<li>{{$json.low_count}} low priority suggestions</li>{{/if}}\n      </ul>\n    </div>\n    \n    <div style=\"background: white; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #27ae60;\">\n      <h3 style=\"color: #27ae60; margin-top: 0;\">Estimated Impact</h3>\n      <div style=\"display: flex; justify-content: space-between;\">\n        <span><strong>Engagement:</strong> +{{$json.estimated_impact.engagement}}%</span>\n        <span><strong>Reach:</strong> +{{$json.estimated_impact.reach}}%</span>\n        <span><strong>ROI:</strong> +{{$json.estimated_impact.roi}}%</span>\n      </div>\n    </div>\n    \n    <div style=\"text-align: center; margin: 20px 0;\">\n      <a href=\"{{$node['Environment Config'].json['DASHBOARD_URL']}}/[locale]/content-optimization?content_id={{$json.content_id}}\" \n         style=\"background: #3498db; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; display: inline-block;\">View All Suggestions</a>\n    </div>\n    \n    <hr style=\"border: none; height: 1px; background: #eee; margin: 20px 0;\">\n    <p style=\"color: #666; font-size: 12px; margin: 0;\">Generated: {{$json.timestamp}} | Content ID: {{$json.content_id}}</p>\n  </div>\n</div>",
+        "options": {}
+      },
+      "id": "standard-email-notification",
+      "name": "Standard Email Notification",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [1040, 460],
+      "description": "Send standard email for regular suggestions"
+    },
+    {
+      "parameters": {
+        "channel": "={{$node['Environment Config'].json['SLACK_CONTENT_CHANNEL']}}",
+        "text": "=🚨 *URGENT: Critical Content Optimization Suggestions*\n\n*Content:* {{$json.content_title}}\n*Critical Issues:* {{$json.critical_count}}\n*High Priority:* {{$json.high_count}}\n\n*Top Critical Suggestion:*\n{{$json.critical_suggestions[0].suggestion}}\n\n*Estimated Impact:* +{{$json.estimated_impact.engagement}}% engagement, +{{$json.estimated_impact.roi}}% ROI\n\n<{{$node['Environment Config'].json['DASHBOARD_URL']}}/[locale]/content-optimization?content_id={{$json.content_id}}|🔗 View Full Details>\n\n⚠️ *Immediate action recommended* ⚠️",
+        "otherOptions": {
+          "includeLinkToWorkflow": false
+        }
+      },
+      "id": "urgent-slack-notification",
+      "name": "Urgent Slack Notification",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [1240, 140],
+      "description": "Send urgent Slack notification for critical suggestions"
+    },
+    {
+      "parameters": {
+        "channel": "={{$node['Environment Config'].json['SLACK_CONTENT_CHANNEL']}}",
+        "text": "=📈 *High Priority Content Optimization Suggestions*\n\n*Content:* {{$json.content_title}}\n*High Priority:* {{$json.high_count}} suggestions\n*Medium Priority:* {{$json.medium_count}} suggestions\n\n*Top Suggestion:*\n{{$json.high_suggestions[0].suggestion}}\n\n*Estimated Impact:* +{{$json.estimated_impact.engagement}}% engagement, +{{$json.estimated_impact.roi}}% ROI\n\n<{{$node['Environment Config'].json['DASHBOARD_URL']}}/[locale]/content-optimization?content_id={{$json.content_id}}|🔗 View All Suggestions>",
+        "otherOptions": {
+          "includeLinkToWorkflow": false
+        }
+      },
+      "id": "priority-slack-notification",
+      "name": "Priority Slack Notification",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [1240, 300],
+      "description": "Send priority Slack notification for high-priority suggestions"
+    },
+    {
+      "parameters": {
+        "channel": "={{$node['Environment Config'].json['SLACK_CONTENT_CHANNEL']}}",
+        "text": "=💡 *New Content Optimization Suggestions Available*\n\n*Content:* {{$json.content_title}}\n*Total Suggestions:* {{$json.total_suggestions}}\n\n*Estimated Impact:* +{{$json.estimated_impact.engagement}}% engagement, +{{$json.estimated_impact.roi}}% ROI\n\n<{{$node['Environment Config'].json['DASHBOARD_URL']}}/[locale]/content-optimization?content_id={{$json.content_id}}|🔗 View Suggestions Dashboard>",
+        "otherOptions": {
+          "includeLinkToWorkflow": false
+        }
+      },
+      "id": "standard-slack-notification",
+      "name": "Standard Slack Notification",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [1240, 460],
+      "description": "Send standard Slack notification for regular suggestions"
+    },
+    {
+      "parameters": {
+        "url": "={{$node['Environment Config'].json['DASHBOARD_URL']}}/api/workflows/content-optimization/notify-dashboard",
+        "sendBody": true,
+        "contentType": "json",
+        "body": "={\n  \"content_id\": \"{{$json.content_id}}\",\n  \"content_title\": \"{{$json.content_title}}\",\n  \"suggestions\": {{JSON.stringify($json.all_suggestions)}},\n  \"distribution_type\": \"{{$json.distribution_type}}\",\n  \"timestamp\": \"{{$json.timestamp}}\",\n  \"total_suggestions\": {{$json.total_suggestions}},\n  \"critical_count\": {{$json.critical_count}},\n  \"high_count\": {{$json.high_count}},\n  \"estimated_impact\": {{JSON.stringify($json.estimated_impact)}}\n}",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "dashboard-notification",
+      "name": "Dashboard Notification",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1440, 300],
+      "description": "Send in-app dashboard notification"
+    },
+    {
+      "parameters": {
+        "url": "={{$node['Environment Config'].json['DASHBOARD_URL']}}/api/workflows/content-optimization/webhook-integrations",
+        "sendBody": true,
+        "contentType": "json",
+        "body": "={\n  \"event\": \"content_optimization_suggestions\",\n  \"content_id\": \"{{$json.content_id}}\",\n  \"content_title\": \"{{$json.content_title}}\",\n  \"suggestions\": {{JSON.stringify($json.all_suggestions)}},\n  \"distribution_type\": \"{{$json.distribution_type}}\",\n  \"timestamp\": \"{{$json.timestamp}}\",\n  \"summary\": {\n    \"total_suggestions\": {{$json.total_suggestions}},\n    \"critical_count\": {{$json.critical_count}},\n    \"high_count\": {{$json.high_count}},\n    \"medium_count\": {{$json.medium_count}},\n    \"low_count\": {{$json.low_count}},\n    \"estimated_impact\": {{JSON.stringify($json.estimated_impact)}}\n  }\n}",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "webhook-integrations",
+      "name": "Webhook Integrations",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1640, 300],
+      "description": "Send to external webhook integrations (ClickUp, etc.)"
+    },
+    {
+      "parameters": {
+        "url": "={{$node['Environment Config'].json['DASHBOARD_URL']}}/api/workflows/content-optimization/audit-log",
+        "sendBody": true,
+        "contentType": "json",
+        "body": "={\n  \"workflow_id\": \"{{$workflow.id}}\",\n  \"execution_id\": \"{{$execution.id}}\",\n  \"content_id\": \"{{$json.content_id}}\",\n  \"content_title\": \"{{$json.content_title}}\",\n  \"distribution_type\": \"{{$json.distribution_type}}\",\n  \"channels_used\": [\"email\", \"slack\", \"dashboard\", \"webhook\"],\n  \"suggestions_distributed\": {{$json.total_suggestions}},\n  \"timestamp\": \"{{$json.timestamp}}\",\n  \"status\": \"completed\"\n}",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "audit-logger",
+      "name": "Audit Logger",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1840, 300],
+      "description": "Log distribution activity for audit trail"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"success\": true,\n  \"message\": \"Content optimization suggestions distributed successfully\",\n  \"distribution_summary\": {\n    \"content_id\": \"{{$json.content_id}}\",\n    \"content_title\": \"{{$json.content_title}}\",\n    \"distribution_type\": \"{{$json.distribution_type}}\",\n    \"total_suggestions\": {{$json.total_suggestions}},\n    \"channels_used\": [\"email\", \"slack\", \"dashboard\", \"webhook\"],\n    \"timestamp\": \"{{$json.timestamp}}\"\n  }\n}",
+        "options": {}
+      },
+      "id": "success-response",
+      "name": "Success Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [2040, 300],
+      "description": "Send success response to webhook caller"
+    }
+  ],
+  "connections": {
+    "Content Optimization Webhook": {
+      "main": [
+        [
+          {
+            "node": "Environment Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Environment Config": {
+      "main": [
+        [
+          {
+            "node": "Process Suggestions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Suggestions": {
+      "main": [
+        [
+          {
+            "node": "Distribution Router",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Distribution Router": {
+      "main": [
+        [
+          {
+            "node": "Urgent Email Notification",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Priority Email Notification",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Standard Email Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Urgent Email Notification": {
+      "main": [
+        [
+          {
+            "node": "Urgent Slack Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Priority Email Notification": {
+      "main": [
+        [
+          {
+            "node": "Priority Slack Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Standard Email Notification": {
+      "main": [
+        [
+          {
+            "node": "Standard Slack Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Urgent Slack Notification": {
+      "main": [
+        [
+          {
+            "node": "Dashboard Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Priority Slack Notification": {
+      "main": [
+        [
+          {
+            "node": "Dashboard Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Standard Slack Notification": {
+      "main": [
+        [
+          {
+            "node": "Dashboard Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dashboard Notification": {
+      "main": [
+        [
+          {
+            "node": "Webhook Integrations",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook Integrations": {
+      "main": [
+        [
+          {
+            "node": "Audit Logger",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Audit Logger": {
+      "main": [
+        [
+          {
+            "node": "Success Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": "content-optimization-error-handler"
+  },
+  "staticData": {
+    "node:content-optimization-webhook": {},
+    "node:distribution-router": {}
+  },
+  "tags": [
+    {
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "updatedAt": "2025-01-01T00:00:00.000Z",
+      "id": "content-optimization",
+      "name": "content-optimization"
+    },
+    {
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "updatedAt": "2025-01-01T00:00:00.000Z",
+      "id": "notifications",
+      "name": "notifications"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2025-01-01T00:00:00.000Z",
+  "versionId": "1"
+}

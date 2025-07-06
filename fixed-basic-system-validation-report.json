@@ -1,0 +1,88 @@
+{
+  "summary": {
+    "total": 5,
+    "passed": 5,
+    "failed": 0,
+    "warnings": 0,
+    "successRate": "100%",
+    "overallStatus": "ALL_PASSED"
+  },
+  "details": [
+    {
+      "timestamp": "2025-06-22T19:40:36.310Z",
+      "testName": "Database Connectivity",
+      "status": "PASSED",
+      "duration": 398,
+      "details": {
+        "connection": "successful",
+        "responseTime": "398ms"
+      }
+    },
+    {
+      "timestamp": "2025-06-22T19:40:36.499Z",
+      "testName": "Real Data Retrieval",
+      "status": "PASSED",
+      "duration": 185,
+      "details": {
+        "contentPosts": 10,
+        "contentAnalytics": 10,
+        "socialAccounts": 5,
+        "campaigns": 5,
+        "totalRecords": 30
+      }
+    },
+    {
+      "timestamp": "2025-06-22T19:40:36.500Z",
+      "testName": "Data Structure Validation",
+      "status": "PASSED",
+      "duration": 0,
+      "details": {
+        "structure": {
+          "contentPostsValid": true,
+          "contentAnalyticsValid": true,
+          "socialAccountsValid": true,
+          "campaignsValid": true
+        },
+        "quality": {
+          "sufficientContentPosts": true,
+          "sufficientAnalytics": true,
+          "dataRelationships": true
+        },
+        "readyForML": true
+      }
+    },
+    {
+      "timestamp": "2025-06-22T19:40:36.501Z",
+      "testName": "ML Engine Availability",
+      "status": "PASSED",
+      "duration": 0,
+      "details": {
+        "engines": {
+          "confidenceEngineExists": true,
+          "validationFrameworkExists": true,
+          "continuousWorkflowExists": true,
+          "learningEngineExists": true
+        },
+        "readyForMLTesting": true
+      }
+    },
+    {
+      "timestamp": "2025-06-22T19:40:36.598Z",
+      "testName": "Basic ML Functionality",
+      "status": "PASSED",
+      "duration": 96,
+      "details": {
+        "testPostId": "4a1db0cb-4fa3-4e01-92a2-3466584db816",
+        "mlReadiness": {
+          "hasContent": true,
+          "hasPlatform": true,
+          "hasTimestamp": true,
+          "hasEngagementData": true
+        },
+        "canProceedWithMLTesting": true,
+        "sampleContent": "AI-gedreven content optimalisatie zorgt voor 40% m..."
+      }
+    }
+  ],
+  "timestamp": "2025-06-22T19:40:36.600Z"
+}

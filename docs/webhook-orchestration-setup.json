@@ -1,0 +1,20 @@
+{
+  "timestamp": "2025-06-18T13:24:08.483Z",
+  "environment": {
+    "appUrl": "http://localhost:3000",
+    "n8nBaseUrl": "http://localhost:5678",
+    "hasApiKey": false,
+    "hasWebhookSecret": true
+  },
+  "endpoints": {
+    "incoming": "http://localhost:3000/api/webhooks/n8n",
+    "status": "http://localhost:3000/api/webhooks/n8n"
+  },
+  "nextSteps": [
+    "Configure your n8n instance to send webhooks to the incoming endpoint",
+    "Set up n8n workflows with webhook nodes",
+    "Test with actual n8n workflow executions",
+    "Monitor webhook events in the database",
+    "Configure environment variables for production"
+  ]
+}

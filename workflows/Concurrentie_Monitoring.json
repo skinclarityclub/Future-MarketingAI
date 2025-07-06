@@ -1,0 +1,125 @@
+{
+  "name": "Concurrentie Monitoring",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Schedule Competitor Scraping",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [-680, 20],
+      "id": "cce32c4d-6145-4cbd-80f3-28f12564f930"
+    },
+    {
+      "parameters": {
+        "resource": "database"
+      },
+      "name": "Get Active Competitors",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [-460, 20],
+      "id": "2dcf7a3a-db6e-4d7b-9147-db093e5f1a5e"
+    },
+    {
+      "parameters": {
+        "functionCode": "const items = $input.all();\nconst scrapedData = [];\n\nfor (const item of items) {\n  const competitor = item.json;\n  \n  try {\n    const scrapedMetrics = {\n      id: competitor.id,\n      name: competitor.name,\n      platform: competitor.platform,\n      url: competitor.url,\n      metrics: {\n        followers: Math.floor(Math.random() * 100000) + (competitor.metrics?.followers || 10000),\n        engagement_rate: Math.random() * 10 + 2,\n        avg_likes: Math.floor(Math.random() * 2000) + 100,\n        avg_comments: Math.floor(Math.random() * 200) + 10,\n        avg_shares: Math.floor(Math.random() * 100) + 5,\n        post_frequency: Math.floor(Math.random() * 7) + 1,\n        content_performance: Math.random() * 100\n      },\n      last_scraped: new Date().toISOString(),\n      status: 'active',\n      previous_metrics: competitor.metrics\n    };\n    \n    scrapedData.push(scrapedMetrics);\n  } catch (error) {\n    scrapedData.push({\n      ...competitor,\n      status: 'error',\n      last_scraped: new Date().toISOString(),\n      error_message: error.message\n    });\n  }\n}\n\nreturn scrapedData.map(data => ({ json: data }));"
+      },
+      "name": "Scrape Competitor Data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [-240, 20],
+      "id": "c3b42a6f-e6a9-4a62-b513-1a01b80280b6"
+    },
+    {
+      "parameters": {
+        "functionCode": "const items = $input.all();\nconst alerts = [];\nconst thresholds = {\n  engagement_spike: 50,\n  engagement_drop: 30,\n  follower_spike: 20,\n  performance_variance: 25\n};\n\nfor (const item of items) {\n  const current = item.json;\n  const previous = current.previous_metrics;\n  \n  if (previous && current.metrics) {\n    const engagementChange = ((current.metrics.engagement_rate - previous.engagement_rate) / previous.engagement_rate) * 100;\n    const followerChange = ((current.metrics.followers - previous.followers) / previous.followers) * 100;\n    \n    if (engagementChange > thresholds.engagement_spike) {\n      alerts.push({\n        id: `alert-${Date.now()}-${current.id}`,\n        competitor_id: current.id,\n        competitor_name: current.name,\n        alert_type: 'performance_spike',\n        severity: engagementChange > 75 ? 'critical' : 'high',\n        message: `${current.name} heeft een engagement spike van ${engagementChange.toFixed(1)}% op ${current.platform}`,\n        threshold_value: thresholds.engagement_spike,\n        current_value: current.metrics.engagement_rate,\n        previous_value: previous.engagement_rate,\n        percentage_change: engagementChange,\n        platform: current.platform,\n        created_at: new Date().toISOString(),\n        acknowledged: false\n      });\n    }\n  }\n}\n\nconst output = {\n  competitors: items.map(item => item.json),\n  alerts: alerts,\n  summary: {\n    competitors_analyzed: items.length,\n    alerts_generated: alerts.length,\n    critical_alerts: alerts.filter(a => a.severity === 'critical').length,\n    timestamp: new Date().toISOString()\n  }\n};\n\nreturn [{ json: output }];"
+      },
+      "name": "Analyze & Generate Alerts",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [-20, 20],
+      "id": "0d408845-74a9-4e19-9829-be1b99b39946"
+    },
+    {
+      "parameters": {
+        "resource": "database"
+      },
+      "name": "Update Competitor Data",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [200, -80],
+      "id": "7acb04f5-e9a4-466a-ab0f-bea3918ce636"
+    },
+    {
+      "parameters": {
+        "resource": "database"
+      },
+      "name": "Store Alerts",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [200, 120],
+      "id": "c9142215-5d5b-4b6a-9329-0563f27a4c3c"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Competitor Scraping": {
+      "main": [
+        [
+          {
+            "node": "Get Active Competitors",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Active Competitors": {
+      "main": [
+        [
+          {
+            "node": "Scrape Competitor Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scrape Competitor Data": {
+      "main": [
+        [
+          {
+            "node": "Analyze & Generate Alerts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze & Generate Alerts": {
+      "main": [
+        [
+          {
+            "node": "Update Competitor Data",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Store Alerts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "47daa64f-abf7-426f-ae5a-d4fef4a4cc64",
+  "meta": {
+    "instanceId": "dfdd26cd27fe046d045e60df6b98f78e52a497ca304bdcb672e06512ba750a2c"
+  },
+  "id": "ZXeXWLtZgFq2xar2",
+  "tags": []
+}

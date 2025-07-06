@@ -1,0 +1,410 @@
+{
+  "index_patterns": ["skc-bi-dashboard-*"],
+  "template": {
+    "settings": {
+      "index": {
+        "number_of_shards": 3,
+        "number_of_replicas": 1,
+        "refresh_interval": "30s",
+        "max_result_window": 50000,
+        "mapping": {
+          "total_fields": {
+            "limit": 2000
+          },
+          "depth": {
+            "limit": 20
+          },
+          "nested_fields": {
+            "limit": 100
+          }
+        },
+        "codec": "best_compression",
+        "sort": {
+          "field": ["@timestamp"],
+          "order": ["desc"]
+        },
+        "lifecycle": {
+          "name": "skc-logs-policy",
+          "rollover_alias": "skc-bi-dashboard-logs"
+        },
+        "routing": {
+          "allocation": {
+            "total_shards_per_node": 2
+          }
+        }
+      },
+      "analysis": {
+        "analyzer": {
+          "skc_log_analyzer": {
+            "type": "custom",
+            "tokenizer": "standard",
+            "filter": ["lowercase", "stop", "snowball"]
+          },
+          "skc_path_analyzer": {
+            "type": "custom",
+            "tokenizer": "path_hierarchy",
+            "filter": ["lowercase"]
+          }
+        }
+      }
+    },
+    "mappings": {
+      "dynamic": "true",
+      "dynamic_templates": [
+        {
+          "message_fields": {
+            "path_match": "message*",
+            "mapping": {
+              "type": "text",
+              "analyzer": "skc_log_analyzer",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                }
+              }
+            }
+          }
+        },
+        {
+          "string_fields": {
+            "match": "*",
+            "match_mapping_type": "string",
+            "mapping": {
+              "type": "text",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                }
+              }
+            }
+          }
+        },
+        {
+          "numeric_fields": {
+            "match": "*_time*",
+            "match_mapping_type": "long",
+            "mapping": {
+              "type": "long"
+            }
+          }
+        }
+      ],
+      "properties": {
+        "@timestamp": {
+          "type": "date",
+          "format": "strict_date_optional_time||epoch_millis"
+        },
+        "@version": {
+          "type": "keyword"
+        },
+        "message": {
+          "type": "text",
+          "analyzer": "skc_log_analyzer",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 1024
+            }
+          }
+        },
+        "level": {
+          "type": "keyword",
+          "fields": {
+            "text": {
+              "type": "text"
+            }
+          }
+        },
+        "service_name": {
+          "type": "keyword",
+          "fields": {
+            "text": {
+              "type": "text"
+            }
+          }
+        },
+        "service_type": {
+          "type": "keyword"
+        },
+        "environment": {
+          "type": "keyword"
+        },
+        "application": {
+          "type": "keyword"
+        },
+        "technology": {
+          "type": "keyword"
+        },
+        "container": {
+          "properties": {
+            "name": {
+              "type": "keyword"
+            },
+            "image": {
+              "type": "keyword"
+            },
+            "id": {
+              "type": "keyword"
+            },
+            "labels": {
+              "type": "object",
+              "dynamic": true
+            }
+          }
+        },
+        "host": {
+          "properties": {
+            "name": {
+              "type": "keyword"
+            },
+            "hostname": {
+              "type": "keyword"
+            },
+            "ip": {
+              "type": "ip"
+            },
+            "mac": {
+              "type": "keyword"
+            },
+            "os": {
+              "properties": {
+                "name": {
+                  "type": "keyword"
+                },
+                "version": {
+                  "type": "keyword"
+                },
+                "platform": {
+                  "type": "keyword"
+                }
+              }
+            }
+          }
+        },
+        "log": {
+          "properties": {
+            "file": {
+              "properties": {
+                "path": {
+                  "type": "keyword",
+                  "analyzer": "skc_path_analyzer",
+                  "fields": {
+                    "text": {
+                      "type": "text"
+                    }
+                  }
+                }
+              }
+            },
+            "offset": {
+              "type": "long"
+            }
+          }
+        },
+        "process": {
+          "properties": {
+            "pid": {
+              "type": "long"
+            },
+            "name": {
+              "type": "keyword"
+            },
+            "title": {
+              "type": "text"
+            }
+          }
+        },
+        "http": {
+          "properties": {
+            "method": {
+              "type": "keyword"
+            },
+            "endpoint": {
+              "type": "keyword",
+              "fields": {
+                "text": {
+                  "type": "text"
+                }
+              }
+            },
+            "status_code": {
+              "type": "short"
+            },
+            "response_time": {
+              "type": "float"
+            },
+            "response_category": {
+              "type": "keyword"
+            },
+            "user_agent": {
+              "type": "text",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 512
+                }
+              }
+            },
+            "request_id": {
+              "type": "keyword"
+            }
+          }
+        },
+        "database": {
+          "properties": {
+            "query": {
+              "type": "text",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 1024
+                }
+              }
+            },
+            "query_duration": {
+              "type": "float"
+            },
+            "rows_affected": {
+              "type": "long"
+            },
+            "error": {
+              "type": "text"
+            }
+          }
+        },
+        "security": {
+          "properties": {
+            "user_id": {
+              "type": "keyword"
+            },
+            "username": {
+              "type": "keyword"
+            },
+            "source_ip": {
+              "type": "ip"
+            },
+            "ip_type": {
+              "type": "keyword"
+            },
+            "action": {
+              "type": "keyword"
+            },
+            "result": {
+              "type": "keyword"
+            },
+            "threat_level": {
+              "type": "keyword"
+            }
+          }
+        },
+        "geoip": {
+          "properties": {
+            "country_name": {
+              "type": "keyword"
+            },
+            "country_code2": {
+              "type": "keyword"
+            },
+            "region_name": {
+              "type": "keyword"
+            },
+            "city_name": {
+              "type": "keyword"
+            },
+            "location": {
+              "type": "geo_point"
+            },
+            "timezone": {
+              "type": "keyword"
+            }
+          }
+        },
+        "performance": {
+          "properties": {
+            "category": {
+              "type": "keyword"
+            },
+            "response_time": {
+              "type": "float"
+            },
+            "memory_usage": {
+              "type": "long"
+            },
+            "cpu_usage": {
+              "type": "float"
+            }
+          }
+        },
+        "business": {
+          "properties": {
+            "user_id": {
+              "type": "keyword"
+            },
+            "tenant_id": {
+              "type": "keyword"
+            },
+            "session_id": {
+              "type": "keyword"
+            },
+            "feature": {
+              "type": "keyword"
+            },
+            "action": {
+              "type": "keyword"
+            },
+            "success": {
+              "type": "boolean"
+            },
+            "revenue_impact": {
+              "type": "float"
+            }
+          }
+        },
+        "error": {
+          "properties": {
+            "type": {
+              "type": "keyword"
+            },
+            "message": {
+              "type": "text"
+            },
+            "stack_trace": {
+              "type": "text",
+              "index": false
+            },
+            "code": {
+              "type": "keyword"
+            },
+            "severity": {
+              "type": "keyword"
+            }
+          }
+        },
+        "fields": {
+          "type": "object",
+          "dynamic": true
+        },
+        "tags": {
+          "type": "keyword"
+        },
+        "ingestion_timestamp": {
+          "type": "date"
+        }
+      }
+    },
+    "aliases": {
+      "skc-bi-dashboard-logs": {},
+      "logs-current": {}
+    }
+  },
+  "priority": 500,
+  "version": 1,
+  "_meta": {
+    "description": "Template for SKC BI Dashboard application logs",
+    "created_by": "skc-observability-stack",
+    "created_date": "2024-06-19",
+    "use_case": "centralized_logging"
+  }
+}

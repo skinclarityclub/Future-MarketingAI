@@ -1,0 +1,108 @@
+import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
+import { ask } from "@/lib/assistant/assistant-service";
+import type { ConversationContext } from "@/lib/assistant/complex-query-handler";
+
+const bodySchema = z.object({
+  question: z.string().min(3),
+  context: z
+    .object({
+      currentPage: z.string().optional(),
+      dashboardContext: z.any().optional(),
+      timestamp: z.string().optional(),
+      requestType: z.string().optional(),
+      // Enhanced context for complex queries
+      previousQueries: z.array(z.string()).optional(),
+      userPreferences: z.record(z.any()).optional(),
+      currentDashboardState: z.record(z.any()).optional(),
+      sessionData: z.record(z.any()).optional(),
+    })
+    .optional(),
+  // Additional parameters for complex query handling
+  explanationLevel: z.enum(["basic", "detailed", "expert"]).optional(),
+  enableComplexHandling: z.boolean().optional(),
+});
+
+export async function POST(req: NextRequest) {
+  try {
+    const json = await req.json();
+    const {
+      question,
+      context,
+      explanationLevel = "detailed",
+      enableComplexHandling = true,
+    } = bodySchema.parse(json);
+
+    // Build conversation context for complex queries
+    const conversationContext: ConversationContext | undefined = context
+      ? {
+          previousQueries: context.previousQueries || [],
+          userPreferences: context.userPreferences || {},
+          currentDashboardState: {
+            page: context.currentPage,
+            dashboardData: context.dashboardContext,
+            timestamp: context.timestamp,
+            ...context.currentDashboardState,
+          },
+          sessionData: context.sessionData || {},
+        }
+      : undefined;
+
+    // Pass question and context to the enhanced assistant service
+    const result = await ask(question, conversationContext);
+
+    // Return enhanced response format for complex queries
+    return NextResponse.json({
+      answer: result.answer || "Sorry, ik kon geen antwoord genereren.",
+      detailedExplanation: result.detailedExplanation,
+      sources: result.sources || ["assistant-service"],
+      confidence: result.confidence || 0.8,
+      insights: result.insights || [],
+      visualizationSuggestions: result.visualizationSuggestions || [],
+      followUpQuestions: result.followUpQuestions || [],
+      executionTime: result.executionTime,
+      isComplexQuery: result.isComplexQuery || false,
+      // Additional metadata
+      metadata: {
+        questionType: result.isComplexQuery ? "complex" : "simple",
+        explanationLevel,
+        timestamp: new Date().toISOString(),
+        modelData: result.modelData,
+      },
+    });
+  } catch (error: any) {
+    console.error("Assistant API error", error);
+
+    // Return user-friendly error response with enhanced error information
+    return NextResponse.json(
+      {
+        answer: "Sorry, er is een fout opgetreden. Probeer het later opnieuw.",
+        detailedExplanation:
+          "Er kon geen gedetailleerde analyse worden uitgevoerd op dit moment.",
+        sources: [],
+        confidence: 0,
+        insights: [],
+        visualizationSuggestions: [],
+        followUpQuestions: [
+          "Kan je je vraag anders formuleren?",
+          "Welke specifieke data wil je bekijken?",
+          "Heb je hulp nodig met de dashboard navigatie?",
+        ],
+        executionTime: 0,
+        isComplexQuery: false,
+        metadata: {
+          questionType: "error",
+          explanationLevel: "basic",
+          timestamp: new Date().toISOString(),
+          error:
+            process.env.NODE_ENV === "development"
+              ? error.message
+              : "Unknown error",
+        },
+      },
+      { status: 200 }
+    ); // Return 200 to avoid frontend error handling
+  }
+}
+
+export const runtime = "edge";

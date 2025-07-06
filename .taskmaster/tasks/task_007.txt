@@ -1,0 +1,43 @@
+# Task ID: 7
+# Title: Internationalization & Localization
+# Status: done
+# Dependencies: 1
+# Priority: medium
+# Description: Add multi-language support with seamless language switching.
+# Details:
+Implement language switcher in the header navigation with persistent language preference using localStorage. Translate all UI text, labels, and messages. Ensure number formatting follows locale conventions.
+
+# Test Strategy:
+Test language switching speed and persistence. Validate translations for completeness and accuracy. Check number formatting for locale correctness.
+
+# Subtasks:
+## 1. Set Up Internationalized Routing [done]
+### Dependencies: None
+### Description: Configure Next.js to support multiple languages by setting up internationalized routing.
+### Details:
+Update the `next.config.js` file to include the `i18n` configuration with the desired locales and default locale. This enables Next.js to handle routing for different languages.
+
+## 2. Implement Language Switcher Component [done]
+### Dependencies: 7.1
+### Description: Create a language switcher component to allow users to change the application's language.
+### Details:
+Develop a React component that lists available languages and updates the application's locale when a user selects a different language. Ensure the selected language is stored in `localStorage` for persistence.
+
+## 3. Manage Translation Files [done]
+### Dependencies: 7.1
+### Description: Organize and manage translation files for different languages.
+### Details:
+Create a `locales` directory containing JSON files for each supported language. Each file should include key-value pairs for all translatable text in the application.
+
+## 4. Integrate Translations into Components [done]
+### Dependencies: 7.3
+### Description: Load and apply translations in React components based on the current locale.
+### Details:
+Utilize a library like `next-intl` to load the appropriate translation file based on the current locale and provide translated strings to components.
+
+## 5. Implement Locale-Specific Number Formatting [done]
+### Dependencies: 7.4
+### Description: Ensure that numbers are formatted according to the conventions of the current locale.
+### Details:
+Use JavaScript's `Intl.NumberFormat` API to format numbers in a locale-aware manner throughout the application.
+

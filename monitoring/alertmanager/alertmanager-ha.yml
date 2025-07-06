@@ -1,0 +1,331 @@
+# ====================================================================
+# Alertmanager High Availability Configuration
+# Task 41.6: Clustered alerting for 99.99% SLA compliance
+# ====================================================================
+
+global:
+  # Global configuration for Alertmanager
+  smtp_smarthost: "localhost:587"
+  smtp_from: "alerts@skc-company.com"
+  smtp_auth_username: "alerts@skc-company.com"
+  smtp_auth_password: "your-smtp-password"
+  pagerduty_url: "https://events.pagerduty.com/v2/enqueue"
+  slack_api_url: "https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK"
+
+  # HA specific settings
+  cluster:
+    peer_timeout: 15s
+    gossip_interval: 200ms
+    pushpull_interval: 60s
+    settle_timeout: 45s
+
+# Templates for alert formatting
+templates:
+  - "/etc/alertmanager/templates/*.tmpl"
+
+# Route configuration with HA considerations
+route:
+  group_by: ["alertname", "cluster", "service", "severity"]
+  group_wait: 10s
+  group_interval: 10s
+  repeat_interval: 12h
+  receiver: "default-receiver"
+
+  # ====================================================================
+  # HIGH AVAILABILITY ROUTING
+  # ====================================================================
+  routes:
+    # SLA BREACH ALERTS - Highest Priority
+    - match:
+        severity: sla-breach
+      receiver: "sla-critical-alerts"
+      group_wait: 0s
+      group_interval: 5s
+      repeat_interval: 5m
+      routes:
+        - match:
+            service: "monitoring-stack"
+          receiver: "monitoring-stack-failure"
+          group_wait: 0s
+          repeat_interval: 2m
+
+    # CRITICAL ALERTS - Immediate Response
+    - match:
+        severity: critical
+      receiver: "critical-alerts"
+      group_wait: 0s
+      group_interval: 5s
+      repeat_interval: 5m
+      routes:
+        - match:
+            alertname: PrometheusDown
+          receiver: "prometheus-failure"
+          group_wait: 0s
+          repeat_interval: 1m
+        - match:
+            alertname: AlertmanagerDown
+          receiver: "alertmanager-failure"
+          group_wait: 0s
+          repeat_interval: 1m
+        - match:
+            alertname: GrafanaDown
+          receiver: "grafana-failure"
+          group_wait: 0s
+          repeat_interval: 2m
+
+    # HIGH SEVERITY ALERTS
+    - match:
+        severity: high
+      receiver: "high-priority-alerts"
+      group_wait: 5s
+      group_interval: 30s
+      repeat_interval: 15m
+
+    # WARNING ALERTS
+    - match:
+        severity: warning
+      receiver: "warning-alerts"
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 30m
+
+    # INFO ALERTS
+    - match:
+        severity: info
+      receiver: "info-alerts"
+      group_wait: 1m
+      group_interval: 10m
+      repeat_interval: 2h
+
+# ====================================================================
+# RECEIVERS WITH HIGH AVAILABILITY CONSIDERATIONS
+# ====================================================================
+receivers:
+  # Default receiver for unmatched alerts
+  - name: "default-receiver"
+    slack_configs:
+      - api_url: "https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK"
+        channel: "#alerts-general"
+        title: "[SKC-BI] {{ range .Alerts }}{{ .Annotations.summary }}{{ end }}"
+        text: '{{ template "slack.skc.text" . }}'
+
+  # ====================================================================
+  # SLA CRITICAL ALERTS
+  # ====================================================================
+  - name: "sla-critical-alerts"
+    pagerduty_configs:
+      - routing_key: "YOUR-PAGERDUTY-SLA-CRITICAL-KEY"
+        description: "SLA BREACH: {{ range .Alerts }}{{ .Annotations.summary }}{{ end }}"
+        severity: "critical"
+        source: "SKC-BI-Dashboard"
+        component: "{{ .GroupLabels.service }}"
+        group: "sla-monitoring"
+        class: "sla-breach"
+        links:
+          - href: "http://grafana:3000/d/sla-dashboard"
+            text: "SLA Dashboard"
+          - href: "http://prometheus:9090"
+            text: "Prometheus"
+    slack_configs:
+      - api_url: "https://hooks.slack.com/services/YOUR/SLA/WEBHOOK"
+        channel: "#sla-alerts"
+        title: "🚨 SLA BREACH ALERT 🚨"
+        text: |
+          *SLA COMPLIANCE BREACH DETECTED*
+
+          {{ range .Alerts }}
+          *Alert:* {{ .Annotations.summary }}
+          *Service:* {{ .Labels.service }}
+          *Severity:* {{ .Labels.severity }}
+          *Started:* {{ .StartsAt.Format "2006-01-02 15:04:05" }}
+          *Description:* {{ .Annotations.description }}
+          {{ end }}
+
+          *Action Required:* Immediate escalation to on-call team
+          *SLA Target:* 99.99% uptime
+        color: "danger"
+
+  # ====================================================================
+  # MONITORING STACK FAILURE ALERTS
+  # ====================================================================
+  - name: "monitoring-stack-failure"
+    pagerduty_configs:
+      - routing_key: "YOUR-PAGERDUTY-MONITORING-KEY"
+        description: "MONITORING STACK FAILURE: {{ range .Alerts }}{{ .Annotations.summary }}{{ end }}"
+        severity: "critical"
+        source: "SKC-BI-Dashboard-Monitoring"
+        component: "observability-stack"
+        group: "infrastructure"
+        class: "monitoring-failure"
+    slack_configs:
+      - api_url: "https://hooks.slack.com/services/YOUR/MONITORING/WEBHOOK"
+        channel: "#infrastructure-alerts"
+        title: "🔥 MONITORING STACK FAILURE 🔥"
+        text: |
+          *CRITICAL: Monitoring Infrastructure Failure*
+
+          {{ range .Alerts }}
+          *Component:* {{ .Labels.service }}
+          *Issue:* {{ .Annotations.summary }}
+          *Impact:* Loss of observability
+          *Started:* {{ .StartsAt.Format "2006-01-02 15:04:05" }}
+          {{ end }}
+
+          *IMMEDIATE ACTION REQUIRED*
+        color: "danger"
+
+  # ====================================================================
+  # COMPONENT-SPECIFIC FAILURE ALERTS
+  # ====================================================================
+  - name: "prometheus-failure"
+    pagerduty_configs:
+      - routing_key: "YOUR-PAGERDUTY-PROMETHEUS-KEY"
+        description: "Prometheus Instance Failure"
+        severity: "critical"
+        source: "Prometheus"
+    slack_configs:
+      - api_url: "https://hooks.slack.com/services/YOUR/PROMETHEUS/WEBHOOK"
+        channel: "#prometheus-alerts"
+        title: "⚠️ Prometheus Down"
+        text: |
+          *Prometheus Instance Failure*
+
+          One or more Prometheus instances are unavailable.
+          Check cluster status and failover mechanisms.
+
+          *Affected Instances:*
+          {{ range .Alerts }}
+          • {{ .Labels.instance }}
+          {{ end }}
+        color: "warning"
+
+  - name: "alertmanager-failure"
+    slack_configs:
+      - api_url: "https://hooks.slack.com/services/YOUR/ALERTMANAGER/WEBHOOK"
+        channel: "#alertmanager-alerts"
+        title: "🚨 Alertmanager Cluster Issue"
+        text: |
+          *Alertmanager Cluster Status Alert*
+
+          {{ range .Alerts }}
+          *Issue:* {{ .Annotations.summary }}
+          *Instance:* {{ .Labels.instance }}
+          {{ end }}
+
+          *Note:* Clustering ensures continued operation with remaining instances.
+        color: "warning"
+
+  - name: "grafana-failure"
+    slack_configs:
+      - api_url: "https://hooks.slack.com/services/YOUR/GRAFANA/WEBHOOK"
+        channel: "#grafana-alerts"
+        title: "📊 Grafana Service Alert"
+        text: |
+          *Grafana Dashboard Service Issue*
+
+          {{ range .Alerts }}
+          *Problem:* {{ .Annotations.summary }}
+          *Details:* {{ .Annotations.description }}
+          {{ end }}
+
+          *Impact:* Visualization and dashboard access may be affected.
+        color: "warning"
+
+  # ====================================================================
+  # STANDARD SEVERITY RECEIVERS
+  # ====================================================================
+  - name: "critical-alerts"
+    pagerduty_configs:
+      - routing_key: "YOUR-PAGERDUTY-CRITICAL-KEY"
+        description: "{{ range .Alerts }}{{ .Annotations.summary }}{{ end }}"
+        severity: "critical"
+    slack_configs:
+      - api_url: "https://hooks.slack.com/services/YOUR/CRITICAL/WEBHOOK"
+        channel: "#critical-alerts"
+        title: "🚨 {{ .GroupLabels.alertname }}"
+        text: '{{ template "slack.skc.text" . }}'
+        color: "danger"
+
+  - name: "high-priority-alerts"
+    slack_configs:
+      - api_url: "https://hooks.slack.com/services/YOUR/HIGH/WEBHOOK"
+        channel: "#high-priority-alerts"
+        title: "⚠️ {{ .GroupLabels.alertname }}"
+        text: '{{ template "slack.skc.text" . }}'
+        color: "warning"
+
+  - name: "warning-alerts"
+    slack_configs:
+      - api_url: "https://hooks.slack.com/services/YOUR/WARNING/WEBHOOK"
+        channel: "#warning-alerts"
+        title: "⚠️ {{ .GroupLabels.alertname }}"
+        text: '{{ template "slack.skc.text" . }}'
+        color: "warning"
+
+  - name: "info-alerts"
+    slack_configs:
+      - api_url: "https://hooks.slack.com/services/YOUR/INFO/WEBHOOK"
+        channel: "#info-alerts"
+        title: "ℹ️ {{ .GroupLabels.alertname }}"
+        text: '{{ template "slack.skc.text" . }}'
+        color: "good"
+
+# ====================================================================
+# INHIBIT RULES FOR HIGH AVAILABILITY
+# ====================================================================
+inhibit_rules:
+  # Inhibit alerts about one instance when the entire cluster is down
+  - source_match:
+      severity: "critical"
+      alertname: "PrometheusClusterDown"
+    target_match:
+      service: "prometheus"
+    equal: ["cluster"]
+
+  # Inhibit instance alerts when service is completely down
+  - source_match:
+      severity: "critical"
+      alertname: "ServiceDown"
+    target_match:
+      severity: "warning"
+    equal: ["service", "cluster"]
+
+  # Inhibit warning alerts when critical alerts are firing for the same service
+  - source_match:
+      severity: "critical"
+    target_match:
+      severity: "warning"
+    equal: ["service", "instance"]
+
+  # Inhibit HA pair alerts when cluster alert is active
+  - source_match:
+      severity: "critical"
+      alertname: "AlertmanagerClusterDown"
+    target_match:
+      service: "alertmanager"
+    equal: ["cluster"]
+
+# ====================================================================
+# HIGH AVAILABILITY SETTINGS
+# ====================================================================
+
+# Silences configuration
+mute_time_intervals:
+  - name: maintenance_window
+    time_intervals:
+      - times:
+          - start_time: "02:00"
+            end_time: "04:00"
+        weekdays: ["saturday", "sunday"]
+        months: ["1:12"]
+
+# Cluster specific configuration for HA mode
+cluster:
+  # Settlement timeout for cluster coordination
+  settlement_timeout: 45s
+
+  # How often to sync with cluster
+  sync_interval: 15s
+
+  # How long to wait for cluster members
+  push_pull_interval: 60s

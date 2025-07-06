@@ -1,0 +1,251 @@
+# ====================================================================
+# SLA Monitoring Configuration - Blackbox Exporter
+# Task 41.6: 99.99% SLA compliance monitoring
+# ====================================================================
+
+modules:
+  # ====================================================================
+  # HTTP SLA CHECKS
+  # ====================================================================
+
+  # Standard HTTP 2xx check for application endpoints
+  http_2xx_sla:
+    prober: http
+    timeout: 5s
+    http:
+      valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
+      valid_status_codes: [200, 201, 202, 204]
+      method: GET
+      headers:
+        User-Agent: "SKC-SLA-Monitor/1.0"
+        Accept: "application/json,text/html"
+      follow_redirects: true
+      preferred_ip_protocol: "ip4"
+      fail_if_ssl: false
+      fail_if_not_ssl: false
+
+  # Fast SLA check (1 second timeout) for critical endpoints
+  http_2xx_fast_sla:
+    prober: http
+    timeout: 1s
+    http:
+      valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
+      valid_status_codes: [200]
+      method: GET
+      headers:
+        User-Agent: "SKC-SLA-Monitor-Fast/1.0"
+      follow_redirects: false
+      preferred_ip_protocol: "ip4"
+
+  # API endpoint SLA check with JSON response validation
+  api_sla_check:
+    prober: http
+    timeout: 3s
+    http:
+      valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
+      valid_status_codes: [200]
+      method: GET
+      headers:
+        User-Agent: "SKC-API-SLA-Monitor/1.0"
+        Accept: "application/json"
+        Content-Type: "application/json"
+      follow_redirects: true
+      preferred_ip_protocol: "ip4"
+      fail_if_body_not_matches_regexp:
+        - ".*\"status\"\\s*:\\s*\"(ok|success|healthy)\".*"
+
+  # Database health check via HTTP endpoint
+  database_sla_check:
+    prober: http
+    timeout: 10s
+    http:
+      valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
+      valid_status_codes: [200]
+      method: GET
+      headers:
+        User-Agent: "SKC-DB-SLA-Monitor/1.0"
+        Accept: "application/json"
+      follow_redirects: false
+      preferred_ip_protocol: "ip4"
+      fail_if_body_not_matches_regexp:
+        - ".*\"database\"\\s*:\\s*\"(connected|healthy|available)\".*"
+
+  # Authentication endpoint SLA check
+  auth_sla_check:
+    prober: http
+    timeout: 5s
+    http:
+      valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
+      valid_status_codes: [200, 401] # 401 is expected for unauthenticated requests
+      method: GET
+      headers:
+        User-Agent: "SKC-Auth-SLA-Monitor/1.0"
+      follow_redirects: false
+      preferred_ip_protocol: "ip4"
+
+  # ====================================================================
+  # MONITORING STACK SLA CHECKS
+  # ====================================================================
+
+  # Prometheus health check
+  prometheus_sla:
+    prober: http
+    timeout: 5s
+    http:
+      valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
+      valid_status_codes: [200]
+      method: GET
+      headers:
+        User-Agent: "SKC-Prometheus-SLA/1.0"
+      follow_redirects: false
+      preferred_ip_protocol: "ip4"
+      fail_if_body_not_matches_regexp:
+        - "Prometheus is Ready."
+
+  # Grafana health check
+  grafana_sla:
+    prober: http
+    timeout: 5s
+    http:
+      valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
+      valid_status_codes: [200]
+      method: GET
+      headers:
+        User-Agent: "SKC-Grafana-SLA/1.0"
+        Accept: "application/json"
+      follow_redirects: false
+      preferred_ip_protocol: "ip4"
+      fail_if_body_not_matches_regexp:
+        - ".*\"database\"\\s*:\\s*\"ok\".*"
+
+  # Alertmanager health check
+  alertmanager_sla:
+    prober: http
+    timeout: 5s
+    http:
+      valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
+      valid_status_codes: [200]
+      method: GET
+      headers:
+        User-Agent: "SKC-Alertmanager-SLA/1.0"
+      follow_redirects: false
+      preferred_ip_protocol: "ip4"
+      fail_if_body_not_matches_regexp:
+        - "Alertmanager is Ready."
+
+  # ====================================================================
+  # TCP SLA CHECKS
+  # ====================================================================
+
+  # Database TCP connection check
+  tcp_database_sla:
+    prober: tcp
+    timeout: 5s
+    tcp:
+      preferred_ip_protocol: "ip4"
+
+  # Redis TCP connection check
+  tcp_redis_sla:
+    prober: tcp
+    timeout: 3s
+    tcp:
+      preferred_ip_protocol: "ip4"
+
+  # ====================================================================
+  # ICMP SLA CHECKS
+  # ====================================================================
+
+  # Basic connectivity check
+  icmp_sla:
+    prober: icmp
+    timeout: 5s
+    icmp:
+      preferred_ip_protocol: "ip4"
+      source_ip_address: ""
+      payload_size: 64
+
+  # ====================================================================
+  # DNS SLA CHECKS
+  # ====================================================================
+
+  # DNS resolution check
+  dns_sla:
+    prober: dns
+    timeout: 5s
+    dns:
+      query_name: "localhost"
+      query_type: "A"
+      preferred_ip_protocol: "ip4"
+      valid_rcodes:
+        - NOERROR
+
+  # ====================================================================
+  # HTTPS/TLS SLA CHECKS
+  # ====================================================================
+
+  # HTTPS with TLS verification
+  https_sla:
+    prober: http
+    timeout: 10s
+    http:
+      valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
+      valid_status_codes: [200]
+      method: GET
+      headers:
+        User-Agent: "SKC-HTTPS-SLA-Monitor/1.0"
+      follow_redirects: true
+      preferred_ip_protocol: "ip4"
+      tls_config:
+        insecure_skip_verify: false
+        ca_file: ""
+        cert_file: ""
+        key_file: ""
+        server_name: ""
+      fail_if_ssl: false
+      fail_if_not_ssl: true
+
+  # ====================================================================
+  # PERFORMANCE SLA CHECKS
+  # ====================================================================
+
+  # Low latency check (sub-second response time requirement)
+  performance_sla:
+    prober: http
+    timeout: 1s
+    http:
+      valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
+      valid_status_codes: [200]
+      method: GET
+      headers:
+        User-Agent: "SKC-Performance-SLA/1.0"
+      follow_redirects: false
+      preferred_ip_protocol: "ip4"
+# ====================================================================
+# TARGET CONFIGURATION EXAMPLES
+# ====================================================================
+#
+# The following targets should be configured in Prometheus:
+#
+# scrape_configs:
+#   - job_name: 'sla-monitoring'
+#     scrape_interval: 30s
+#     metrics_path: /probe
+#     params:
+#       module: [http_2xx_sla]
+#     static_configs:
+#       - targets:
+#         - http://localhost:3000                 # Main application
+#         - http://localhost:3000/api/health      # Health endpoint
+#         - http://localhost:3000/api/status      # Status endpoint
+#         - http://grafana:3000/api/health        # Grafana health
+#         - http://prometheus:9090/-/healthy      # Prometheus health
+#         - http://alertmanager:9093/-/healthy    # Alertmanager health
+#     relabel_configs:
+#       - source_labels: [__address__]
+#         target_label: __param_target
+#       - source_labels: [__param_target]
+#         target_label: instance
+#       - target_label: __address__
+#         replacement: sla-monitor:9115
+#
+# ====================================================================

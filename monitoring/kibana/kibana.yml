@@ -1,0 +1,85 @@
+# ====================================================================
+# Kibana Configuration for SKC BI Dashboard
+# Task 41.3: Log visualization and analysis platform
+# ====================================================================
+
+# Basic server configuration
+server.host: "0.0.0.0"
+server.port: 5601
+server.name: "skc-bi-dashboard-kibana"
+server.basePath: ""
+server.rewriteBasePath: false
+
+# Elasticsearch connection
+elasticsearch.hosts: ["http://elasticsearch:9200"]
+elasticsearch.username: "elastic"
+elasticsearch.password: "changeme"
+
+# Index patterns
+elasticsearch.index: ".kibana"
+kibana.index: ".kibana"
+kibana.defaultAppId: "dashboard"
+
+# Security settings
+elasticsearch.ssl.verificationMode: none
+elasticsearch.ssl.certificateAuthorities: []
+xpack.security.enabled: false
+xpack.monitoring.enabled: true
+
+# Logging configuration
+logging.appenders:
+  console:
+    type: console
+    layout:
+      type: json
+  file:
+    type: file
+    fileName: /var/log/kibana/kibana.log
+    layout:
+      type: json
+
+logging.root:
+  appenders:
+    - console
+    - file
+  level: info
+
+logging.loggers:
+  - name: elasticsearch
+    level: warn
+  - name: http.server.response
+    level: debug
+
+# Performance and resource settings
+elasticsearch.requestTimeout: 30000
+elasticsearch.shardTimeout: 30000
+elasticsearch.maxSockets: 1024
+elasticsearch.keepAlive: true
+
+# Dashboard and visualization settings
+dashboard.defaultDarkMode: false
+visualizations.regionBasedMap.enabled: true
+map.includeElasticMapsService: true
+map.tilemap.url: "https://tiles.elastic.co/v2/default/{z}/{x}/{y}.png?elastic_tile_service_tos=agree"
+
+# Monitoring and metrics
+monitoring.ui.enabled: true
+monitoring.kibana.collection.enabled: true
+ops.interval: 30000
+
+# Internationalization
+i18n.locale: "en"
+
+# Development settings (disable in production)
+newsfeed.enabled: false
+telemetry.enabled: false
+telemetry.optIn: false
+
+# Data views and index patterns
+data.search.aggs.shardDelay.enabled: true
+uiSettings.overrides:
+  "theme:darkMode": false
+  "defaultIndex": "skc-bi-dashboard-*"
+  "timepicker:timeDefaults": '{ "from": "now-24h", "to": "now" }'
+  "dateFormat": "MMM D, YYYY @ HH:mm:ss.SSS"
+  "dateFormat:tz": "UTC"

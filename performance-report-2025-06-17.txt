@@ -1,0 +1,91 @@
+
+================================================================================
+📊 BI DASHBOARD PERFORMANCE TESTING REPORT
+================================================================================
+Generated: 2025-06-17T14:23:48.013Z
+System: Windows_NT 10.0.26100 (x64)
+CPU Cores: 12
+Total Memory: 15.7 GB
+
+1. Load Test - 10 Users
+--------------------------------------------------
+Duration: 38.0s
+Total Requests: 297
+Successful: 297 (100.0%)
+Failed: 0 (0.0%)
+Average Response Time: 616ms
+Min Response Time: 290ms
+Max Response Time: 1476ms
+Throughput: 7.8 req/s
+Average CPU Usage: 10.1%
+Average Memory Usage: 92.8%
+
+🚨 BOTTLENECKS IDENTIFIED:
+• High memory usage detected (92.8%)
+• Low throughput detected (7.8 req/s)
+
+💡 RECOMMENDATIONS:
+• Optimize memory usage and implement garbage collection
+• Review and optimize data structures
+• Implement streaming for large data sets
+• Implement connection pooling for database connections
+• Optimize API response payloads
+• Consider implementing GraphQL for efficient data fetching
+• Implement performance monitoring and alerting
+• Set up APM (Application Performance Monitoring) tools
+• Regular performance testing in CI/CD pipeline
+
+2. Load Test - 50 Users
+--------------------------------------------------
+Duration: 71.0s
+Total Requests: 1989
+Successful: 1989 (100.0%)
+Failed: 0 (0.0%)
+Average Response Time: 1120ms
+Min Response Time: 454ms
+Max Response Time: 1321ms
+Throughput: 28.0 req/s
+Average CPU Usage: 10.1%
+Average Memory Usage: 93.0%
+
+🚨 BOTTLENECKS IDENTIFIED:
+• High memory usage detected (93.0%)
+
+💡 RECOMMENDATIONS:
+• Implement caching strategies for frequently accessed data
+• Optimize database queries and add indexes
+• Consider implementing CDN for static assets
+• Optimize memory usage and implement garbage collection
+• Review and optimize data structures
+• Implement streaming for large data sets
+• Implement performance monitoring and alerting
+• Set up APM (Application Performance Monitoring) tools
+• Regular performance testing in CI/CD pipeline
+
+3. Load Test - 100 Users
+--------------------------------------------------
+Duration: 44.5s
+Total Requests: 1800
+Successful: 1800 (100.0%)
+Failed: 0 (0.0%)
+Average Response Time: 1724ms
+Min Response Time: 1476ms
+Max Response Time: 1902ms
+Throughput: 40.5 req/s
+Average CPU Usage: 10.1%
+Average Memory Usage: 90.1%
+
+🚨 BOTTLENECKS IDENTIFIED:
+• High memory usage detected (90.1%)
+
+💡 RECOMMENDATIONS:
+• Implement caching strategies for frequently accessed data
+• Optimize database queries and add indexes
+• Consider implementing CDN for static assets
+• Optimize memory usage and implement garbage collection
+• Review and optimize data structures
+• Implement streaming for large data sets
+• Implement performance monitoring and alerting
+• Set up APM (Application Performance Monitoring) tools
+• Regular performance testing in CI/CD pipeline
+

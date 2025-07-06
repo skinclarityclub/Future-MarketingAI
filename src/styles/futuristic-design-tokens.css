@@ -1,0 +1,575 @@
+/* 🚀 FutureMarketingAI - Futuristic Design Tokens */
+/* "Bedrijf uit de Toekomst" Design System */
+
+:root {
+  /* ====================================================================
+     🧠 NEURAL AESTHETICS - Core Color System
+     ==================================================================== */
+
+  /* Consciousness Colors */
+  --consciousness-gold: #ffd700;
+  --awareness-silver: #c0c0c0;
+  --insight-copper: #b87333;
+
+  /* Neural Processing */
+  --neural-fire: #ff6b35;
+  --synaptic-ice: #00d4ff;
+  --quantum-void: #0d0d0d;
+
+  /* Emotional Intelligence */
+  --empathy-rose: #ff69b4;
+  --logic-sapphire: #0f52ba;
+  --creativity-emerald: #50c878;
+
+  /* Temporal Dimensions */
+  --past-sepia: #704214;
+  --present-white: #ffffff;
+  --future-chrome: #e5e4e2;
+
+  /* Enhanced Neural Blue Spectrum */
+  --neural-blue-50: #eff6ff;
+  --neural-blue-100: #dbeafe;
+  --neural-blue-200: #bfdbfe;
+  --neural-blue-300: #93c5fd;
+  --neural-blue-400: #60a5fa;
+  --neural-blue-500: #3b82f6;
+  --neural-blue-600: #2563eb;
+  --neural-blue-700: #1d4ed8;
+  --neural-blue-800: #1e40af;
+  --neural-blue-900: #1e3a8a;
+
+  /* Quantum Purple Spectrum */
+  --quantum-purple-50: #faf5ff;
+  --quantum-purple-100: #f3e8ff;
+  --quantum-purple-200: #e9d5ff;
+  --quantum-purple-300: #d8b4fe;
+  --quantum-purple-400: #c084fc;
+  --quantum-purple-500: #a855f7;
+  --quantum-purple-600: #9333ea;
+  --quantum-purple-700: #7c3aed;
+  --quantum-purple-800: #6b21a8;
+  --quantum-purple-900: #581c87;
+
+  /* Holographic Cyan Spectrum */
+  --holographic-cyan-50: #ecfeff;
+  --holographic-cyan-100: #cffafe;
+  --holographic-cyan-200: #a5f3fc;
+  --holographic-cyan-300: #67e8f9;
+  --holographic-cyan-400: #22d3ee;
+  --holographic-cyan-500: #06b6d4;
+  --holographic-cyan-600: #0891b2;
+  --holographic-cyan-700: #0e7490;
+  --holographic-cyan-800: #155e75;
+  --holographic-cyan-900: #164e63;
+
+  /* ====================================================================
+     🎨 ADVANCED GRADIENT SYSTEMS
+     ==================================================================== */
+
+  /* Neural Network Gradients */
+  --gradient-neural: linear-gradient(
+    135deg,
+    var(--neural-blue-600) 0%,
+    var(--quantum-purple-600) 50%,
+    var(--holographic-cyan-600) 100%
+  );
+
+  --gradient-neural-consciousness: linear-gradient(
+    135deg,
+    var(--consciousness-gold) 0%,
+    var(--neural-fire) 30%,
+    var(--synaptic-ice) 70%,
+    var(--awareness-silver) 100%
+  );
+
+  --gradient-quantum-field: linear-gradient(
+    45deg,
+    var(--quantum-purple-900) 0%,
+    var(--quantum-void) 25%,
+    var(--quantum-purple-800) 50%,
+    var(--quantum-void) 75%,
+    var(--quantum-purple-900) 100%
+  );
+
+  --gradient-holographic-depth: linear-gradient(
+    180deg,
+    var(--holographic-cyan-500) 0%,
+    transparent 50%,
+    var(--holographic-cyan-500) 100%
+  );
+
+  --gradient-temporal-flow: linear-gradient(
+    90deg,
+    var(--past-sepia) 0%,
+    var(--present-white) 50%,
+    var(--future-chrome) 100%
+  );
+
+  /* Glass Morphism Gradients */
+  --gradient-glass-neural: linear-gradient(
+    135deg,
+    rgba(59, 130, 246, 0.15) 0%,
+    rgba(139, 92, 246, 0.08) 50%,
+    rgba(34, 211, 238, 0.12) 100%
+  );
+
+  --gradient-glass-quantum: linear-gradient(
+    135deg,
+    rgba(139, 92, 246, 0.2) 0%,
+    rgba(13, 13, 13, 0.3) 50%,
+    rgba(139, 92, 246, 0.15) 100%
+  );
+
+  --gradient-glass-holographic: linear-gradient(
+    135deg,
+    rgba(34, 211, 238, 0.18) 0%,
+    rgba(255, 255, 255, 0.05) 50%,
+    rgba(34, 211, 238, 0.12) 100%
+  );
+
+  /* ====================================================================
+     🔤 NEURAL TYPOGRAPHY SYSTEM
+     ==================================================================== */
+
+  /* Font Families */
+  --font-neural:
+    "SF Pro Display", "Inter", system-ui, -apple-system, sans-serif;
+  --font-quantum: "JetBrains Mono", "Fira Code", "SF Mono", monospace;
+  --font-consciousness: "Times New Roman", Georgia, serif;
+
+  /* Cognitive Scale Typography */
+  --text-thought: 72px; /* Breakthrough insights */
+  --text-concept: 48px; /* Major concepts */
+  --text-idea: 36px; /* Individual ideas */
+  --text-notion: 24px; /* Supporting notions */
+  --text-whisper: 16px; /* Subtle information */
+  --text-subliminal: 12px; /* Background data */
+
+  /* Neural Text Effects */
+  --text-glow-neural: 0 0 20px rgba(59, 130, 246, 0.6);
+  --text-glow-quantum: 0 0 20px rgba(139, 92, 246, 0.6);
+  --text-glow-holographic: 0 0 20px rgba(34, 211, 238, 0.6);
+  --text-glow-consciousness: 0 0 30px rgba(255, 215, 0, 0.8);
+
+  /* ====================================================================
+     ⚛️ QUANTUM INTERACTION VARIABLES
+     ==================================================================== */
+
+  /* Animation Durations - Quantum Time */
+  --quantum-instant: 0.08s; /* Quantum tunneling speed */
+  --quantum-fast: 0.16s; /* Particle movement */
+  --quantum-normal: 0.32s; /* Wave function collapse */
+  --quantum-slow: 0.64s; /* Probability field shift */
+  --quantum-eternal: 1.28s; /* Universe expansion */
+
+  /* Quantum Easing Functions */
+  --ease-quantum-tunnel: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-quantum-entangle: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --ease-quantum-superposition: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --ease-quantum-collapse: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Quantum Scale Factors */
+  --quantum-scale-micro: 1.01;
+  --quantum-scale-small: 1.03;
+  --quantum-scale-medium: 1.05;
+  --quantum-scale-large: 1.08;
+  --quantum-scale-massive: 1.12;
+
+  /* ====================================================================
+     🌌 HOLOGRAPHIC DEPTH SYSTEM
+     ==================================================================== */
+
+  /* Z-Index Layers - Dimensional Depth */
+  --z-quantum-void: -1000;
+  --z-background: 0;
+  --z-surface: 100;
+  --z-elevated: 200;
+  --z-floating: 300;
+  --z-modal: 400;
+  --z-overlay: 500;
+  --z-consciousness: 1000;
+
+  /* Blur Intensities */
+  --blur-subtle: 8px;
+  --blur-medium: 16px;
+  --blur-strong: 24px;
+  --blur-intense: 32px;
+  --blur-quantum: 40px;
+
+  /* Backdrop Filter Effects */
+  --backdrop-neural: blur(20px) saturate(180%) brightness(110%);
+  --backdrop-quantum: blur(24px) saturate(200%) contrast(120%);
+  --backdrop-holographic: blur(28px) saturate(150%) hue-rotate(15deg);
+
+  /* ====================================================================
+     ⏰ TEMPORAL FLUIDITY VARIABLES
+     ==================================================================== */
+
+  /* Time-based Animation Delays */
+  --temporal-past: -0.5s;
+  --temporal-present: 0s;
+  --temporal-future: 0.5s;
+  --temporal-infinity: infinite;
+
+  /* Temporal Warp Effects */
+  --perspective-normal: 1000px;
+  --perspective-deep: 2000px;
+  --perspective-infinite: 5000px;
+
+  /* ====================================================================
+     🌟 CONSCIOUSNESS AMPLIFICATION EFFECTS
+     ==================================================================== */
+
+  /* Neural Pulse Effects */
+  --pulse-neural: 0 0 0 0 rgba(59, 130, 246, 0.7);
+  --pulse-quantum: 0 0 0 0 rgba(139, 92, 246, 0.7);
+  --pulse-holographic: 0 0 0 0 rgba(34, 211, 238, 0.7);
+  --pulse-consciousness: 0 0 0 0 rgba(255, 215, 0, 0.8);
+
+  /* Synaptic Connection Lines */
+  --synapse-width: 2px;
+  --synapse-opacity: 0.6;
+  --synapse-glow: 4px;
+
+  /* ====================================================================
+     🔧 PERFORMANCE OPTIMIZATION VARIABLES
+     ==================================================================== */
+
+  /* GPU Acceleration Hints */
+  --gpu-hint: translateZ(0);
+  --will-change-transform: transform;
+  --will-change-opacity: opacity;
+  --will-change-all: transform, opacity, filter;
+
+  /* Performance Thresholds */
+  --performance-target-fps: 120;
+  --performance-input-latency: 16ms;
+  --performance-load-time: 1000ms;
+
+  /* ====================================================================
+     ♿ ACCESSIBILITY ENHANCEMENT VARIABLES
+     ==================================================================== */
+
+  /* High Contrast Mode */
+  --contrast-enhanced-bg: #000000;
+  --contrast-enhanced-text: #ffffff;
+  --contrast-enhanced-border: #ffffff;
+  --contrast-enhanced-focus: #00ff00;
+
+  /* Reduced Motion Alternatives */
+  --motion-reduced-duration: 0.01ms;
+  --motion-reduced-scale: 1;
+  --motion-reduced-opacity: 1;
+
+  /* Focus Indicators */
+  --focus-neural: 2px solid var(--neural-blue-500);
+  --focus-quantum: 2px solid var(--quantum-purple-500);
+  --focus-holographic: 2px solid var(--holographic-cyan-500);
+  --focus-offset: 2px;
+}
+
+/* ====================================================================
+   🎭 COMPONENT ARCHETYPE CLASSES
+   ==================================================================== */
+
+/* Neural Cards */
+.neural-card {
+  background: var(--gradient-glass-neural);
+  -webkit-backdrop-filter: var(--backdrop-neural);
+  backdrop-filter: var(--backdrop-neural);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: 16px;
+  transition: all var(--quantum-normal) var(--ease-quantum-collapse);
+}
+
+.neural-card:hover {
+  transform: translateY(-4px) scale(var(--quantum-scale-small));
+  box-shadow:
+    0 20px 40px rgba(59, 130, 246, 0.2),
+    var(--pulse-neural);
+}
+
+/* Quantum Buttons */
+.quantum-button {
+  background: var(--gradient-neural);
+  border: 1px solid rgba(139, 92, 246, 0.4);
+  border-radius: 12px;
+  color: var(--present-white);
+  cursor: pointer;
+  overflow: hidden;
+  position: relative;
+  transition: all var(--quantum-fast) var(--ease-quantum-tunnel);
+}
+
+.quantum-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left var(--quantum-normal) var(--ease-quantum-collapse);
+}
+
+.quantum-button:hover::before {
+  left: 100%;
+}
+
+.quantum-button:hover {
+  transform: translateY(-2px) scale(var(--quantum-scale-micro));
+  box-shadow: var(--pulse-quantum);
+}
+
+/* Holographic Modals */
+.holographic-modal {
+  background: var(--gradient-glass-holographic);
+  -webkit-backdrop-filter: var(--backdrop-holographic);
+  backdrop-filter: var(--backdrop-holographic);
+  border: 1px solid rgba(34, 211, 238, 0.3);
+  border-radius: 20px;
+  box-shadow:
+    0 30px 60px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Consciousness Navigation */
+.consciousness-nav {
+  background: var(--gradient-neural-consciousness);
+  -webkit-backdrop-filter: var(--backdrop-neural);
+  backdrop-filter: var(--backdrop-neural);
+  border: 1px solid var(--consciousness-gold);
+  box-shadow: var(--text-glow-consciousness);
+}
+
+/* ====================================================================
+   🌟 SIGNATURE ANIMATION KEYFRAMES
+   ==================================================================== */
+
+/* Neural Shimmer */
+@keyframes neural-shimmer {
+  0% {
+    background-position: -200% 0;
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    background-position: 200% 0;
+    opacity: 0;
+  }
+}
+
+/* Quantum Pulse */
+@keyframes quantum-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: var(--pulse-quantum);
+  }
+  50% {
+    transform: scale(var(--quantum-scale-small));
+    box-shadow: 0 0 0 10px rgba(139, 92, 246, 0);
+  }
+}
+
+/* Holographic Distortion */
+@keyframes holographic-distortion {
+  0%,
+  100% {
+    filter: hue-rotate(0deg) contrast(1);
+  }
+  25% {
+    filter: hue-rotate(90deg) contrast(1.2);
+  }
+  50% {
+    filter: hue-rotate(180deg) contrast(0.8);
+  }
+  75% {
+    filter: hue-rotate(270deg) contrast(1.1);
+  }
+}
+
+/* Temporal Warp */
+@keyframes temporal-warp {
+  0% {
+    transform: perspective(var(--perspective-normal)) rotateX(0deg);
+    filter: blur(0px);
+  }
+  50% {
+    transform: perspective(var(--perspective-normal)) rotateX(180deg);
+    filter: blur(2px);
+  }
+  100% {
+    transform: perspective(var(--perspective-normal)) rotateX(360deg);
+    filter: blur(0px);
+  }
+}
+
+/* Consciousness Amplification */
+@keyframes consciousness-amplify {
+  0% {
+    transform: scale(1);
+    filter: brightness(1);
+    text-shadow: var(--text-glow-consciousness);
+  }
+  50% {
+    transform: scale(var(--quantum-scale-medium));
+    filter: brightness(1.3);
+    text-shadow:
+      var(--text-glow-consciousness),
+      0 0 40px rgba(255, 215, 0, 0.9);
+  }
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+    text-shadow: var(--text-glow-consciousness);
+  }
+}
+
+/* Neural Data Flow */
+@keyframes neural-data-flow {
+  0% {
+    background-position: 0% 50%;
+    opacity: 0.3;
+  }
+  50% {
+    background-position: 100% 50%;
+    opacity: 0.8;
+  }
+  100% {
+    background-position: 200% 50%;
+    opacity: 0.3;
+  }
+}
+
+/* ====================================================================
+   📱 RESPONSIVE DESIGN TOKENS
+   ==================================================================== */
+
+/* Mobile Quantum Adjustments */
+@media (max-width: 768px) {
+  :root {
+    /* Reduced motion for mobile performance */
+    --quantum-instant: 0.05s;
+    --quantum-fast: 0.1s;
+    --quantum-normal: 0.2s;
+
+    /* Optimized blur for mobile */
+    --blur-subtle: 4px;
+    --blur-medium: 8px;
+    --blur-strong: 12px;
+
+    /* Touch-optimized scales */
+    --quantum-scale-micro: 1.02;
+    --quantum-scale-small: 1.04;
+    --quantum-scale-medium: 1.06;
+  }
+}
+
+/* High-performance devices */
+@media (min-width: 1920px) and (min-resolution: 2dppx) {
+  :root {
+    /* Enhanced effects for high-end displays */
+    --blur-quantum: 60px;
+    --perspective-infinite: 8000px;
+    --quantum-scale-massive: 1.15;
+  }
+}
+
+/* ====================================================================
+   ♿ ACCESSIBILITY MEDIA QUERIES
+   ==================================================================== */
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  :root {
+    --gradient-neural: linear-gradient(
+      135deg,
+      var(--contrast-enhanced-bg) 0%,
+      var(--contrast-enhanced-text) 100%
+    );
+  }
+
+  .neural-card,
+  .quantum-button,
+  .holographic-modal {
+    border: 2px solid var(--contrast-enhanced-border);
+    background: var(--contrast-enhanced-bg);
+    color: var(--contrast-enhanced-text);
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --quantum-instant: var(--motion-reduced-duration);
+    --quantum-fast: var(--motion-reduced-duration);
+    --quantum-normal: var(--motion-reduced-duration);
+    --quantum-slow: var(--motion-reduced-duration);
+    --quantum-eternal: var(--motion-reduced-duration);
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: var(--motion-reduced-duration) !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: var(--motion-reduced-duration) !important;
+    transform: none !important;
+  }
+}
+
+/* ====================================================================
+   🚀 UTILITY CLASSES
+   ==================================================================== */
+
+/* Neural Effects */
+.neural-shimmer {
+  animation: neural-shimmer 3s ease-in-out infinite;
+}
+
+.quantum-pulse {
+  animation: quantum-pulse 2s ease-in-out infinite;
+}
+
+.holographic-distort {
+  animation: holographic-distortion 4s ease-in-out infinite;
+}
+
+.temporal-warp {
+  animation: temporal-warp 6s ease-in-out infinite;
+}
+
+.consciousness-amplify {
+  animation: consciousness-amplify 3s ease-in-out infinite;
+}
+
+/* GPU Acceleration */
+.gpu-accelerated {
+  transform: var(--gpu-hint);
+  will-change: var(--will-change-all);
+  backface-visibility: hidden;
+}
+
+/* Focus States */
+.focus-neural:focus {
+  outline: var(--focus-neural);
+  outline-offset: var(--focus-offset);
+}
+
+.focus-quantum:focus {
+  outline: var(--focus-quantum);
+  outline-offset: var(--focus-offset);
+}
+
+.focus-holographic:focus {
+  outline: var(--focus-holographic);
+  outline-offset: var(--focus-offset);
+}

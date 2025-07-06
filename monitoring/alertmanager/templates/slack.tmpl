@@ -1,0 +1,170 @@
+{{/* ====================================================================
+SKC BI Dashboard Slack Alert Templates
+Task 41.5: Real-time alerting templates for better formatting
+==================================================================== */}}
+
+{{/* Slack title template */}}
+{{ define "slack.skc.title" }}
+[{{ .Status | toUpper }}] {{ .GroupLabels.alertname }}
+{{ end }}
+
+{{/* Slack text template */}}
+{{ define "slack.skc.text" }}
+{{- if eq .Status "firing" }}
+:fire: **ALERT FIRING** :fire:
+{{- else }}
+:white_check_mark: **ALERT RESOLVED** :white_check_mark:
+{{- end }}
+
+**Service:** {{ .GroupLabels.service | default "Unknown" }}
+**Environment:** {{ .GroupLabels.environment | default "production" }}
+**Cluster:** {{ .GroupLabels.cluster | default "skc-bi-dashboard" }}
+
+{{ range .Alerts }}
+**Alert:** {{ .Annotations.summary }}
+**Description:** {{ .Annotations.description }}
+**Severity:** {{ .Labels.severity | title }}
+{{- if .Labels.instance }}
+**Instance:** {{ .Labels.instance }}
+{{- end }}
+{{- if .Annotations.runbook_url }}
+**Runbook:** {{ .Annotations.runbook_url }}
+{{- end }}
+**Started:** {{ .StartsAt.Format "2006-01-02 15:04:05 UTC" }}
+{{- if .EndsAt }}
+**Ended:** {{ .EndsAt.Format "2006-01-02 15:04:05 UTC" }}
+{{- end }}
+{{ end }}
+
+**Dashboard Links:**
+• [Grafana Dashboards](http://grafana.localhost:3000)
+• [Prometheus Metrics](http://prometheus.localhost:9090)
+• [Alertmanager](http://alertmanager.localhost:9093)
+{{ end }}
+
+{{/* Critical alert template */}}
+{{ define "slack.skc.critical" }}
+:rotating_light: **CRITICAL ALERT** :rotating_light:
+{{ template "slack.skc.text" . }}
+
+**Immediate Action Required!**
+This alert may impact our 99.99% SLA commitment.
+{{ end }}
+
+{{/* SLA breach template */}}
+{{ define "slack.skc.sla" }}
+:warning: **SLA BREACH DETECTED** :warning:
+
+{{ range .Alerts }}
+**Service:** {{ .Labels.service }}
+**Summary:** {{ .Annotations.summary }}
+**Impact:** {{ .Annotations.description }}
+**Started:** {{ .StartsAt.Format "2006-01-02 15:04:05 UTC" }}
+{{ end }}
+
+:point_right: **This affects our 99.99% SLA commitment**
+:point_right: **Escalated to PagerDuty automatically**
+
+**Quick Actions:**
+• [View Live Dashboard](http://grafana.localhost:3000)
+• [Check Application Status](http://localhost:3000)
+• [Acknowledge Alert](http://alertmanager.localhost:9093)
+{{ end }}
+
+{{/* Infrastructure alert template */}}
+{{ define "slack.skc.infrastructure" }}
+:desktop_computer: **Infrastructure Alert**
+
+{{ range .Alerts }}
+**System:** {{ .Labels.instance }}
+**Issue:** {{ .Annotations.summary }}
+**Details:** {{ .Annotations.description }}
+**Severity:** {{ .Labels.severity | title }}
+{{ end }}
+
+**Recommended Actions:**
+• Check system resource usage
+• Review performance metrics
+• Monitor application response times
+{{ end }}
+
+{{/* Database alert template */}}
+{{ define "slack.skc.database" }}
+:floppy_disk: **Database Alert**
+
+{{ range .Alerts }}
+**Database:** {{ .Labels.service }}
+**Issue:** {{ .Annotations.summary }}
+**Details:** {{ .Annotations.description }}
+**Instance:** {{ .Labels.instance }}
+{{ end }}
+
+**Recommended Actions:**
+• Check database performance metrics
+• Review slow query logs
+• Monitor connection pools
+• Verify replication status
+{{ end }}
+
+{{/* Application alert template */}}
+{{ define "slack.skc.application" }}
+:computer: **Application Alert**
+
+{{ range .Alerts }}
+**Application:** SKC BI Dashboard
+**Component:** {{ .Labels.service }}
+**Issue:** {{ .Annotations.summary }}
+**Details:** {{ .Annotations.description }}
+**Severity:** {{ .Labels.severity | title }}
+{{ end }}
+
+**Quick Checks:**
+• [Application Health](http://localhost:3000/api/health)
+• [Performance Metrics](http://grafana.localhost:3000/d/app-performance)
+• [Error Logs](http://kibana.localhost:5601)
+{{ end }}
+
+{{/* Warning alert template */}}
+{{ define "slack.skc.warning" }}
+:warning: **Warning Alert**
+
+{{ range .Alerts }}
+**Service:** {{ .Labels.service }}
+**Summary:** {{ .Annotations.summary }}
+**Details:** {{ .Annotations.description }}
+{{- if .Labels.instance }}
+**Instance:** {{ .Labels.instance }}
+{{- end }}
+{{ end }}
+
+This is a warning-level alert that requires attention but is not immediately critical.
+{{ end }}
+
+{{/* Business metrics alert template */}}
+{{ define "slack.skc.business" }}
+:chart_with_upwards_trend: **Business Metrics Alert**
+
+{{ range .Alerts }}
+**Metric:** {{ .Annotations.summary }}
+**Details:** {{ .Annotations.description }}
+**Current Value:** {{ .Annotations.value | default "N/A" }}
+{{ end }}
+
+**Analysis Recommended:**
+• Review user activity patterns
+• Check application performance
+• Analyze conversion metrics
+{{ end }}
+
+{{/* Resolution template */}}
+{{ define "slack.skc.resolved" }}
+:white_check_mark: **Alert Resolved**
+
+{{ range .Alerts }}
+**Alert:** {{ .Annotations.summary }}
+**Service:** {{ .Labels.service }}
+**Duration:** {{ .StartsAt.Format "15:04" }} - {{ .EndsAt.Format "15:04" }}
+{{ end }}
+
+The issue has been automatically resolved. No further action required.
+{{ end }} 

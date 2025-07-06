@@ -1,0 +1,95 @@
+# ====================================================================
+# Grafana Dashboard Provisioning Configuration
+# Task 41.2: Automatic dashboard loading for SKC BI Dashboard
+# ====================================================================
+
+apiVersion: 1
+
+providers:
+  # SKC BI Dashboard - Executive & Business Dashboards
+  - name: "skc-executive"
+    orgId: 1
+    folder: "SKC Executive"
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 30
+    allowUiUpdates: true
+    options:
+      path: /etc/grafana/provisioning/dashboards/skc-executive
+
+  # SKC BI Dashboard - Application Performance
+  - name: "skc-application"
+    orgId: 1
+    folder: "SKC Application"
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 30
+    allowUiUpdates: true
+    options:
+      path: /etc/grafana/provisioning/dashboards/skc-application
+
+  # SKC BI Dashboard - Infrastructure Monitoring
+  - name: "skc-infrastructure"
+    orgId: 1
+    folder: "SKC Infrastructure"
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 30
+    allowUiUpdates: true
+    options:
+      path: /etc/grafana/provisioning/dashboards/skc-infrastructure
+
+  # General System Dashboards
+  - name: "system"
+    orgId: 1
+    folder: "System Monitoring"
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 30
+    allowUiUpdates: true
+    options:
+      path: /etc/grafana/provisioning/dashboards/system
+
+  # Security & Audit Dashboards
+  - name: "security"
+    orgId: 1
+    folder: "Security & Audit"
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 30
+    allowUiUpdates: true
+    options:
+      path: /etc/grafana/provisioning/dashboards/security
+
+  # Database Performance Dashboards
+  - name: "database"
+    orgId: 1
+    folder: "Database Performance"
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 30
+    allowUiUpdates: true
+    options:
+      path: /etc/grafana/provisioning/dashboards/database
+
+  # Network & External Services
+  - name: "network"
+    orgId: 1
+    folder: "Network & External"
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 30
+    allowUiUpdates: true
+    options:
+      path: /etc/grafana/provisioning/dashboards/network
+
+  # Development & DevOps Dashboards
+  - name: "devops"
+    orgId: 1
+    folder: "DevOps & CI/CD"
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 30
+    allowUiUpdates: true
+    options:
+      path: /etc/grafana/provisioning/dashboards/devops

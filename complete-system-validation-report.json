@@ -1,0 +1,87 @@
+{
+  "summary": {
+    "total": 5,
+    "passed": 4,
+    "failed": 0,
+    "warnings": 1,
+    "successRate": "80%",
+    "overallStatus": "PASSED_WITH_WARNINGS"
+  },
+  "details": [
+    {
+      "timestamp": "2025-06-22T19:30:02.635Z",
+      "testName": "Database Connectivity",
+      "status": "PASSED",
+      "duration": 506,
+      "details": {
+        "connection": "successful",
+        "responseTime": "506ms"
+      }
+    },
+    {
+      "timestamp": "2025-06-22T19:30:02.884Z",
+      "testName": "Real Data Retrieval",
+      "status": "PASSED",
+      "duration": 246,
+      "details": {
+        "contentPosts": 10,
+        "contentAnalytics": 10,
+        "socialAccounts": 5,
+        "campaigns": 5,
+        "totalRecords": 30
+      }
+    },
+    {
+      "timestamp": "2025-06-22T19:30:02.885Z",
+      "testName": "Data Structure Validation",
+      "status": "PASSED",
+      "duration": 0,
+      "details": {
+        "structure": {
+          "contentPostsValid": true,
+          "contentAnalyticsValid": true,
+          "socialAccountsValid": true,
+          "campaignsValid": true
+        },
+        "quality": {
+          "sufficientContentPosts": true,
+          "sufficientAnalytics": true,
+          "dataRelationships": true
+        },
+        "readyForML": true
+      }
+    },
+    {
+      "timestamp": "2025-06-22T19:30:03.155Z",
+      "testName": "ML Engine Availability",
+      "status": "PASSED",
+      "duration": 268,
+      "details": {
+        "engines": {
+          "confidenceEngineExists": true,
+          "validationFrameworkExists": true,
+          "continuousWorkflowExists": true,
+          "learningEngineExists": true
+        },
+        "readyForMLTesting": true
+      }
+    },
+    {
+      "timestamp": "2025-06-22T19:30:03.156Z",
+      "testName": "Basic ML Functionality",
+      "status": "WARNING",
+      "duration": 0,
+      "details": {
+        "testPostId": "4a1db0cb-4fa3-4e01-92a2-3466584db816",
+        "mlReadiness": {
+          "hasContent": false,
+          "hasPlatform": true,
+          "hasTimestamp": true,
+          "hasEngagementData": true
+        },
+        "canProceedWithMLTesting": false
+      }
+    }
+  ],
+  "timestamp": "2025-06-22T19:30:03.158Z"
+}

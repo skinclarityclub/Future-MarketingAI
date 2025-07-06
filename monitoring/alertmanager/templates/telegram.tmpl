@@ -1,0 +1,302 @@
+{{/* ====================================================================
+SKC BI Dashboard Telegram Alert Templates
+Mobile-optimized alert formatting for Telegram channels
+==================================================================== */}}
+
+{{/* Base Telegram text template */}}
+{{ define "telegram.skc.text" }}
+{{- if eq .Status "firing" }}
+🔥 **ALERT FIRING** 🔥
+{{- else }}
+✅ **ALERT RESOLVED** ✅
+{{- end }}
+
+**Service:** {{ .GroupLabels.service | default "Unknown" }}
+**Environment:** {{ .GroupLabels.environment | default "production" }}
+**Severity:** {{ .GroupLabels.severity | title }}
+
+{{ range .Alerts }}
+**📋 Alert:** {{ .Annotations.summary }}
+**📝 Details:** {{ .Annotations.description }}
+{{- if .Labels.instance }}
+**🖥️ Instance:** {{ .Labels.instance }}
+{{- end }}
+**⏰ Started:** {{ .StartsAt.Format "15:04 02-01-2006" }}
+{{- if .EndsAt }}
+**⏰ Ended:** {{ .EndsAt.Format "15:04 02-01-2006" }}
+{{- end }}
+{{ end }}
+
+**🔗 Quick Actions:**
+• [🎯 Dashboard](http://localhost:3000)
+• [📊 Grafana](http://grafana.localhost:3000)
+• [🔍 Prometheus](http://prometheus.localhost:9090)
+{{ end }}
+
+{{/* Critical alert template - for urgent issues */}}
+{{ define "telegram.skc.critical" }}
+🚨🚨 **CRITICAL ALERT** 🚨🚨
+
+**⚡ IMMEDIATE ACTION REQUIRED ⚡**
+
+**Service:** {{ .GroupLabels.service | default "Unknown" }}
+**Environment:** {{ .GroupLabels.environment | default "production" }}
+
+{{ range .Alerts }}
+**🔥 Critical Issue:** {{ .Annotations.summary }}
+**📋 Description:** {{ .Annotations.description }}
+{{- if .Labels.instance }}
+**🖥️ Affected Instance:** {{ .Labels.instance }}
+{{- end }}
+**⏰ Started:** {{ .StartsAt.Format "15:04:05 02-01-2006" }}
+{{- if .Annotations.runbook_url }}
+**📖 Runbook:** {{ .Annotations.runbook_url }}
+{{- end }}
+{{ end }}
+
+**⚠️ SLA IMPACT WARNING ⚠️**
+This may affect our 99.99% uptime commitment!
+
+**🚀 Emergency Actions:**
+• [🎯 Live Dashboard](http://localhost:3000)
+• [📊 Grafana Alerts](http://grafana.localhost:3000)
+• [🚨 Alertmanager](http://alertmanager.localhost:9093)
+• [📞 On-Call Escalation](tel:+31123456789)
+
+**Team:** @critical-response-team
+{{ end }}
+
+{{/* SLA breach template - highest priority */}}
+{{ define "telegram.skc.sla" }}
+🚨🚨🚨 **SLA BREACH DETECTED** 🚨🚨🚨
+
+**💥 99.99% SLA COMMITMENT VIOLATED 💥**
+
+{{ range .Alerts }}
+**Service:** {{ .Labels.service }}
+**Issue:** {{ .Annotations.summary }}
+**Impact:** {{ .Annotations.description }}
+**Started:** {{ .StartsAt.Format "15:04:05 02-01-2006" }}
+{{ end }}
+
+**📈 SLA Status:**
+• Target: 99.99% uptime
+• Current breach affects monthly SLA
+• Customer impact: YES
+
+**🆘 IMMEDIATE ESCALATION:**
+• PagerDuty alert sent
+• Management notified
+• Customer success team alerted
+
+**🔧 Emergency Response:**
+• [📊 SLA Dashboard](http://grafana.localhost:3000/d/sla)
+• [⚡ Incident Management](http://localhost:3000/incident)
+• [📞 Emergency Contact](tel:+31123456789)
+
+**Team:** @sla-response @management @customer-success
+{{ end }}
+
+{{/* Warning alert template */}}
+{{ define "telegram.skc.warning" }}
+⚠️ **WARNING ALERT** ⚠️
+
+**Service:** {{ .GroupLabels.service | default "Unknown" }}
+**Severity:** Warning Level
+
+{{ range .Alerts }}
+**⚠️ Issue:** {{ .Annotations.summary }}
+**📋 Details:** {{ .Annotations.description }}
+{{- if .Labels.instance }}
+**🖥️ Instance:** {{ .Labels.instance }}
+{{- end }}
+**⏰ Detected:** {{ .StartsAt.Format "15:04 02-01-2006" }}
+{{ end }}
+
+**📊 Monitoring:**
+This is a warning-level alert requiring attention but not immediately critical.
+
+**🔗 Investigation Tools:**
+• [📊 Grafana](http://grafana.localhost:3000)
+• [🔍 Logs](http://kibana.localhost:5601)
+• [⚡ Metrics](http://prometheus.localhost:9090)
+{{ end }}
+
+{{/* Info alert template */}}
+{{ define "telegram.skc.info" }}
+ℹ️ **INFO NOTIFICATION** ℹ️
+
+**Service:** {{ .GroupLabels.service | default "Unknown" }}
+**Type:** Information
+
+{{ range .Alerts }}
+**📋 Info:** {{ .Annotations.summary }}
+**📝 Details:** {{ .Annotations.description }}
+**⏰ Time:** {{ .StartsAt.Format "15:04 02-01-2006" }}
+{{ end }}
+
+**💡 Note:** This is an informational alert for awareness.
+{{ end }}
+
+{{/* Infrastructure alert template */}}
+{{ define "telegram.skc.infrastructure" }}
+🖥️ **INFRASTRUCTURE ALERT** 🖥️
+
+{{ range .Alerts }}
+**🏗️ System:** {{ .Labels.instance }}
+**⚠️ Issue:** {{ .Annotations.summary }}
+**📋 Details:** {{ .Annotations.description }}
+**📊 Severity:** {{ .Labels.severity | title }}
+**⏰ Started:** {{ .StartsAt.Format "15:04 02-01-2006" }}
+{{ end }}
+
+**🔧 Recommended Actions:**
+• Check system resource usage
+• Review performance metrics  
+• Monitor application response times
+
+**🔗 Infrastructure Tools:**
+• [🖥️ Server Monitoring](http://grafana.localhost:3000/d/infrastructure)
+• [💾 Disk Usage](http://grafana.localhost:3000/d/disk)
+• [🌐 Network Stats](http://grafana.localhost:3000/d/network)
+
+**Team:** @infrastructure-team
+{{ end }}
+
+{{/* Database alert template */}}
+{{ define "telegram.skc.database" }}
+🗄️ **DATABASE ALERT** 🗄️
+
+{{ range .Alerts }}
+**💾 Database:** {{ .Labels.service }}
+**⚠️ Issue:** {{ .Annotations.summary }}
+**📋 Details:** {{ .Annotations.description }}
+**🖥️ Instance:** {{ .Labels.instance }}
+**⏰ Started:** {{ .StartsAt.Format "15:04 02-01-2006" }}
+{{ end }}
+
+**🔧 Recommended Actions:**
+• Check database performance metrics
+• Review slow query logs
+• Monitor connection pools
+• Verify replication status
+
+**🔗 Database Tools:**
+• [📊 DB Performance](http://grafana.localhost:3000/d/database)
+• [🐘 PostgreSQL Stats](http://grafana.localhost:3000/d/postgresql)
+• [🔄 Replication Status](http://grafana.localhost:3000/d/replication)
+
+**Team:** @database-team
+{{ end }}
+
+{{/* Application alert template */}}
+{{ define "telegram.skc.application" }}
+💻 **APPLICATION ALERT** 💻
+
+{{ range .Alerts }}
+**🎯 Application:** SKC BI Dashboard
+**⚙️ Component:** {{ .Labels.service }}
+**⚠️ Issue:** {{ .Annotations.summary }}
+**📋 Details:** {{ .Annotations.description }}
+**📊 Severity:** {{ .Labels.severity | title }}
+**⏰ Started:** {{ .StartsAt.Format "15:04 02-01-2006" }}
+{{ end }}
+
+**🔧 Quick Checks:**
+• [🌐 App Health](http://localhost:3000/api/health)
+• [📊 Performance](http://grafana.localhost:3000/d/app-performance)
+• [📜 Error Logs](http://kibana.localhost:5601)
+
+**🎯 User Impact:**
+{{- if eq .GroupLabels.severity "critical" }}
+• High - Users may be unable to access the application
+{{- else if eq .GroupLabels.severity "warning" }}
+• Medium - Some features may be degraded
+{{- else }}
+• Low - Minimal user impact expected
+{{- end }}
+
+**Team:** @application-team @frontend-team
+{{ end }}
+
+{{/* Business metrics alert template */}}
+{{ define "telegram.skc.business" }}
+📈 **BUSINESS METRICS ALERT** 📈
+
+{{ range .Alerts }}
+**📊 Metric:** {{ .Annotations.summary }}
+**📋 Details:** {{ .Annotations.description }}
+**📉 Current Value:** {{ .Annotations.value | default "N/A" }}
+**⏰ Detected:** {{ .StartsAt.Format "15:04 02-01-2006" }}
+{{ end }}
+
+**🎯 Business Impact:**
+This alert indicates a significant change in business metrics that requires analysis.
+
+**📊 Analysis Tools:**
+• [📈 Revenue Dashboard](http://localhost:3000/revenue)
+• [👥 User Analytics](http://localhost:3000/analytics)
+• [🎯 Conversion Metrics](http://localhost:3000/conversion)
+
+**Team:** @business-intelligence @analytics-team
+{{ end }}
+
+{{/* Resolution notification template */}}
+{{ define "telegram.skc.resolved" }}
+✅ **ALERT RESOLVED** ✅
+
+{{ range .Alerts }}
+**✅ Resolved:** {{ .Annotations.summary }}
+**🎯 Service:** {{ .Labels.service }}
+**⏱️ Duration:** {{ .StartsAt.Format "15:04" }} - {{ .EndsAt.Format "15:04" }}
+**📅 Date:** {{ .StartsAt.Format "02-01-2006" }}
+{{ end }}
+
+**🎉 Status:** All systems normal
+**✨ Impact:** Issue automatically resolved
+
+**📊 Post-Resolution:**
+• Monitor for recurring issues
+• Review resolution in next team meeting
+• Update runbooks if needed
+{{ end }}
+
+{{/* Maintenance window template */}}
+{{ define "telegram.skc.maintenance" }}
+🔧 **MAINTENANCE WINDOW** 🔧
+
+{{ range .Alerts }}
+**🛠️ Activity:** {{ .Annotations.summary }}
+**📋 Details:** {{ .Annotations.description }}
+**⏰ Window:** {{ .StartsAt.Format "15:04" }} - {{ .EndsAt.Format "15:04" }}
+**📅 Date:** {{ .StartsAt.Format "02-01-2006" }}
+{{ end }}
+
+**📢 Notice:**
+Scheduled maintenance in progress. Some services may be temporarily unavailable.
+
+**📊 Status Updates:**
+• [🌐 Status Page](http://status.skc-company.com)
+• [📊 Live Monitoring](http://grafana.localhost:3000)
+
+**Team:** @operations-team
+{{ end }}
+
+{{/* Test alert template */}}
+{{ define "telegram.skc.test" }}
+🧪 **TEST ALERT** 🧪
+
+This is a test alert to verify Telegram integration is working correctly.
+
+**⚡ Test Details:**
+• Alertmanager → Telegram webhook → Bot → Channel
+• All formatting and emoji rendering
+• Link functionality and markdown parsing
+
+**✅ If you see this message, Telegram alerting is working!**
+
+**🔗 Test Resources:**
+• [🎯 Dashboard](http://localhost:3000)
+• [📊 Grafana](http://grafana.localhost:3000)
+• [🚨 Alertmanager](http://alertmanager.localhost:9093)
+{{ end }} 

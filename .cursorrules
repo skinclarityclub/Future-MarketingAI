@@ -1,0 +1,73 @@
+# BI Dashboard Project - Cursor Rules
+
+## Project Context
+You are working on an Enterprise Business Intelligence Dashboard using Next.js 14, Supabase, TypeScript, TailwindCSS, and n8n workflows. This is a data-intensive application with real-time analytics capabilities.
+
+## Tech Stack Preferences
+- **Frontend**: Next.js 14 App Router, TypeScript, TailwindCSS
+- **Backend**: Supabase (PostgreSQL), n8n workflows
+- **UI**: Shadcn/ui components, Recharts for visualizations
+- **Deployment**: Vercel (frontend), Supabase Cloud (database)
+
+## Code Style & Structure
+- Use TypeScript for all code; prefer interfaces over types
+- Use functional components with proper TypeScript interfaces
+- Prefer React Server Components; minimize 'use client' usage
+- Use kebab-case for component names (e.g., revenue-chart.tsx)
+- Structure: exported component, subcomponents, helpers, types
+
+## Supabase Integration Rules
+- ALWAYS use `@supabase/ssr` package for Next.js
+- NEVER use deprecated `@supabase/auth-helpers-nextjs`
+- Use `createBrowserClient` and `createServerClient` pattern
+- Implement proper error handling for all database operations
+
+## Performance Optimization
+- Minimize client components and useEffect usage
+- Implement proper loading states and error boundaries
+- Use Suspense for data-fetching components
+- Optimize charts for large datasets (>100k data points)
+
+## Task Master Integration
+- When implementing tasks, reference the task ID in commit messages
+- Update task status after completing features
+- Use task-master commands through Cursor chat for workflow management
+- Generate subtasks for complex features automatically
+
+## Database Patterns
+- Use proper indexing for time-series data
+- Implement RLS (Row Level Security) policies
+- Create proper database migrations
+- Use views for complex analytics queries
+
+## n8n Workflow Patterns
+- Create modular, reusable workflow components
+- Implement proper error handling and retry logic
+- Use environment variables for API configurations
+- Document workflow dependencies clearly
+
+## Testing & Quality
+- Write tests for critical business logic
+- Implement data validation for all inputs
+- Use proper TypeScript strict mode
+- Add logging for debugging complex data flows
+
+## Internationalization
+- Support English and Dutch languages
+- Use locale-specific number and date formatting
+- Implement proper currency formatting (USD/EUR)
+- Ensure right-to-left text support foundation
+
+## Commands Allowed in YOLO Mode
+- npm test, yarn test, nr test (testing)
+- npm run build, yarn build (building)
+- tsc, prettier, eslint (linting)
+- mkdir, touch (file operations)
+- task-master commands (task management)
+
+## Premium UI Standards
+- Use gradient backgrounds and glass morphism effects
+- Implement smooth 60fps animations
+- Apply proper shadow systems and hover effects
+- Create enterprise-grade visual hierarchy
+- Ensure mobile-responsive design patterns 

@@ -1,0 +1,682 @@
+{
+  "name": "Webhook Orchestrator",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "orchestrator-v2",
+        "responseMode": "responseNode",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "X-Orchestrator-Version",
+                "value": "2.0"
+              },
+              {
+                "name": "X-System",
+                "value": "SkinClarity-Enterprise"
+              },
+              {
+                "name": "X-Processing-Node",
+                "value": "orchestrator-v2"
+              }
+            ]
+          }
+        }
+      },
+      "id": "98351520-79e1-46e8-92d9-1bc74c5866ad",
+      "name": "Enterprise Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [340, 260],
+      "webhookId": "enterprise-orchestrator-v2"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 🎯 ORCHESTRATOR FILTER + ENTERPRISE REQUEST CLASSIFIER V2.1\nconst webhookInput = $input.first().json;\nconst requestBody = webhookInput.body || {};\n\nconsole.log(\"🔥 === ORCHESTRATOR FILTER V2.1 ===\");\n\n// ====================================\n// 🚫 FILTERING - ONLY PROCESS CALLBACKS\n// ====================================\n\n// ALLEEN callbacks verwerken, alle chat messages negeren\nif (requestBody.message && !requestBody.callback_query) {\n    console.log(\"💬 Chat message detected - IGNORING (handled by MarketingManager)\");\n    console.log(\"📝 Message preview:\", requestBody.message?.text?.substring(0, 50) + '...');\n    return [{\n        json: {\n            action: 'ignored',\n            reason: 'chat_message_handled_by_marketing_manager',\n            message_preview: requestBody.message?.text?.substring(0, 50) + '...',\n            user_id: requestBody.message?.from?.id,\n            routing: 'skipped_to_marketing_manager',\n            timestamp: new Date().toISOString()\n        }\n    }];\n}\n\n// ALLEEN state callbacks verwerken\nif (requestBody.callback_query) {\n    const callbackData = requestBody.callback_query.data || '';\n    const stateCallbackPattern = /^(AIP|RIP|MIP|AFP|RFP|MFP|AIC|MIC|AFC|MFC|AIS|MIS|AFS|MFS|AIR|MIR|AFR|MFR)_/;\n    \n    if (!stateCallbackPattern.test(callbackData)) {\n        console.log(\"🔄 Non-state callback detected - IGNORING\");\n        console.log(\"🔄 Callback data:\", callbackData);\n        return [{\n            json: {\n                action: 'ignored',\n                reason: 'not_a_state_callback',\n                callback_data: callbackData,\n                routing: 'skipped_invalid_callback',\n                timestamp: new Date().toISOString()\n            }\n        }];\n    }\n    \n    console.log(\"✅ Valid state callback - PROCESSING:\", callbackData);\n}\n\n// Check voor scheduled content (mag door)\nif (requestBody.scheduled_execution || requestBody.contentType) {\n    console.log(\"📅 Scheduled content detected - PROCESSING\");\n}\n\n// Als we hier komen, gaan we door naar classification\nconsole.log(\"🔄 Proceeding to full classification...\");\n\n// ====================================\n// ENTERPRISE REQUEST CLASSIFIER V2.1\n// ====================================\n\nconsole.log(\"🔥 === ENTERPRISE WEBHOOK PROCESSING V2.1 ===\");\nconsole.log(\"📥 Webhook structure keys:\", Object.keys(webhookInput));\n\nconst headers = webhookInput.headers || {};\nconst query = webhookInput.query || {};\n\nconsole.log(\"📦 Request Body:\", JSON.stringify(requestBody, null, 2));\nconsole.log(\"📋 Content-Length:\", headers['content-length']);\nconsole.log(\"📋 Content-Type:\", headers['content-type']);\n\nconst startTime = Date.now();\n\n// Initialize enhanced classification\nconst classification = {\n    request_id: $execution.id,\n    source: 'unknown',\n    source_confidence: 0,\n    type: 'unknown',\n    subtype: null,\n    priority: 'normal',\n    priority_score: 50,\n    target_workflow: null,\n    routing_strategy: 'default',\n    requires_state_tracking: false,\n    business_context: {},\n    urgency_flags: [],\n    classification_timestamp: new Date().toISOString(),\n    processing_latency_ms: 0,\n    original_body: requestBody\n};\n\n// ====================================\n// ENHANCED SOURCE DETECTION\n// ====================================\n\n// Check if we have actual data\nif (Object.keys(requestBody).length === 0) {\n    console.log(\"⚠️ Empty request body detected\");\n    classification.source = 'empty_request';\n    classification.type = 'test_or_error';\n    classification.source_confidence = 100;\n    classification.priority_score = 10;\n    \n} else if (requestBody.update_id && requestBody.callback_query) {\n    // Telegram State Callbacks - EXPANDED FOR ALL CONTENT TYPES\n    const callbackData = requestBody.callback_query.data || '';\n    \n    // 🎯 COMPLETE CALLBACK PATTERN - ALL CONTENT TYPES\n    const stateCallbackPattern = /^(AIP|RIP|MIP|AFP|RFP|MFP|AIC|MIC|AFC|MFC|AIS|MIS|AFS|MFS|AIR|MIR|AFR|MFR)_/;\n    \n    console.log(\"🔄 Telegram callback detected:\", callbackData);\n    \n    if (stateCallbackPattern.test(callbackData)) {\n        classification.source = 'telegram_state_callback';\n        classification.type = 'state_transition';\n        classification.subtype = 'user_approval_flow';\n        classification.source_confidence = 98;\n        classification.priority = 'high';\n        classification.priority_score = 85;\n        classification.requires_state_tracking = true;\n        classification.urgency_flags.push('user_waiting');\n        \n        // Extract execution ID and determine content type\n        const parts = callbackData.split('_');\n        if (parts.length >= 2) {\n            classification.business_context.target_execution_id = parts[1];\n            classification.business_context.approval_type = parts[0];\n            \n            // 📱 CONTENT TYPE DETECTION\n            const callbackType = parts[0];\n            if (callbackType.includes('P')) {\n                classification.business_context.content_type = 'post';\n                classification.business_context.workflow_type = 'PostBuilder';\n            } else if (callbackType.includes('C')) {\n                classification.business_context.content_type = 'carousel';\n                classification.business_context.workflow_type = 'CarouselBuilder';\n            } else if (callbackType.includes('S')) {\n                classification.business_context.content_type = 'story';\n                classification.business_context.workflow_type = 'StoryBuilder';\n            } else if (callbackType.includes('R')) {\n                classification.business_context.content_type = 'reel';\n                classification.business_context.workflow_type = 'ReelBuilder';\n            }\n            \n            // 🎯 APPROVAL PHASE DETECTION\n            if (callbackType.startsWith('A')) {\n                classification.business_context.approval_phase = callbackType.includes('I') ? 'image_approval' : 'final_approval';\n                classification.business_context.user_action = 'approve';\n            } else if (callbackType.startsWith('M')) {\n                classification.business_context.approval_phase = callbackType.includes('I') ? 'image_modification' : 'final_modification';\n                classification.business_context.user_action = 'modify';\n            } else if (callbackType.startsWith('R')) {\n                classification.business_context.approval_phase = 'regenerate';\n                classification.business_context.user_action = 'regenerate';\n            }\n            \n            console.log(\"🎨 Content type detected:\", classification.business_context.content_type);\n            console.log(\"📱 Workflow type:\", classification.business_context.workflow_type);\n            console.log(\"⚡ Approval phase:\", classification.business_context.approval_phase);\n        }\n    } else {\n        classification.source = 'telegram_callback';\n        classification.type = 'callback_query';\n        classification.subtype = 'general_interaction';\n        classification.source_confidence = 90;\n    }\n    \n} else if (requestBody.update_id && requestBody.message) {\n    // Telegram Messages - DEZE SECTIE WORDT NU NIET MEER BEREIKT DOOR FILTERING\n    console.log(\"⚠️ This should not happen - chat messages should be filtered out\");\n    classification.source = 'telegram_message';\n    classification.source_confidence = 95;\n    classification.type = 'filtered_chat_message';\n    \n} else if (requestBody.scheduled_execution || requestBody.contentType) {\n    // Scheduled Content\n    classification.source = 'content_calendar';\n    classification.type = 'scheduled_content';\n    classification.subtype = 'automated_content_creation';\n    classification.source_confidence = 95;\n    classification.priority = 'normal';\n    classification.priority_score = 75;\n    \n    classification.business_context.scheduled_item = true;\n    classification.business_context.content_type = requestBody.contentType || 'unknown';\n    console.log(\"📅 Scheduled content detected\");\n    \n} else if (requestBody.test || requestBody.debug) {\n    // Test requests\n    classification.source = 'test_request';\n    classification.type = 'test_operation';\n    classification.subtype = 'debugging';\n    classification.source_confidence = 100;\n    classification.priority = 'low';\n    classification.priority_score = 25;\n    console.log(\"🧪 Test request detected\");\n    \n} else {\n    console.log(\"❓ Unknown request format\");\n    console.log(\"📋 Request body keys:\", Object.keys(requestBody));\n}\n\n// ====================================\n// INTELLIGENT ROUTING - ENHANCED\n// ====================================\n\nif (classification.type === 'state_transition') {\n    classification.target_workflow = 'CallbackHandler';\n    classification.routing_strategy = 'state_management';\n    \n    // 🎯 ENHANCED ROUTING BASED ON CONTENT TYPE\n    if (classification.business_context.content_type) {\n        classification.routing_strategy = `state_management_${classification.business_context.content_type}`;\n    }\n    \n} else if (classification.type === 'content_request') {\n    classification.target_workflow = 'MarketingDirector';\n    classification.routing_strategy = 'content_creation';\n    \n    // 🎨 CONTENT-SPECIFIC ROUTING\n    const contentType = classification.business_context.content_type;\n    if (contentType) {\n        classification.routing_strategy = `content_creation_${contentType}`;\n        classification.business_context.suggested_workflow = `${contentType.charAt(0).toUpperCase() + contentType.slice(1)}Builder`;\n    }\n    \n} else if (classification.type === 'scheduled_content') {\n    classification.target_workflow = 'MarketingManager';\n    classification.routing_strategy = 'automation';\n} else if (classification.type === 'chat_message') {\n    // Deze zou niet meer moeten voorkomen door filtering\n    classification.target_workflow = 'MarketingDirector';\n    classification.routing_strategy = 'chat_handling_filtered';\n} else {\n    classification.target_workflow = 'StateCoordinator';\n    classification.routing_strategy = 'fallback_default';\n}\n\n// ====================================\n// ENHANCED PRIORITY CALCULATION\n// ====================================\n\nconst currentHour = new Date().getHours();\nconst currentDay = new Date().getDay(); // 0 = Sunday\n\n// 🕐 TIME-BASED PRIORITY\nif (currentHour >= 8 && currentHour <= 10) {\n    classification.priority_score += 10;\n    classification.urgency_flags.push('peak_hours');\n}\n\nif (currentHour >= 17 && currentHour <= 19) {\n    classification.priority_score += 5;\n    classification.urgency_flags.push('evening_peak');\n}\n\n// 📅 WEEKDAY PRIORITY\nif (currentDay >= 1 && currentDay <= 5) { // Monday to Friday\n    classification.priority_score += 5;\n} else {\n    classification.priority_score -= 5;\n    classification.urgency_flags.push('weekend');\n}\n\n// 👥 USER-BASED PRIORITY\nif (classification.urgency_flags.includes('user_waiting')) {\n    classification.priority_score += 20;\n}\n\n// Extract user ID for admin detection\nconst userId = requestBody.callback_query?.from?.id || requestBody.message?.from?.id;\nconst adminUsers = [6475835412, 7543174110]; // Add more admin IDs here\n\nif (adminUsers.includes(userId)) {\n    classification.business_context.user_type = 'admin';\n    classification.priority_score += 15;\n    classification.urgency_flags.push('admin_user');\n    console.log(\"👑 Admin user detected:\", userId);\n} else {\n    classification.business_context.user_type = 'regular';\n}\n\n// 🎨 CONTENT-TYPE PRIORITY\nif (classification.business_context.content_type) {\n    const contentPriority = {\n        'post': 10,\n        'story': 5,\n        'carousel': 15,\n        'reel': 20\n    };\n    const bonus = contentPriority[classification.business_context.content_type] || 0;\n    classification.priority_score += bonus;\n}\n\n// 📱 APPROVAL PHASE PRIORITY\nif (classification.business_context.approval_phase) {\n    if (classification.business_context.approval_phase.includes('final')) {\n        classification.priority_score += 10; // Final approvals are more urgent\n    }\n}\n\n// Normalize priority score\nclassification.priority_score = Math.min(100, Math.max(0, classification.priority_score));\n\n// Set priority levels\nif (classification.priority_score >= 80) {\n    classification.priority = 'urgent';\n} else if (classification.priority_score >= 60) {\n    classification.priority = 'high';\n} else if (classification.priority_score >= 40) {\n    classification.priority = 'normal';\n} else {\n    classification.priority = 'low';\n}\n\n// ====================================\n// ENHANCED BUSINESS CONTEXT\n// ====================================\n\n// Add workflow execution context\nif (classification.business_context.target_execution_id) {\n    classification.business_context.execution_context = {\n        execution_id: classification.business_context.target_execution_id,\n        estimated_workflow: classification.business_context.workflow_type,\n        approval_phase: classification.business_context.approval_phase,\n        user_action: classification.business_context.user_action\n    };\n}\n\n// Add timing context\nclassification.business_context.timing = {\n    hour: currentHour,\n    day_of_week: currentDay,\n    is_business_hours: currentHour >= 9 && currentHour <= 17 && currentDay >= 1 && currentDay <= 5,\n    is_peak_time: (currentHour >= 8 && currentHour <= 10) || (currentHour >= 17 && currentHour <= 19)\n};\n\n// ====================================\n// FINALIZATION & METRICS\n// ====================================\n\nconst processingTime = Date.now() - startTime;\nclassification.processing_latency_ms = processingTime;\n\n// Enhanced request fingerprinting\nconst crypto = require('crypto');\nclassification.request_fingerprint = crypto\n    .createHash('md5')\n    .update(JSON.stringify({\n        source: classification.source,\n        type: classification.type,\n        content_type: classification.business_context.content_type,\n        approval_phase: classification.business_context.approval_phase,\n        body_hash: crypto.createHash('md5').update(JSON.stringify(requestBody)).digest('hex'),\n        timestamp_minute: Math.floor(Date.now() / 60000)\n    }))\n    .digest('hex');\n\n// Enhanced logging\nconsole.log(\"✅ === CLASSIFICATION COMPLETE ===\");\nconsole.log(\"🎯 Source:\", classification.source, \"(\" + classification.source_confidence + \"%)\");\nconsole.log(\"📊 Type:\", classification.type, \"->\", classification.subtype);\nconsole.log(\"🎨 Content Type:\", classification.business_context.content_type || 'none');\nconsole.log(\"📱 Workflow:\", classification.business_context.workflow_type || 'none');\nconsole.log(\"⚡ Priority:\", classification.priority, \"(\" + classification.priority_score + \"/100)\");\nconsole.log(\"🎯 Target:\", classification.target_workflow);\nconsole.log(\"🔄 Strategy:\", classification.routing_strategy);\nconsole.log(\"🚨 Urgency Flags:\", classification.urgency_flags.join(', '));\nconsole.log(\"⏱️ Processing Time:\", processingTime + \"ms\");\n\nif (classification.business_context.execution_context) {\n    console.log(\"🔗 Execution Context:\", JSON.stringify(classification.business_context.execution_context, null, 2));\n}\n\nreturn [{json: classification}];"
+      },
+      "id": "5770964a-447f-40e5-a5f9-5dd094a73c98",
+      "name": "Enterprise Request Classifier",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [560, 260]
+    },
+    {
+      "parameters": {
+        "tableId": "orchestrator_requests",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "request_id",
+              "fieldValue": "={{ $json.request_id }}"
+            },
+            {
+              "fieldId": "source",
+              "fieldValue": "={{ $json.source }}"
+            },
+            {
+              "fieldId": "request_type",
+              "fieldValue": "={{ $json.type }}"
+            },
+            {
+              "fieldId": "target_workflow",
+              "fieldValue": "={{ $json.target_workflow }}"
+            },
+            {
+              "fieldId": "routing_strategy",
+              "fieldValue": "={{ $json.routing_strategy }}"
+            },
+            {
+              "fieldId": "priority_score",
+              "fieldValue": "={{ $json.priority_score }}"
+            },
+            {
+              "fieldId": "processing_latency_ms",
+              "fieldValue": "={{ $json.processing_latency_ms }}"
+            },
+            {
+              "fieldId": "request_fingerprint",
+              "fieldValue": "={{ $json.request_fingerprint }}"
+            },
+            {
+              "fieldId": "requires_state_tracking",
+              "fieldValue": "={{ $json.requires_state_tracking }}"
+            },
+            {
+              "fieldId": "classification_data",
+              "fieldValue": "={{ JSON.stringify($json) }}"
+            }
+          ]
+        }
+      },
+      "id": "eb403ed1-5566-46e2-b476-5c7a270ce7e5",
+      "name": "State Logger",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [780, 260],
+      "credentials": {
+        "supabaseApi": {
+          "id": "DILZN3aAMdS9FL24",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.target_workflow }}",
+                    "rightValue": "CallbackHandler",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "State_Callbacks"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.target_workflow }}",
+                    "rightValue": "MarketingDirector",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Content_Requests"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.target_workflow }}",
+                    "rightValue": "MarketingManager",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Scheduled_Content"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.priority }}",
+                    "rightValue": "urgent",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Urgent_Priority"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "d8f5f940-cc80-462a-b6ac-ff36e4902f43",
+      "name": "Enterprise Workflow Router",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [1000, 260]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://skinclarityclub.app.n8n.cloud/webhook/callback-handler",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "X-Forwarded-From",
+              "value": "orchestrator-v2"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.original_body }}",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "eef3be7e-09aa-4a50-96ee-42817c84a992",
+      "name": "Route to Callback Handler",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1240, 100]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "SLATBPwKaqsiCCYl",
+          "mode": "list",
+          "cachedResultName": "AI AGENTS WORKFLOW — MarketingManager"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "original_request": "=={{ JSON.stringify($json.original_body) }}",
+            "orchestrator_metadata": "={{ { \n    request_id: $json.request_id, \n    priority_score: $json.priority_score, \n    routing_strategy: $json.routing_strategy,\n    source: $json.source,\n    type: $json.type,\n    user_type: $json.business_context?.user_type || 'regular',\n    timestamp: $json.classification_timestamp\n  } }}",
+            "priority_score": "={{ $json.priority_score }}",
+            "user_type": "=={{ $json.business_context?.user_type || 'regular' }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "original_request",
+              "displayName": "original_request",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "orchestrator_metadata",
+              "displayName": "orchestrator_metadata",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "priority_score",
+              "displayName": "priority_score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number"
+            },
+            {
+              "id": "user_type",
+              "displayName": "user_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "id": "82eb0698-f546-46cc-8668-67004fad7704",
+      "name": "Route to Marketing Director",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [1320, 280]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "SLATBPwKaqsiCCYl",
+          "mode": "list",
+          "cachedResultName": "AI AGENTS WORKFLOW — MarketingManager"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "priority_score": "={{ $json.priority_score }}",
+            "orchestrator_metadata": "={{ $json }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "original_request",
+              "displayName": "original_request",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "orchestrator_metadata",
+              "displayName": "orchestrator_metadata",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "priority_score",
+              "displayName": "priority_score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number"
+            },
+            {
+              "id": "user_type",
+              "displayName": "user_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "id": "95e5a69f-6edd-4bd3-837d-0c761abdc22f",
+      "name": "Route to Marketing Manager",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [1240, 520]
+    },
+    {
+      "parameters": {
+        "jsCode": "// 📊 SAFE PERFORMANCE MONITORING V2.0\nconst classification = $input.first().json;\n\nconsole.log(\"📊 === PERFORMANCE MONITORING ===\");\n\n// Safe data extraction with fallbacks\nconst urgencyFlags = classification.urgency_flags || [];\nconst businessContext = classification.business_context || {};\nconst processingLatency = classification.processing_latency_ms || 0;\nconst sourceConfidence = classification.source_confidence || 0;\nconst priorityScore = classification.priority_score || 50;\n\n// Calculate performance metrics safely\nconst metrics = {\n    // Timing metrics\n    classification_latency_ms: processingLatency,\n    total_processing_time_ms: Date.now() - new Date(classification.classification_timestamp || new Date()).getTime(),\n    \n    // Quality metrics\n    source_confidence: sourceConfidence,\n    classification_quality: sourceConfidence > 90 ? 'high' : \n                           sourceConfidence > 70 ? 'medium' : 'low',\n    \n    // Business metrics\n    priority_score: priorityScore,\n    urgency_level: urgencyFlags.length,\n    \n    // System metrics\n    routing_strategy: classification.routing_strategy || 'unknown',\n    state_tracking_required: classification.requires_state_tracking || false,\n    \n    // Request metrics\n    request_size_bytes: JSON.stringify(classification.original_body || {}).length,\n    fingerprint: classification.request_fingerprint || 'unknown',\n    \n    // Timestamp\n    monitored_at: new Date().toISOString()\n};\n\n// Performance alerts with safe checks\nconst alerts = [];\n\nif (metrics.classification_latency_ms > 100) {\n    alerts.push({\n        type: 'performance',\n        severity: 'warning',\n        message: 'Classification latency above threshold: ' + metrics.classification_latency_ms + 'ms'\n    });\n}\n\nif (metrics.source_confidence < 70) {\n    alerts.push({\n        type: 'quality',\n        severity: 'warning', \n        message: 'Low source confidence: ' + metrics.source_confidence + '%'\n    });\n}\n\nif (urgencyFlags.includes('user_waiting')) {\n    alerts.push({\n        type: 'urgency',\n        severity: 'high',\n        message: 'User waiting for response - prioritize processing'\n    });\n}\n\nif (urgencyFlags.includes('admin_user')) {\n    alerts.push({\n        type: 'priority',\n        severity: 'info',\n        message: 'Admin user request detected'\n    });\n}\n\n// SLA compliance check\nconst slaCompliant = {\n    latency_sla: metrics.classification_latency_ms < 200, // 200ms SLA\n    quality_sla: metrics.source_confidence > 50, // Lowered threshold for empty requests\n    routing_sla: !!(classification.target_workflow) // Must have target\n};\n\nmetrics.sla_compliant = Object.values(slaCompliant).every(Boolean);\nmetrics.sla_details = slaCompliant;\n\n// Performance scoring (0-100) with safe calculation\nlet performanceScore = 100;\n\nif (metrics.classification_latency_ms > 50) performanceScore -= 10;\nif (metrics.classification_latency_ms > 100) performanceScore -= 20;\nif (metrics.source_confidence < 90) performanceScore -= 15;\nif (alerts.length > 0) performanceScore -= (alerts.length * 10);\n\n// Special handling for empty requests\nif (classification.source === 'empty_request') {\n    performanceScore = Math.max(performanceScore, 40); // Don't penalize too much for test requests\n}\n\nmetrics.performance_score = Math.max(0, performanceScore);\n\n// Request classification summary\nconst requestSummary = {\n    source: classification.source || 'unknown',\n    type: classification.type || 'unknown',\n    confidence: sourceConfidence,\n    priority: priorityScore,\n    target: classification.target_workflow || 'unknown',\n    strategy: classification.routing_strategy || 'unknown'\n};\n\nconsole.log(\"📊 Performance Metrics:\");\nconsole.log(\"⏱️  Classification Latency:\", metrics.classification_latency_ms + \"ms\");\nconsole.log(\"🎯 Source Confidence:\", metrics.source_confidence + \"%\");\nconsole.log(\"📈 Performance Score:\", metrics.performance_score + \"/100\");\nconsole.log(\"✅ SLA Compliant:\", metrics.sla_compliant);\nconsole.log(\"🚨 Alerts:\", alerts.length);\nconsole.log(\"📋 Request Summary:\", JSON.stringify(requestSummary, null, 2));\n\nif (alerts.length > 0) {\n    console.log(\"🚨 Performance Alerts:\");\n    alerts.forEach(alert => console.log(\"  - \" + alert.severity + \": \" + alert.message));\n}\n\n// Enterprise insights\nconst insights = [];\n\nif (classification.source === 'empty_request') {\n    insights.push(\"Empty request detected - likely test or misconfigured client\");\n}\n\nif (urgencyFlags.length > 2) {\n    insights.push(\"High urgency request with multiple flags\");\n}\n\nif (metrics.source_confidence === 100 && classification.source !== 'empty_request') {\n    insights.push(\"Perfect classification confidence - well-structured request\");\n}\n\nif (insights.length > 0) {\n    console.log(\"💡 Enterprise Insights:\");\n    insights.forEach(insight => console.log(\"  - \" + insight));\n}\n\nconsole.log(\"📊 === MONITORING COMPLETE ===\");\n\nreturn [{\n    json: {\n        ...classification,\n        performance_metrics: metrics,\n        performance_alerts: alerts,\n        enterprise_insights: insights,\n        request_summary: requestSummary,\n        monitoring_timestamp: new Date().toISOString()\n    }\n}];"
+      },
+      "id": "28287c7b-90bd-4bc6-8796-42dded1f55ec",
+      "name": "Performance Monitor",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1520, 280]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"status\": \"success\",\n  \"orchestrator_version\": \"2.0\",\n  \"message\": \"Request processed successfully by Enterprise Orchestrator\",\n  \"request_id\": \"={{ $json.request_id || $execution.id }}\",\n  \"source\": \"={{ $json.source || 'unknown' }}\",\n  \"request_type\": \"={{ $json.type || $json.request_type || 'unknown' }}\",\n  \"target_workflow\": \"={{ $json.target_workflow || 'unknown' }}\",\n  \"routing_strategy\": \"={{ $json.routing_strategy || 'default' }}\",\n  \"processing_latency_ms\": {{ $json.processing_latency_ms || $json.performance_metrics?.classification_latency_ms || 0 }},\n  \"priority_score\": {{ $json.priority_score || 50 }},\n  \"performance_score\": {{ $json.performance_metrics?.performance_score || 0 }},\n  \"processed_at\": \"{{ new Date().toISOString() }}\",\n  \"sla_compliant\": {{ $json.performance_metrics?.sla_compliant || false }},\n  \"debug\": {\n    \"classification_confidence\": {{ $json.source_confidence || 0 }},\n    \"urgency_flags_count\": {{ ($json.urgency_flags || []).length }},\n    \"execution_path\": \"orchestrator_v2\",\n    \"has_performance_data\": {{ !!$json.performance_metrics }}\n  }\n}",
+        "options": {
+          "responseCode": 200,
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "name": "X-Response-Source",
+                "value": "orchestrator-v2"
+              }
+            ]
+          }
+        }
+      },
+      "id": "8462e317-f8de-4a28-8b57-6463f68b5d2f",
+      "name": "Enterprise Response Builder",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1760, 260]
+    },
+    {
+      "parameters": {
+        "content": "# Enhanced Webhook Orchestrator v2.0\n\n🎯 **ENTERPRISE ROUTING SYSTEM**\n\nIntelligente centralized router die alle requests analyseert en routeert naar de juiste workflows.\n\n## Features:\n- 🔍 **Smart Classification**: AI-powered request analysis\n- 🎯 **Intelligent Routing**: Route naar juiste workflow  \n- 📊 **Performance Monitoring**: Real-time metrics\n- 🗃️ **State Logging**: Alle requests gelogd in database\n- ⚡ **Priority Management**: Urgency-based processing\n\n## Routes:\n- **State Callbacks** → CallbackHandler\n- **Content Requests** → MarketingDirector  \n- **Scheduled Content** → MarketingManager\n- **Chat Messages** → MarketingDirector\n\n## Monitoring:\n- Response times < 200ms\n- Classification confidence > 80%\n- SLA compliance tracking\n- Performance alerts",
+        "height": 760,
+        "width": 380,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [340, -580],
+      "id": "d65c2d0a-d0a4-42ac-86e3-4c85d73a2bea",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "# ROUTING OUTPUTS\n\n1. **State Callbacks**\n   - Telegram approval flows\n   - User waiting responses\n   - High priority\n\n2. **Content Requests** \n   - User content creation\n   - Chat interactions\n   - Admin user priority\n\n3. **Scheduled Content**\n   - Calendar automation\n   - Background processing\n   - Load balanced\n\n4. **Urgent Priority**\n   - Critical requests\n   - Admin actions\n   - Error escalation",
+        "height": 400,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [860, -240],
+      "id": "e110e336-0b07-4c8c-a2c9-89a40a67bbda",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 🔍 ENHANCED DEBUG: Parse classification_data\nconst inputData = $input.first().json;\n\nconsole.log(\"🚀 === ENHANCED DEBUG ===\");\n\n// Parse classification_data als het een string is\nlet classificationData = null;\nif (inputData.classification_data) {\n    try {\n        classificationData = typeof inputData.classification_data === 'string' \n            ? JSON.parse(inputData.classification_data) \n            : inputData.classification_data;\n        console.log(\"✅ Successfully parsed classification_data\");\n    } catch (e) {\n        console.log(\"❌ Failed to parse classification_data:\", e.message);\n    }\n}\n\n// Extract original_body from classification_data\nlet originalBody = null;\nif (classificationData && classificationData.original_body) {\n    originalBody = classificationData.original_body;\n    console.log(\"✅ Found original_body in classification_data!\");\n    console.log(\"📄 Original body:\", JSON.stringify(originalBody, null, 2));\n} else {\n    console.log(\"❌ No original_body found in classification_data\");\n}\n\n// Return with the correct original_body\nreturn [{\n    json: {\n        ...inputData,\n        // Add the parsed original_body to the output\n        original_body: originalBody,\n        debug_parsed: {\n            classification_data_found: !!classificationData,\n            original_body_extracted: !!originalBody,\n            callback_query_found: !!(originalBody && originalBody.callback_query)\n        }\n    }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1100, 100],
+      "id": "7728179e-3779-4626-959e-9f9230928e21",
+      "name": "Code"
+    }
+  ],
+  "pinData": {
+    "Enterprise Webhook Trigger": [
+      {
+        "json": {
+          "headers": {
+            "host": "skinclarityclub.app.n8n.cloud",
+            "user-agent": "axios/1.8.3",
+            "content-length": "1507",
+            "accept": "application/json,text/html,application/xhtml+xml,application/xml,text/*;q=0.9, image/*;q=0.8, */*;q=0.7",
+            "accept-encoding": "gzip, br",
+            "cdn-loop": "cloudflare; loops=1; subreqs=1",
+            "cf-connecting-ip": "4.182.88.118",
+            "cf-ew-via": "15",
+            "cf-ipcountry": "DE",
+            "cf-ray": "94fe924343b435f7-FRA",
+            "cf-visitor": "{\"scheme\":\"https\"}",
+            "cf-worker": "n8n.cloud",
+            "content-type": "application/json",
+            "x-forwarded-for": "4.182.88.118, 162.158.111.51",
+            "x-forwarded-host": "skinclarityclub.app.n8n.cloud",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "traefik-prod-users-gwc-3-6db8488cf7-5k6rh",
+            "x-is-trusted": "yes",
+            "x-real-ip": "4.182.88.118"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "update_id": 521396270,
+            "callback_query": {
+              "id": "143385200788266842",
+              "from": {
+                "id": 6475835412,
+                "is_bot": false,
+                "first_name": "D",
+                "language_code": "nl"
+              },
+              "message": {
+                "message_id": 996,
+                "from": {
+                  "id": 7394622882,
+                  "is_bot": true,
+                  "first_name": "Bob de MarketingGuru",
+                  "username": "SkinClarityBot"
+                },
+                "chat": {
+                  "id": 6475835412,
+                  "first_name": "D",
+                  "type": "private"
+                },
+                "date": 1749953803,
+                "photo": [
+                  {
+                    "file_id": "AgACAgQAAxkDAAID5GhOLQt9FxujamSGdCskPvpF20aaAAKOuDEbhd91UjHWCIvvHFi8AQADAgADcwADNgQ",
+                    "file_unique_id": "AQADjrgxG4XfdVJ4",
+                    "file_size": 1752,
+                    "width": 90,
+                    "height": 90
+                  },
+                  {
+                    "file_id": "AgACAgQAAxkDAAID5GhOLQt9FxujamSGdCskPvpF20aaAAKOuDEbhd91UjHWCIvvHFi8AQADAgADbQADNgQ",
+                    "file_unique_id": "AQADjrgxG4XfdVJy",
+                    "file_size": 21214,
+                    "width": 320,
+                    "height": 320
+                  },
+                  {
+                    "file_id": "AgACAgQAAxkDAAID5GhOLQt9FxujamSGdCskPvpF20aaAAKOuDEbhd91UjHWCIvvHFi8AQADAgADeAADNgQ",
+                    "file_unique_id": "AQADjrgxG4XfdVJ9",
+                    "file_size": 81484,
+                    "width": 800,
+                    "height": 800
+                  },
+                  {
+                    "file_id": "AgACAgQAAxkDAAID5GhOLQt9FxujamSGdCskPvpF20aaAAKOuDEbhd91UjHWCIvvHFi8AQADAgADeQADNgQ",
+                    "file_unique_id": "AQADjrgxG4XfdVJ-",
+                    "file_size": 117543,
+                    "width": 1024,
+                    "height": 1024
+                  }
+                ],
+                "caption": "🎨 Nieuwe Instagram afbeelding gegenereerd!\n📈 **Strategy:** PREMIUM\n📊 **Priority:** HIGH\n🏆 **Quality:** Enterprise Grade\n\n⏰ Wat vind je van deze afbeelding?",
+                "reply_markup": {
+                  "inline_keyboard": [
+                    [
+                      {
+                        "text": "✅ Perfect!",
+                        "callback_data": "AIP_1256_image-approval"
+                      },
+                      {
+                        "text": "✏️ Verbeteren",
+                        "callback_data": "MIP_1256_image-approval"
+                      }
+                    ]
+                  ]
+                }
+              },
+              "chat_instance": "7222373269950687427",
+              "data": "AIP_1256_image-approval"
+            }
+          },
+          "webhookUrl": "https://skinclarityclub.app.n8n.cloud/webhook/orchestrator-v2",
+          "executionMode": "production"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Enterprise Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Enterprise Request Classifier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enterprise Request Classifier": {
+      "main": [
+        [
+          {
+            "node": "State Logger",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "State Logger": {
+      "main": [
+        [
+          {
+            "node": "Enterprise Workflow Router",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enterprise Workflow Router": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Route to Marketing Director",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Route to Marketing Manager",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Performance Monitor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route to Callback Handler": {
+      "main": [
+        [
+          {
+            "node": "Performance Monitor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route to Marketing Director": {
+      "main": [
+        [
+          {
+            "node": "Performance Monitor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route to Marketing Manager": {
+      "main": [
+        [
+          {
+            "node": "Performance Monitor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Performance Monitor": {
+      "main": [
+        [
+          {
+            "node": "Enterprise Response Builder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Route to Callback Handler",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "137e03e1-a274-486f-9696-001551046de3",
+  "meta": {
+    "instanceId": "dfdd26cd27fe046d045e60df6b98f78e52a497ca304bdcb672e06512ba750a2c"
+  },
+  "id": "j0b13S8mqDiyIFsK",
+  "tags": []
+}

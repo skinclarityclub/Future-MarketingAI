@@ -1,0 +1,238 @@
+/**
+ * HOLOGRAPHIC EFFECTS CSS
+ * Custom shadow effects and animations for glassmorphism elements
+ */
+
+/* ============================
+   CUSTOM SHADOW SYSTEM
+   ============================ */
+
+/* Holographic Shadows */
+.shadow-holographic {
+  box-shadow: 
+    0 8px 32px rgba(59, 130, 246, 0.3),
+    0 16px 64px rgba(139, 92, 246, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.shadow-massive {
+  box-shadow: 
+    0 25px 50px rgba(0, 0, 0, 0.25),
+    0 10px 20px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.shadow-ethereal {
+  box-shadow: 
+    0 0 20px rgba(59, 130, 246, 0.4),
+    0 0 40px rgba(139, 92, 246, 0.3),
+    0 0 80px rgba(34, 211, 238, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* Neural Glow Effects */
+.glow-neural {
+  box-shadow: 
+    0 0 20px rgba(59, 130, 246, 0.5),
+    0 0 40px rgba(59, 130, 246, 0.3),
+    0 0 80px rgba(59, 130, 246, 0.1);
+}
+
+.glow-quantum {
+  box-shadow: 
+    0 0 20px rgba(139, 92, 246, 0.5),
+    0 0 40px rgba(139, 92, 246, 0.3),
+    0 0 80px rgba(139, 92, 246, 0.1);
+}
+
+.glow-holographic {
+  box-shadow: 
+    0 0 20px rgba(34, 211, 238, 0.5),
+    0 0 40px rgba(34, 211, 238, 0.3),
+    0 0 80px rgba(34, 211, 238, 0.1);
+}
+
+.glow-cybernetic {
+  box-shadow: 
+    0 0 20px rgba(16, 185, 129, 0.5),
+    0 0 40px rgba(16, 185, 129, 0.3),
+    0 0 80px rgba(16, 185, 129, 0.1);
+}
+
+/* ============================
+   HOLOGRAPHIC ANIMATIONS
+   ============================ */
+
+/* Data Flow Animation */
+@keyframes dataFlow {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(200%);
+    opacity: 0;
+  }
+}
+
+.animate-data-flow {
+  animation: dataFlow 3s ease-in-out infinite;
+}
+
+/* Holographic Shimmer */
+@keyframes holographicShimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-holographic-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  background-size: 200% 100%;
+  animation: holographicShimmer 2s ease-in-out infinite;
+}
+
+/* Neural Pulse */
+@keyframes neuralPulse {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+.animate-neural-pulse {
+  animation: neuralPulse 2s ease-in-out infinite;
+}
+
+/* Quantum Distortion */
+@keyframes quantumDistortion {
+  0%, 100% {
+    filter: hue-rotate(0deg) saturate(1);
+  }
+  25% {
+    filter: hue-rotate(90deg) saturate(1.2);
+  }
+  50% {
+    filter: hue-rotate(180deg) saturate(0.8);
+  }
+  75% {
+    filter: hue-rotate(270deg) saturate(1.1);
+  }
+}
+
+.animate-quantum-distortion {
+  animation: quantumDistortion 4s ease-in-out infinite;
+}
+
+/* ============================
+   RESPONSIVE HOLOGRAPHIC EFFECTS
+   ============================ */
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .shadow-holographic,
+  .shadow-massive,
+  .shadow-ethereal {
+    box-shadow: 
+      0 4px 16px rgba(59, 130, 246, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+  
+  .glow-neural,
+  .glow-quantum,
+  .glow-holographic,
+  .glow-cybernetic {
+    box-shadow: 
+      0 0 10px rgba(59, 130, 246, 0.3),
+      0 0 20px rgba(59, 130, 246, 0.2);
+  }
+}
+
+/* High performance mode */
+@media (prefers-reduced-motion: reduce) {
+  .animate-data-flow,
+  .animate-holographic-shimmer,
+  .animate-neural-pulse,
+  .animate-quantum-distortion {
+    animation: none;
+  }
+  
+  .shadow-holographic,
+  .shadow-massive,
+  .shadow-ethereal,
+  .glow-neural,
+  .glow-quantum,
+  .glow-holographic,
+  .glow-cybernetic {
+    transition: none;
+  }
+}
+
+/* ============================
+   UTILITY CLASSES
+   ============================ */
+
+.glass-blur-light {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.glass-blur-medium {
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.glass-blur-heavy {
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+.glass-blur-extreme {
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+}
+
+/* Holographic borders */
+.border-holographic {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.05)
+  );
+}
+
+.border-neural {
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.border-quantum {
+  border: 1px solid rgba(139, 92, 246, 0.3);
+}
+
+.border-cybernetic {
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+/* GPU Acceleration */
+.gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform, opacity;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+} 

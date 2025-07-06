@@ -1,0 +1,1227 @@
+{
+  "name": "ReelBuilder",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "reelTopic"
+            },
+            {
+              "name": "reelContext"
+            },
+            {
+              "name": "chatID"
+            },
+            {
+              "name": "contentStrategy"
+            },
+            {
+              "name": "priority"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [-3720, -400],
+      "id": "be7e3bc0-ce90-4a87-82b9-1b2fa4190e11",
+      "name": "Enterprise Input Trigger"
+    },
+    {
+      "parameters": {
+        "content": "# 🏢 FASE 1: Script & Image Generation",
+        "height": 580,
+        "width": 1260,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-3760, -480],
+      "id": "cce9fda0-7c28-4685-b2f2-d26d30ac5dc4",
+      "name": "Enterprise Phase 1"
+    },
+    {
+      "parameters": {
+        "content": "# 🎬 FASE 2: Video Generation",
+        "height": 580,
+        "width": 1260,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-2960, -480],
+      "id": "3a4ba9f4-866a-4845-a3cb-2d7a7ebfd424",
+      "name": "Enterprise Phase 2"
+    },
+    {
+      "parameters": {
+        "content": "# 🎵 FASE 3: Audio & Text Overlay",
+        "height": 580,
+        "width": 1260,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-1760, -480],
+      "id": "0bf9f17c-524b-4672-a6d0-e00240e89213",
+      "name": "Enterprise Phase 3"
+    },
+    {
+      "parameters": {
+        "content": "# 🚀 FASE 4: Final Render & Review",
+        "height": 580,
+        "width": 1260,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-560, -480],
+      "id": "f6908118-188d-4f59-ab61-b050421a310c",
+      "name": "Enterprise Phase 4"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 🎨 ENTERPRISE TEMPLATE CONFIGURATION SYSTEM FOR REELS\nconst input = $input.first().json;\n\nconsole.log(\"🎨 === ENTERPRISE REEL TEMPLATE CONFIGURATION ===\");\nconsole.log(\"🎬 Content Type: reel (enterprise workflow)\");\nconsole.log(\"📈 Strategy:\", input.contentStrategy || 'premium');\n\nconst templateConfig = {\n  // Reel-specific configuration\n  content_type: 'reel',\n  aspect_ratio: '9:16',\n  video_duration: 4, // seconds per scene\n  total_scenes: 4,\n  total_duration: 16, // 4 scenes x 4 seconds\n  \n  // AI models per strategy (enterprise grade)\n  ai_models: {\n    script: 'openai/gpt-4o', // For scene script generation\n    visual: 'openai/gpt-4o', // For image generation per scene\n    video: 'kling', // Kling API for video generation\n    rendering: 'creatomate' // Final reel rendering\n  },\n  \n  // Enterprise reel configuration\n  enterprise_config: {\n    quality_threshold: input.contentStrategy === 'campaign' ? 0.90 : \n                      input.contentStrategy === 'premium' ? 0.85 : 0.75,\n    approval_levels: {\n      script_approval: true,\n      scene_review: true,\n      final_approval: true\n    },\n    error_recovery: true,\n    state_tracking: true\n  },\n  \n  // Creatomate template for final assembly\n  creatomate_template: 'enterprise-reel-template-v1',\n  \n  // Ready for expansion\n  template_mapping: {\n    ready_for_expansion: true,\n    supports_multiple_templates: true\n  }\n};\n\nconsole.log(\"✅ Enterprise reel template config ready:\", templateConfig.content_type);\nconsole.log(\"🎬 Total duration:\", templateConfig.total_duration, \"seconds\");\nconsole.log(\"📊 Quality threshold:\", (templateConfig.enterprise_config.quality_threshold * 100).toFixed(1) + '%');\n\nreturn [{ json: { ...input, template_config: templateConfig } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-3540, -400],
+      "id": "50e9a788-bf1a-4c59-ad1c-0e4ccabe4943",
+      "name": "Enterprise Template Configuration"
+    },
+    {
+      "parameters": {
+        "tableId": "content_workflows",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "execution_id",
+              "fieldValue": "={{ $execution.id }}"
+            },
+            {
+              "fieldId": "workflow_type",
+              "fieldValue": "createReel_Enterprise"
+            },
+            {
+              "fieldId": "current_state",
+              "fieldValue": "INITIAL"
+            },
+            {
+              "fieldId": "user_id",
+              "fieldValue": "={{ $('Enterprise Input Trigger').first().json.chatID }}"
+            },
+            {
+              "fieldId": "chat_id",
+              "fieldValue": "={{ $('Enterprise Input Trigger').first().json.chatID }}"
+            },
+            {
+              "fieldId": "input_data",
+              "fieldValue": "={{ JSON.stringify($('Enterprise Input Trigger').first().json) }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [-3720, -260],
+      "id": "69d80e1f-de25-433b-bf62-2efbd4a7cce6",
+      "name": "Enterprise Workflow Registry",
+      "credentials": {
+        "supabaseApi": {
+          "id": "DILZN3aAMdS9FL24",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// 🏢 ENTERPRISE STATE COORDINATOR INITIALIZATION (REEL)\nconst supabaseWorkflow = $('Enterprise Workflow Registry').first().json;\nconst inputData = $('Enterprise Input Trigger').first().json;\n\nconsole.log(\"🎬 === ENTERPRISE REEL STATE COORDINATOR INIT ===\");\nconsole.log(\"🆔 Execution ID:\", $execution.id);\nconsole.log(\"📊 Supabase Workflow ID:\", supabaseWorkflow.id);\nconsole.log(\"📈 Content Strategy:\", inputData.contentStrategy || 'premium');\nconsole.log(\"📊 Priority Level:\", inputData.priority || 'high');\n\ntry {\n  console.log(\"🔄 Preparing Enterprise StateCoordinator data for Reel\");\n  \n  // Enterprise StateCoordinator Data Package for Reel\n  const enterpriseStateData = {\n    action: 'create',\n    execution_id: $execution.id,\n    workflow_data: {\n      workflow_type: 'createReel_Enterprise',\n      workflow_version: '2.3_enterprise_reel',\n      current_state: 'INITIAL',\n      current_phase: 'enterprise_script_generation',\n      chat_id: inputData.chatID,\n      user_id: inputData.chatID,\n      input_data: inputData,\n      supabase_workflow_id: supabaseWorkflow.id,\n      \n      // Enterprise Reel Configuration\n      enterprise_config: {\n        content_strategy: inputData.contentStrategy || 'premium',\n        priority_level: inputData.priority || 'high',\n        enterprise_mode: true,\n        quality_threshold: inputData.contentStrategy === 'campaign' ? 0.90 : \n                          inputData.contentStrategy === 'premium' ? 0.85 : 0.75,\n        reel_specific: {\n          scene_count: 4,\n          scene_duration: 4,\n          total_duration: 16,\n          aspect_ratio: '9:16',\n          video_quality: 'enterprise'\n        }\n      }\n    }\n  };\n\n  console.log(\"✅ Enterprise StateCoordinator data prepared for Reel\");\n  console.log(\"📄 Enterprise Reel Config:\", JSON.stringify(enterpriseStateData.workflow_data.enterprise_config.reel_specific, null, 2));\n\n  return [{ \n    json: { \n      ...inputData, \n      enterprise_state_data: enterpriseStateData,\n      supabase_id: supabaseWorkflow.id,\n      enterprise_ready: true,\n      \n      // Enterprise Metadata\n      content_strategy: inputData.contentStrategy || 'premium',\n      priority_level: inputData.priority || 'high',\n      workflow_version: '2.3_enterprise_reel'\n    } \n  }];\n\n} catch (error) {\n  console.log(\"❌ Enterprise StateCoordinator preparation error:\", error.message);\n  \n  // Enterprise Fallback Mode\n  return [{ \n    json: { \n      ...inputData, \n      enterprise_state_created: false, \n      supabase_id: supabaseWorkflow.id,\n      enterprise_error: error.message,\n      fallback_mode: 'enterprise_reel',\n      content_strategy: inputData.contentStrategy || 'premium',\n      priority_level: inputData.priority || 'high'\n    } \n  }];\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-3540, -260],
+      "id": "095e964f-feba-4c3e-82c8-9ebfded1cbe0",
+      "name": "Initialize Enterprise StateCoordinator"
+    },
+    {
+      "parameters": {
+        "team": "90151264028",
+        "space": "90155049265",
+        "folder": "90157459408",
+        "list": "901511913287",
+        "name": "=🎬 Reel: {{ $('Enterprise Input Trigger').first().json.reelTopic }}",
+        "additionalFields": {
+          "customFieldsJson": "={ \n  \"execution_id\": \"{{ $execution.id }}\",\n  \"content_strategy\": \"{{ $('Enterprise Input Trigger').first().json.contentStrategy || 'premium' }}\",\n  \"workflow_version\": \"2.3_enterprise_reel\",\n  \"current_phase\": \"script_generation\",\n  \"chat_id\": \"{{ $('Enterprise Input Trigger').first().json.chatID }}\",\n  \"reel_duration\": \"16_seconds\",\n  \"scene_count\": \"4\"\n}",
+          "content": "=🏢 Enterprise ReelBuilder gestart!\n- **Topic:** {{ $('Enterprise Input Trigger').first().json.reelTopic }}\n- **Context:** {{ $('Enterprise Input Trigger').first().json.reelContext }}\n- **Strategy:** {{ $('Enterprise Input Trigger').first().json.contentStrategy || 'premium' }}\n- **Priority:** {{ $('Enterprise Input Trigger').first().json.priority || 'high' }}\n- **Duration:** 16 seconds (4 scenes)\n- **Quality target:** {{ $('Enterprise Input Trigger').first().json.contentStrategy === 'campaign' ? '90%' : $('Enterprise Input Trigger').first().json.contentStrategy === 'premium' ? '85%' : '75%' }}",
+          "priority": "={{ $('Enterprise Input Trigger').first().json.contentStrategy === 'campaign' ? 4 : $('Enterprise Input Trigger').first().json.contentStrategy === 'premium' ? 3 : 2 }}",
+          "startDate": "={{ $now.toISODate() }}",
+          "status": "planning"
+        }
+      },
+      "type": "n8n-nodes-base.clickUp",
+      "typeVersion": 1,
+      "position": [-3720, -80],
+      "id": "cb7e7770-acd4-4760-9beb-775a58c748e6",
+      "name": "Create ClickUp Task",
+      "credentials": {
+        "clickUpApi": {
+          "id": "3GNKK7vXdnhoVmRl",
+          "name": "ClickUp"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-4o",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [-3400, -300],
+      "id": "a16f458a-2c9b-497e-a7fd-53906abac947",
+      "name": "Enterprise Script Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "ht1g53zw1Z9E7nlN",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Reel Topic: {{ $('Enterprise Input Trigger').first().json.reelTopic }}\nReel Context: {{ $('Enterprise Input Trigger').first().json.reelContext }}\nContent Strategy: {{ $('Enterprise Input Trigger').first().json.contentStrategy || 'premium' }}\nPriority: {{ $('Enterprise Input Trigger').first().json.priority || 'high' }}\n\nCreate a structured script with exactly 4 scenes for an engaging Instagram Reel, optimized for the '{{ $('Enterprise Input Trigger').first().json.contentStrategy || 'premium' }}' strategy.",
+        "options": {
+          "systemMessage": "# Enterprise Reel Scripting Agent v2.3\n\nYou are an expert director and visual storyteller, specialized in creating enterprise-grade Instagram Reel scripts that drive measurable business results.\n\n## Mission:\nGenerate a structured JSON script with exactly 4 scenes for an Instagram Reel that:\n- Tells a compelling micro-story in 16 seconds (4 seconds per scene)\n- Maximizes engagement, retention, and conversion rates\n- Aligns with specific content strategies (standard, premium, campaign)\n- Maintains SkinClarity Club's premium brand consistency\n- Optimizes for Instagram's algorithm and user behavior\n- Generates measurable business impact\n\n## Enterprise Content Strategies:\n\n### **Standard Strategy** (75% quality threshold):\n- Clear, accessible visual storytelling\n- Broad audience appeal\n- Proven engagement patterns\n- Reliable performance metrics\n\n### **Premium Strategy** (85% quality threshold):\n- Elevated, aspirational content\n- Premium brand positioning\n- Higher engagement targets\n- Sophisticated visual narratives\n\n### **Campaign Strategy** (90% quality threshold):\n- Maximum impact, conversion-focused\n- Strategic business messaging\n- Executive-level quality standards\n- Premium positioning outcomes\n\n## Scene Architecture (4 scenes, 4 seconds each):\n- **Scene 1 (Hook)**: Scroll-stopping opener that captures attention immediately\n- **Scene 2 (Problem/Setup)**: Establishes context or presents a relatable challenge\n- **Scene 3 (Solution/Value)**: Delivers the core message or solution\n- **Scene 4 (CTA/Payoff)**: Strong call-to-action with memorable conclusion\n\n## Enterprise Scene Requirements:\n- **Visual First**: Describe what the audience SEES in vivid, concrete detail\n- **AI-Optimized**: Provide specific details for AI video generation (subjects, actions, setting, mood, camera angle)\n- **Brand Aligned**: Perfect SkinClarity Club brand consistency throughout\n- **Performance Focused**: Each scene designed for maximum retention and engagement\n- **Mobile Optimized**: 9:16 aspect ratio considerations\n- **Text Overlay Ready**: Space and consideration for overlay text\n\n## SkinClarity Club Enterprise Brand Elements:\n- **Color Palette**: Clean whites, soft pastels, natural earth tones\n- **Lighting**: Soft, natural, professional studio quality\n- **Composition**: Minimalist, premium, spacious 9:16 layouts\n- **Models**: Diverse, authentic, healthy-looking skin\n- **Props**: Glass containers, natural ingredients, clean surfaces\n- **Mood**: Trustworthy, aspirational, scientifically-backed\n- **Movement**: Smooth, professional, purposeful transitions\n\n## Enterprise Output Format (JSON):\nReturn ONLY a valid JSON object with a single key \"scenes\" containing an array of 4 scene objects.\n\n```json\n{\n  \"scenes\": [\n    {\n      \"scene_number\": 1,\n      \"visual_description\": \"Detailed 9:16 visual prompt for AI video generation, hook scene that stops scrolling immediately.\",\n      \"text_overlay\": \"Catchy hook text (max 8 words)\",\n      \"duration\": 4,\n      \"scene_purpose\": \"hook\"\n    },\n    {\n      \"scene_number\": 2,\n      \"visual_description\": \"Detailed 9:16 visual prompt building the story, establishing context or problem.\",\n      \"text_overlay\": \"Context/problem text (max 8 words)\",\n      \"duration\": 4,\n      \"scene_purpose\": \"setup\"\n    },\n    {\n      \"scene_number\": 3,\n      \"visual_description\": \"Detailed 9:16 visual prompt delivering the core value or solution.\",\n      \"text_overlay\": \"Value proposition (max 8 words)\",\n      \"duration\": 4,\n      \"scene_purpose\": \"value\"\n    },\n    {\n      \"scene_number\": 4,\n      \"visual_description\": \"Detailed 9:16 visual prompt with clear call-to-action and memorable conclusion.\",\n      \"text_overlay\": \"Clear CTA (max 8 words)\",\n      \"duration\": 4,\n      \"scene_purpose\": \"cta\"\n    }\n  ],\n  \"performance_prediction\": {\n    \"hook_strength\": 0.90,\n    \"retention_score\": 0.85,\n    \"conversion_potential\": \"high\",\n    \"brand_alignment\": \"perfect\"\n  }\n}\n```\n\n## Enterprise Quality Standards:\n- **Narrative Cohesion**: All 4 scenes must work together as one story\n- **Visual Consistency**: Cohesive aesthetic throughout all scenes\n- **Brand Compliance**: 100% SkinClarity Club alignment\n- **Performance Optimization**: Maximum engagement and conversion focus\n- **Mobile Excellence**: Perfect 9:16 vertical viewing experience\n- **Algorithm Friendly**: Instagram algorithm optimization\n\n**Focus**: Create enterprise-level reel scripts that drive exceptional business results through compelling visual storytelling and strategic content design."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [-3300, -400],
+      "id": "cb680602-882f-4713-b3bf-5c043230b89b",
+      "name": "Enterprise Reel Script Agent"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 🎬 ENTERPRISE SCRIPT PROCESSING & SCENE SPLITTING\nconst rawOutput = $input.first().json.output;\nconst inputData = $('Enterprise Input Trigger').first().json;\n\nconsole.log(\"🎬 === ENTERPRISE SCRIPT PROCESSING ===\");\nconsole.log(\"📥 Raw script output received\");\nconsole.log(\"📈 Content Strategy:\", inputData.contentStrategy || 'premium');\n\n// Clean and parse JSON output\nconst cleanJson = rawOutput.replace(/```json\\n?/g, '').replace(/```\\n?/g, '');\nlet scriptData;\n\ntry {\n    scriptData = JSON.parse(cleanJson);\n    console.log(\"✅ Script data parsed successfully\");\n} catch (error) {\n    console.error(\"❌ Failed to parse script JSON:\", error);\n    throw new Error(\"Enterprise script parsing failed\");\n}\n\n// Enterprise Script Validation\nconst enterpriseValidation = {\n    has_scenes: !!(scriptData.scenes && Array.isArray(scriptData.scenes)),\n    correct_scene_count: scriptData.scenes?.length === 4,\n    all_scenes_complete: scriptData.scenes?.every(s => s.visual_description && s.text_overlay && s.scene_number && s.scene_purpose) || false,\n    has_performance_prediction: !!(scriptData.performance_prediction),\n    proper_scene_numbers: scriptData.scenes?.every(s => s.scene_number >= 1 && s.scene_number <= 4) || false,\n    proper_durations: scriptData.scenes?.every(s => s.duration === 4) || false,\n    text_overlay_length: scriptData.scenes?.every(s => s.text_overlay.split(' ').length <= 8) || false\n};\n\nconst validationScore = Object.values(enterpriseValidation).filter(Boolean).length / Object.keys(enterpriseValidation).length;\n\nconsole.log(\"📋 === ENTERPRISE SCRIPT VALIDATION ===\");\nObject.entries(enterpriseValidation).forEach(([check, passed]) => {\n    console.log(`${passed ? '✅' : '❌'} ${check}: ${passed}`);\n});\nconsole.log(\"🎯 Script Validation Score:\", (validationScore * 100).toFixed(1) + '%');\n\n// Enterprise Quality Gate\nconst qualityThreshold = inputData.contentStrategy === 'campaign' ? 0.90 : \n                        inputData.contentStrategy === 'premium' ? 0.85 : 0.75;\n\nif (validationScore < qualityThreshold) {\n    console.log(\"🚨 ENTERPRISE SCRIPT QUALITY GATE FAILED\");\n    throw new Error(`Script quality standards not met: ${(validationScore * 100).toFixed(1)}%`);\n}\n\nconsole.log(\"🏆 ENTERPRISE SCRIPT QUALITY GATE PASSED!\");\n\n// Enterprise Metadata Enhancement\nconst enhancedScenes = scriptData.scenes.map(scene => ({\n    ...scene,\n    execution_id: $execution.id,\n    content_strategy: inputData.contentStrategy || 'premium',\n    priority_level: inputData.priority || 'high',\n    enterprise_validated: true,\n    generated_at: new Date().toISOString()\n}));\n\nconsole.log(`✅ Processing ${enhancedScenes.length} enterprise scenes for visual generation`);\n\n// Return each scene as separate item for loop processing\nreturn enhancedScenes.map(scene => ({ json: scene }));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-3120, -400],
+      "id": "d0996860-5201-4878-bb14-b4e52970e1f2",
+      "name": "Process & Split Enterprise Scenes"
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "model": "gpt-image-1",
+        "prompt": "={{ $json.visual_description }}, 9:16 aspect ratio, cinematic quality, professional studio lighting, SkinClarity Club premium brand aesthetic",
+        "options": {
+          "size": "1024x1792"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [-2880, -400],
+      "id": "99b21532-f88d-4b58-b197-8ed21c69b71d",
+      "name": "Generate Enterprise Scene Image",
+      "retryOnFail": true,
+      "waitBetweenTries": 2000,
+      "credentials": {
+        "openAiApi": {
+          "id": "lAcEJc06aCiCIRiF",
+          "name": "OpenAi accountFINAL"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://nurdldgqxseunotmygzn.supabase.co/storage/v1/object/content-assets/enterprise/{{ $execution.id }}/scene-{{ $('Process & Split Enterprise Scenes').item.json.scene_number }}.png",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im51cmRsZGdxeHNldW5vdG15Z3puIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0ODIxMDUxNCwiZXhwIjoyMDYzNzg2NTE0fQ.xsrrxjpMbKMdcJ_e_6DiBwz9eLLj3YziKE7UrTqhVCo"
+            },
+            {
+              "name": "Content-Type",
+              "value": "image/png"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-2700, -380],
+      "id": "0b456fee-050b-43b0-9d16-b19eea604521",
+      "name": "Store Enterprise Scene Image",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "t0Vk9fjgaIrAz1Kl",
+          "name": "SupaBase"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// 🏢 ENTERPRISE SCENE URL GENERATOR\nconst storeImageData = $input.first().json;\nconst sceneData = $('Process & Split Enterprise Scenes').item.json;\n\nconsole.log(`🔗 === ENTERPRISE SCENE ${sceneData.scene_number} URL GENERATION ===`);\nconsole.log(\"🆔 Execution ID:\", $execution.id);\nconsole.log(\"🎬 Scene Number:\", sceneData.scene_number);\nconsole.log(\"📈 Content Strategy:\", sceneData.content_strategy);\n\nconst bucketName = 'content-assets';\nconst filePath = `enterprise/${$execution.id}/scene-${sceneData.scene_number}.png`;\nconst publicUrl = `https://nurdldgqxseunotmygzn.supabase.co/storage/v1/object/public/${bucketName}/${filePath}`;\n\n// Enterprise Scene Metadata\nconst enterpriseSceneMetadata = {\n  scene_number: sceneData.scene_number,\n  scene_purpose: sceneData.scene_purpose,\n  file_url: publicUrl,\n  storage_path: filePath,\n  visual_description: sceneData.visual_description,\n  text_overlay: sceneData.text_overlay,\n  duration: sceneData.duration,\n  \n  // Enterprise Features\n  execution_id: $execution.id,\n  content_strategy: sceneData.content_strategy,\n  priority_level: sceneData.priority_level,\n  enterprise_validated: sceneData.enterprise_validated,\n  workflow_version: '2.3_enterprise_reel',\n  generated_at: sceneData.generated_at\n};\n\nconsole.log(\"✅ Enterprise scene\", sceneData.scene_number, \"URL generated:\", publicUrl);\n\nreturn [{ json: enterpriseSceneMetadata }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-2860, -160],
+      "id": "c50c3b4f-f6c4-411b-88ec-622d503bed0c",
+      "name": "Generate Enterprise Scene URL"
+    },
+    {
+      "parameters": {
+        "tableId": "content_assets",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "workflow_id",
+              "fieldValue": "={{ $('Enterprise Workflow Registry').first().json.id }}"
+            },
+            {
+              "fieldId": "execution_id",
+              "fieldValue": "={{ $execution.id }}"
+            },
+            {
+              "fieldId": "asset_type",
+              "fieldValue": "enterprise_reel_scene"
+            },
+            {
+              "fieldId": "file_url",
+              "fieldValue": "={{ $('Generate Enterprise Scene URL').item.json.file_url }}"
+            },
+            {
+              "fieldId": "file_metadata",
+              "fieldValue": "={{ JSON.stringify({scene_number: $('Generate Enterprise Scene URL').item.json.scene_number, scene_purpose: $('Generate Enterprise Scene URL').item.json.scene_purpose, visual_description: $('Generate Enterprise Scene URL').item.json.visual_description, text_overlay: $('Generate Enterprise Scene URL').item.json.text_overlay, content_strategy: $('Generate Enterprise Scene URL').item.json.content_strategy, priority_level: $('Generate Enterprise Scene URL').item.json.priority_level, enterprise_mode: true}) }}"
+            },
+            {
+              "fieldId": "created_at",
+              "fieldValue": "={{ $now.toISODate() }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [-3540, -100],
+      "id": "555806cf-a129-4b20-8b2b-c57fde82d575",
+      "name": "Save Enterprise Scene Asset",
+      "credentials": {
+        "supabaseApi": {
+          "id": "DILZN3aAMdS9FL24",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// 🏢 AGGREGATE ENTERPRISE SCENE DATA\nconst allSceneData = $input.all();\n\nconsole.log(`🔄 === ENTERPRISE SCENE AGGREGATION ===`);\nconsole.log(`📊 Aggregating ${allSceneData.length} enterprise scenes`);\n\n// Sort scenes by scene_number to maintain order\nconst sortedScenes = allSceneData.sort((a, b) => a.json.scene_number - b.json.scene_number);\n\n// Get original input data\nconst originalInputs = $('Enterprise Input Trigger').first().json;\n\n// Enterprise Scene Collection\nconst enterpriseSceneCollection = {\n  // Original inputs\n  ...originalInputs,\n  \n  // Scene data\n  scenes: sortedScenes.map(item => item.json),\n  scene_count: sortedScenes.length,\n  \n  // Enterprise metadata\n  execution_id: $execution.id,\n  content_strategy: originalInputs.contentStrategy || 'premium',\n  priority_level: originalInputs.priority || 'high',\n  workflow_version: '2.3_enterprise_reel',\n  \n  // Processing status\n  scenes_generated: true,\n  ready_for_video_generation: true,\n  aggregated_at: new Date().toISOString()\n};\n\nconsole.log(\"✅ Enterprise scene aggregation complete\");\nconsole.log(\"🎬 Total scenes:\", enterpriseSceneCollection.scene_count);\nconsole.log(\"📈 Strategy:\", enterpriseSceneCollection.content_strategy);\n\nreturn [{ json: enterpriseSceneCollection }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-3340, -160],
+      "id": "1764de10-0701-49f7-b443-f033e775eeb9",
+      "name": "Aggregate Enterprise Scene Data"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "id": "={{ $('Create ClickUp Task').first().json.id }}",
+        "updateFields": {
+          "content": "=🎬 Script en scenes gegenereerd voor reel!\n📊 Scenes: {{ $('Aggregate Enterprise Scene Data').first().json.scene_count }}\n📈 Strategy: {{ $('Aggregate Enterprise Scene Data').first().json.content_strategy }}\n⏰ Scenes ready: {{ $now.toISO() }}\n🎯 Volgende stap: Scene review via Telegram",
+          "name": "=🎬 Reel: {{ $('Enterprise Input Trigger').first().json.reelTopic }} - Scenes Ready",
+          "priority": "={{ $('Enterprise Input Trigger').first().json.contentStrategy === 'campaign' ? 4 : $('Enterprise Input Trigger').first().json.contentStrategy === 'premium' ? 3 : 2 }}",
+          "status": "SCENE REVIEW"
+        }
+      },
+      "type": "n8n-nodes-base.clickUp",
+      "typeVersion": 1,
+      "position": [-3140, -100],
+      "id": "9ec66e5a-fa8c-4603-ad80-88ff63194df7",
+      "name": "Update Task - Scenes Ready",
+      "credentials": {
+        "clickUpApi": {
+          "id": "3GNKK7vXdnhoVmRl",
+          "name": "ClickUp"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// ⚙️ PREPARE TELEGRAM SCENE REVIEW\nconst sceneData = $('Aggregate Enterprise Scene Data').first().json;\nconst scenes = sceneData.scenes;\n\nconsole.log(\"📱 === PREPARING TELEGRAM SCENE REVIEW ===\");\nconsole.log(`🎬 Preparing ${scenes.length} scenes for review`);\n\n// Create media group for all scene images\nconst mediaGroup = scenes.map((scene, index) => ({ \n  type: 'photo', \n  media: scene.file_url,\n  caption: index === 0 ? `🎬 Enterprise Reel Script Gegenereerd!\\n\\n**Topic:** ${sceneData.reelTopic}\\n**Strategy:** ${sceneData.content_strategy.toUpperCase()}\\n**Scenes:** ${scenes.length}\\n\\n**Scene ${scene.scene_number}:** ${scene.scene_purpose}\\n\"${scene.text_overlay}\"\\n\\n⏰ Review alle scenes en kies je actie:` : `**Scene ${scene.scene_number}:** ${scene.scene_purpose}\\n\"${scene.text_overlay}\"`\n}));\n\nconsole.log(\"✅ Telegram media group prepared\");\n\nreturn [{ json: { media: mediaGroup, scene_data: sceneData } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-3160, -240],
+      "id": "df7afef0-3320-4424-aafb-f2763713996f",
+      "name": "Prepare Telegram Scene Review"
+    },
+    {
+      "parameters": {
+        "operation": "sendMediaGroup",
+        "chatId": "={{ $('Enterprise Input Trigger').item.json.chatID }}",
+        "additionalFields": {}
+      },
+      "id": "1c98b08d-4760-44a7-8c8d-8689441f5064",
+      "name": "Enterprise Telegram Scene Review",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [-3000, -240],
+      "webhookId": "enterprise-scene-review",
+      "credentials": {
+        "telegramApi": {
+          "id": "ioh9vLdQ3pzyX0kw",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resume": "webhook",
+        "httpMethod": "POST",
+        "options": {
+          "webhookSuffix": "enterprise-scene-approval"
+        }
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [-2660, -160],
+      "id": "5d151ea6-4753-4048-b383-309667d1eafd",
+      "name": "Wait for Enterprise Scene Approval",
+      "webhookId": "1b128f16-3110-490e-b3fe-2096c15e6b50"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 🔬 ENTERPRISE SCENE CALLBACK PROCESSOR\nconst webhookData = $input.first().json;\n\nconsole.log(\"🔬 === ENTERPRISE SCENE CALLBACK PROCESSING ===\");\n\n// Check if webhookData has body property\nif (webhookData.body) {\n    const bodyData = webhookData.body;\n    return [{ json: { ...bodyData, phase: 'enterprise_scene_approval', enterprise_mode: true } }];\n} else {\n    return [{ json: { ...webhookData, phase: 'enterprise_scene_approval', enterprise_mode: true } }];\n}"
+      },
+      "id": "3ef08a28-769a-46d7-a1b2-92e407cf7050",
+      "name": "Process Enterprise Scene Callback",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-3520, 260]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.action }}",
+                    "rightValue": "approved",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Approved"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.action }}",
+                    "rightValue": "modify",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Modify"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "81c55c13-f9f1-4f7e-a6ff-1819bbbce5d6",
+      "name": "Enterprise Scene Action Router",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [-3360, 260]
+    },
+    {
+      "parameters": {
+        "jsCode": "// 🏢 GET ENTERPRISE STATE COORDINATOR DATA (REEL)\nconsole.log(\"📊 === ENTERPRISE REEL STATE DATA RETRIEVAL ===\");\nconsole.log(\"🆔 Execution ID:\", $execution.id);\n\n// Get aggregated scene data\nconst sceneData = $('Aggregate Enterprise Scene Data').first().json;\n\n// Enterprise State Data for Reel\nconst enterpriseStateData = {\n  execution_id: $execution.id,\n  current_state: 'SCENES_APPROVED',\n  workflow_type: 'createReel_Enterprise',\n  enterprise_mode: true,\n  \n  // Enhanced Input Data\n  input_data: {\n    reelTopic: sceneData.reelTopic,\n    reelContext: sceneData.reelContext,\n    chatID: sceneData.chatID,\n    contentStrategy: sceneData.contentStrategy || 'premium',\n    priority: sceneData.priority || 'high'\n  },\n  \n  // Enhanced Output Data (scenes)\n  output_data: {\n    scenes: sceneData.scenes,\n    scene_count: sceneData.scene_count,\n    content_strategy: sceneData.content_strategy,\n    priority_level: sceneData.priority_level,\n    enterprise_mode: true,\n    quality_tier: 'enterprise_reel'\n  },\n  \n  // Enterprise Reel Configuration\n  enterprise_config: {\n    content_strategy: sceneData.contentStrategy || 'premium',\n    priority_level: sceneData.priority || 'high',\n    quality_threshold: (sceneData.contentStrategy === 'campaign') ? 0.90 : \n                      (sceneData.contentStrategy === 'premium') ? 0.85 : 0.75,\n    reel_specific: {\n      scene_count: sceneData.scene_count,\n      total_duration: sceneData.scene_count * 4,\n      aspect_ratio: '9:16',\n      video_quality: 'enterprise'\n    }\n  }\n};\n\nconsole.log(\"✅ Enterprise reel state data retrieved\");\nconsole.log(\"📈 Strategy:\", enterpriseStateData.enterprise_config.content_strategy);\nconsole.log(\"🎬 Scene count:\", enterpriseStateData.enterprise_config.reel_specific.scene_count);\n\nreturn [{ json: { state_data: enterpriseStateData } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-3140, 180],
+      "id": "02a3352e-3743-4fb2-8ab1-8a5b5b40bea1",
+      "name": "Get Enterprise StateCoordinator Data"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 🎬 SPLIT SCENES FOR VIDEO GENERATION\nconst stateData = $('Get Enterprise StateCoordinator Data').first().json.state_data;\nconst scenes = stateData.output_data.scenes;\n\nconsole.log(`🎬 === SPLITTING ${scenes.length} SCENES FOR VIDEO GENERATION ===`);\n\n// Return each scene as separate item for video generation loop\nreturn scenes.map(scene => ({ json: scene }));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-2940, 180],
+      "id": "766fa6a5-66cb-43a4-81d9-458e5bc9bb6f",
+      "name": "Split Scenes for Video Generation"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.piapi.ai/api/v1/task",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"kling\",\n  \"task_type\": \"image_to_video\",\n  \"input\": {\n    \"prompt\": \"{{ $json.visual_description }}, smooth cinematic motion, 4 seconds duration, professional quality, 9:16 aspect ratio\",\n    \"image_url\": \"{{ $json.file_url }}\",\n    \"aspect_ratio\": \"768:1280\",\n    \"duration\": 4\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-2740, 180],
+      "id": "66a3b447-932f-4451-a0b5-514bc1d25d73",
+      "name": "Generate Enterprise Scene Video",
+      "retryOnFail": true,
+      "maxTries": 2,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "jf1VjeaqBG18Wzzp",
+          "name": "PiAPI - Kling Video"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 180
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [-2540, 180],
+      "id": "d3c482cf-61c0-4178-a8b6-34377064f65d",
+      "name": "Wait for Enterprise Video",
+      "webhookId": "cf7c4f57-b8f6-4e91-8f74-84fcbc2cb677"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.piapi.ai/api/v1/task/{{ $json.data.task_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "057733eb014ca237bb2f7ea48d7bbe62641a17e195952c184378cd02136aec2f"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-2340, 180],
+      "id": "0bf88e69-3d4e-4edd-842c-09551d88082e",
+      "name": "Get Enterprise Video URL",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "jf1VjeaqBG18Wzzp",
+          "name": "PiAPI - Kling Video"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// 🏢 AGGREGATE ENTERPRISE VIDEO DATA\nconst allVideoData = $input.all();\n\nconsole.log(`🎬 === ENTERPRISE VIDEO AGGREGATION ===`);\nconsole.log(`📊 Aggregating ${allVideoData.length} enterprise videos`);\n\n// Sort by scene number\nconst sortedVideos = allVideoData.sort((a, b) => a.json.scene_number - b.json.scene_number);\n\n// Get state data\nconst stateData = $('Get Enterprise StateCoordinator Data').first().json.state_data;\n\n// Enterprise Video Collection\nconst enterpriseVideoCollection = {\n  // State data\n  ...stateData.input_data,\n  \n  // Video data\n  videos: sortedVideos.map(item => ({\n    scene_number: item.json.scene_number,\n    scene_purpose: item.json.scene_purpose,\n    video_url: item.json.data.output.video_url,\n    text_overlay: item.json.text_overlay,\n    duration: item.json.duration\n  })),\n  \n  // Enterprise metadata\n  execution_id: stateData.execution_id,\n  content_strategy: stateData.enterprise_config.content_strategy,\n  priority_level: stateData.enterprise_config.priority_level,\n  workflow_version: '2.3_enterprise_reel',\n  \n  // Processing status\n  videos_generated: true,\n  ready_for_rendering: true,\n  aggregated_at: new Date().toISOString()\n};\n\nconsole.log(\"✅ Enterprise video aggregation complete\");\nconsole.log(\"🎬 Total videos:\", enterpriseVideoCollection.videos.length);\n\nreturn [{ json: enterpriseVideoCollection }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-2140, 180],
+      "id": "fb1fbeb3-91cb-4524-8338-6ff8d9e3bf82",
+      "name": "Aggregate Enterprise Video Data"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "id": "={{ $('Create ClickUp Task').first().json.id }}",
+        "updateFields": {
+          "content": "=🎬 Video's gegenereerd voor reel!\n📊 Videos: {{ $('Aggregate Enterprise Video Data').first().json.videos.length }}\n📈 Strategy: {{ $('Aggregate Enterprise Video Data').first().json.content_strategy }}\n⏰ Videos ready: {{ $now.toISO() }}\n🎯 Volgende stap: Finale reel rendering",
+          "name": "=🎬 Reel: {{ $('Enterprise Input Trigger').first().json.reelTopic }} - Videos Ready",
+          "status": "VIDEO RENDERING"
+        }
+      },
+      "type": "n8n-nodes-base.clickUp",
+      "typeVersion": 1,
+      "position": [-860, 180],
+      "id": "f0e4762f-f86a-45cf-9cf1-92e7b489e9c9",
+      "name": "Update Task - Videos Ready",
+      "credentials": {
+        "clickUpApi": {
+          "id": "3GNKK7vXdnhoVmRl",
+          "name": "ClickUp"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// 🎬 PREPARE ENTERPRISE CREATOMATE RENDERING\nconst packageData = $('Finalize Enterprise Scene Package').first().json;\n\nconsole.log(\"🎬 === PREPARING ENTERPRISE CREATOMATE RENDERING ===\");\n\n// Create modifications object for Creatomate template\nconst modifications = {};\n\npackageData.scenes.forEach((scene, index) => {\n  const sceneNum = scene.scene_number;\n  modifications[`Scene-${sceneNum}-Video.source`] = scene.video_url;\n  modifications[`Scene-${sceneNum}-Text.text`] = scene.text_overlay;\n});\n\n// Enterprise rendering configuration\nconst enterpriseRenderConfig = {\n  template_id: \"enterprise-reel-template-v1\",\n  modifications: modifications,\n  enterprise_config: {\n    quality: \"premium\",\n    resolution: \"1080x1920\",\n    format: \"mp4\",\n    duration: packageData.scenes.length * 4,\n    watermark: false\n  }\n};\n\nconsole.log(\"✅ Enterprise Creatomate config prepared\");\nconsole.log(\"🎬 Total scenes:\", packageData.scenes.length);\n\nreturn [{ json: enterpriseRenderConfig }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-860, -400],
+      "id": "862006fb-8d98-411c-a267-eda54efcc4f5",
+      "name": "Prepare Enterprise Rendering"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.creatomate.com/v1/renders",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer 886f2a7ad96e4ac1955137622696de6f12820d32e462bd8cef1b1002f33d29752f57fc584244adabe0b2d2b96c9b83fb"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"template_id\": \"{{ $json.template_id }}\",\n  \"modifications\": {{ $json.modifications }}\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-660, -400],
+      "id": "e2985191-a38c-4520-a9c4-5f03a21f10c5",
+      "name": "Render Final Enterprise Reel"
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Render Final Enterprise Reel').first().json.url }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-460, -400],
+      "id": "f608bfcf-3634-4ae8-ba8b-03da4149d492",
+      "name": "Download Enterprise Reel Video"
+    },
+    {
+      "parameters": {
+        "operation": "sendVideo",
+        "chatId": "={{ $('Enterprise Input Trigger').first().json.chatID }}",
+        "binaryData": true,
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "🚀 Perfect! Publiceer",
+                    "additionalFields": {
+                      "callback_data": "=ARF_{{ $execution.id }}_final-approval"
+                    }
+                  },
+                  {
+                    "text": "🔄 Opnieuw Renderen",
+                    "additionalFields": {
+                      "callback_data": "=MRF_{{ $execution.id }}_final-approval"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "additionalFields": {
+          "caption": "=🎬 **ENTERPRISE REEL KLAAR!**\\n\\n🏆 **Topic:** {{ $('Enterprise Input Trigger').first().json.reelTopic }}\\n📈 **Strategy:** {{ $('Aggregate Enterprise Video Data').first().json.content_strategy.toUpperCase() }}\\n🎯 **Duration:** {{ $('Aggregate Enterprise Video Data').first().json.videos.length * 4 }} seconden\\n📊 **Quality:** Enterprise Grade\\n\\n🚀 Klaar om te publiceren?"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [-260, -400],
+      "id": "e08b8cf7-d2dd-44a2-a82b-d7846cc0e8ed",
+      "name": "Enterprise Final Reel Review",
+      "webhookId": "f0272eee-fb5b-4d47-92fb-20f60f9b671e"
+    },
+    {
+      "parameters": {
+        "resume": "webhook",
+        "httpMethod": "POST",
+        "options": {
+          "webhookSuffix": "enterprise-final-approval"
+        }
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [-60, -400],
+      "id": "e776add2-3689-4cd6-ba31-74ce3a6da786",
+      "name": "Wait for Enterprise Final Approval",
+      "webhookId": "1b128f16-3110-490e-b3fe-2096c15e6b50"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 🏢 COMPLETE ENTERPRISE REEL WORKFLOW\nconst videoData = $('Aggregate Enterprise Video Data').first().json;\n\nconsole.log(\"🏁 === ENTERPRISE REEL WORKFLOW COMPLETION ===\");\nconsole.log(\"🆔 Execution ID:\", $execution.id);\n\n// Enterprise Completion Data\nconst enterpriseCompletionData = {\n    execution_id: $execution.id,\n    current_state: 'COMPLETED',\n    final_reel: {\n      topic: videoData.reelTopic,\n      context: videoData.reelContext,\n      duration: videoData.videos.length * 4,\n      scenes: videoData.videos.length,\n      video_url: $('Download Enterprise Reel Video').first().json.url || 'pending'\n    },\n    completed_at: new Date().toISOString(),\n    \n    // Enterprise Results\n    enterprise_results: {\n        workflow_version: '2.3_enterprise_reel',\n        content_strategy: videoData.content_strategy,\n        priority_level: videoData.priority_level,\n        scene_count: videoData.videos.length,\n        total_duration: videoData.videos.length * 4,\n        \n        // Success Metrics\n        workflow_success: true,\n        completion_tier: 'enterprise_reel',\n        user_approved: true,\n        quality_tier: 'enterprise'\n    },\n    \n    // Enterprise Metadata\n    enterprise_mode: true,\n    processing_tier: 'enterprise_reel',\n    state_response: 'enterprise_reel_completion_success'\n};\n\nconsole.log(\"✅ Enterprise reel workflow completed successfully\");\nconsole.log(\"🎬 Total duration:\", enterpriseCompletionData.enterprise_results.total_duration, \"seconds\");\n\nreturn [{ json: enterpriseCompletionData }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [140, -400],
+      "id": "951cf8bd-d01e-47c0-9bff-3206c5acd1f9",
+      "name": "Complete Enterprise Reel Workflow"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "id": "={{ $('Create ClickUp Task').first().json.id }}",
+        "updateFields": {
+          "content": "=🏆 Enterprise Reel workflow succesvol voltooid!\\n🎬 Duration: {{ $json.enterprise_results.total_duration }} seconden\\n📈 Strategy: {{ $json.enterprise_results.content_strategy.toUpperCase() }}\\n📊 Scenes: {{ $json.enterprise_results.scene_count }}\\n🚀 READY FOR PUBLICATION!\\n⏰ Completed: {{ $now.toISO() }}",
+          "name": "=🚀 Reel: {{ $('Enterprise Input Trigger').first().json.reelTopic }} - READY TO PUBLISH",
+          "priority": "=4",
+          "status": "READY TO PUBLISH"
+        }
+      },
+      "type": "n8n-nodes-base.clickUp",
+      "typeVersion": 1,
+      "position": [340, -400],
+      "id": "43e9e7c0-6a92-41fe-bdd5-8d067f50748b",
+      "name": "Update Task - Reel Complete",
+      "credentials": {
+        "clickUpApi": {
+          "id": "3GNKK7vXdnhoVmRl",
+          "name": "ClickUp"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Enterprise Input Trigger').first().json.chatID }}",
+        "text": "=🏢 **ENTERPRISE REEL WORKFLOW COMPLETED!**\\n\\n🎉 **Success!** Je Instagram Reel is klaar!\\n🎬 **Duration:** {{ $json.enterprise_results.total_duration }} seconden\\n📊 **Scenes:** {{ $json.enterprise_results.scene_count }}\\n📈 **Strategy:** {{ $json.enterprise_results.content_strategy.toUpperCase() }}\\n📊 **Priority:** {{ $json.enterprise_results.priority_level.toUpperCase() }}\\n🏆 **Quality:** Enterprise Grade\\n🚀 **Ready for Publication!**\\n\\n🆔 Execution ID: {{ $json.execution_id }}\\n🏢 Workflow: ReelBuilder v2.3",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "807db182-3bfe-4493-bdd7-ef0b3287c644",
+      "name": "Enterprise Success Notification",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [540, -400],
+      "webhookId": "enterprise-success-notification",
+      "credentials": {
+        "telegramApi": {
+          "id": "ioh9vLdQ3pzyX0kw",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// 🎵 ENTERPRISE AUDIO CONFIGURATION\nconst videoData = $('Aggregate Enterprise Video Data').first().json;\n\nconsole.log(\"🎵 === ENTERPRISE AUDIO CONFIGURATION ===\");\nconsole.log(\"🎬 Processing audio for\", videoData.videos.length, \"scenes\");\n\n// Enterprise Audio Settings\nconst audioConfig = {\n  background_music: {\n    enabled: true,\n    type: 'premium_commercial',\n    volume: 0.3,\n    fade_in: 0.5,\n    fade_out: 0.5,\n    library: 'epidemic_sound_enterprise'\n  },\n  \n  enterprise_audio_specs: {\n    sample_rate: 48000,\n    bit_depth: 24,\n    channels: 'stereo',\n    format: 'wav',\n    quality: 'enterprise'\n  },\n  \n  scene_audio_mapping: videoData.videos.map(video => ({\n    scene_number: video.scene_number,\n    video_url: video.video_url,\n    text_overlay: video.text_overlay,\n    audio_timing: {\n      start: (video.scene_number - 1) * 4,\n      duration: 4,\n      text_delay: 0.2\n    }\n  }))\n};\n\nconsole.log(\"✅ Enterprise audio configuration prepared\");\nconsole.log(\"🎵 Background music:\", audioConfig.background_music.enabled ? 'Enabled' : 'Disabled');\n\nreturn [{ json: { ...videoData, audio_config: audioConfig } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-1660, 180],
+      "id": "e9edf4ec-7e6a-49ee-8aa2-4fe00a372083",
+      "name": "Enterprise Audio Configuration"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 📝 ENTERPRISE TEXT OVERLAY PROCESSOR\nconst audioData = $input.first().json;\n\nconsole.log(\"📝 === ENTERPRISE TEXT OVERLAY PROCESSING ===\");\nconsole.log(\"🎬 Processing text overlays for\", audioData.videos.length, \"scenes\");\n\n// Enterprise Text Overlay Settings\nconst textOverlaySpecs = {\n  font_family: 'SF Pro Display',\n  font_weight: 'bold',\n  font_size: 48,\n  color: '#FFFFFF',\n  stroke_color: '#000000',\n  stroke_width: 2,\n  shadow: {\n    enabled: true,\n    color: 'rgba(0,0,0,0.5)',\n    blur: 4,\n    offset: { x: 2, y: 2 }\n  },\n  positioning: {\n    horizontal: 'center',\n    vertical: 'upper_third',\n    margin: 60\n  },\n  animation: {\n    type: 'fade_in_up',\n    duration: 0.5,\n    delay: 0.2,\n    easing: 'ease_out'\n  }\n};\n\n// Process each scene's text overlay\nconst processedScenes = audioData.videos.map(video => ({\n  ...video,\n  text_overlay_config: {\n    text: video.text_overlay,\n    ...textOverlaySpecs,\n    scene_specific: {\n      scene_number: video.scene_number,\n      scene_purpose: video.scene_purpose,\n      timing: {\n        start: 0.2,\n        duration: 3.5,\n        fade_out: 0.3\n      }\n    }\n  }\n}));\n\nconsole.log(\"✅ Enterprise text overlays processed\");\nconsole.log(\"📝 Font:\", textOverlaySpecs.font_family, textOverlaySpecs.font_weight);\n\nreturn [{ json: { ...audioData, videos: processedScenes, text_overlay_specs: textOverlaySpecs } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-1460, 180],
+      "id": "a2351457-973b-471a-b573-9484263bd122",
+      "name": "Enterprise Text Overlay Processor"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 🏢 ENTERPRISE BRANDING VALIDATOR\nconst overlayData = $input.first().json;\n\nconsole.log(\"🏢 === ENTERPRISE BRANDING VALIDATION ===\");\nconsole.log(\"🎬 Validating branding for\", overlayData.videos.length, \"scenes\");\n\n// SkinClarity Club Enterprise Brand Standards\nconst brandStandards = {\n  color_palette: {\n    primary: '#FFFFFF',\n    secondary: '#F8F9FA',\n    accent: '#E3F2FD',\n    text: '#212529'\n  },\n  logo_requirements: {\n    placement: 'bottom_right',\n    size: 'small',\n    opacity: 0.8,\n    margin: 40\n  },\n  typography: {\n    primary_font: 'SF Pro Display',\n    fallback: 'Arial, sans-serif',\n    min_size: 36,\n    max_size: 60\n  },\n  quality_standards: {\n    min_contrast_ratio: 4.5,\n    readability_score: 8.5,\n    brand_consistency: 0.95\n  }\n};\n\n// Validate each scene against brand standards\nconst validatedScenes = overlayData.videos.map(video => {\n  const validation = {\n    text_readability: video.text_overlay.length <= 8 && video.text_overlay.length >= 3,\n    color_compliance: true,\n    font_standards: overlayData.text_overlay_specs.font_family === brandStandards.typography.primary_font,\n    contrast_ratio: true,\n    brand_consistency: true\n  };\n  \n  const validationScore = Object.values(validation).filter(Boolean).length / Object.keys(validation).length;\n  \n  return {\n    ...video,\n    brand_validation: {\n      ...validation,\n      overall_score: validationScore,\n      enterprise_approved: validationScore >= 0.90\n    }\n  };\n});\n\nconst overallBrandScore = validatedScenes.reduce((sum, scene) => sum + scene.brand_validation.overall_score, 0) / validatedScenes.length;\n\nconsole.log(\"✅ Enterprise branding validation complete\");\nconsole.log(\"🏆 Overall brand score:\", (overallBrandScore * 100).toFixed(1) + '%');\n\nreturn [{ json: { ...overlayData, videos: validatedScenes, brand_standards: brandStandards, overall_brand_score: overallBrandScore } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-1260, 180],
+      "id": "104c2196-6f6a-42d0-95c3-c4cef4d0895f",
+      "name": "Enterprise Branding Validator"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 🎬 FINALIZE ENTERPRISE SCENE PACKAGE\nconst brandedData = $input.first().json;\n\nconsole.log(\"🎬 === FINALIZING ENTERPRISE SCENE PACKAGE ===\");\nconsole.log(\"📦 Packaging\", brandedData.videos.length, \"enterprise scenes for rendering\");\n\n// Create final enterprise package\nconst enterprisePackage = {\n  execution_id: $execution.id,\n  package_type: 'enterprise_reel_scenes',\n  content_strategy: brandedData.content_strategy,\n  priority_level: brandedData.priority_level,\n  \n  // Scene data ready for rendering\n  scenes: brandedData.videos.map(video => ({\n    scene_number: video.scene_number,\n    scene_purpose: video.scene_purpose,\n    video_url: video.video_url,\n    text_overlay: video.text_overlay,\n    duration: video.duration,\n    \n    // Enterprise rendering specs\n    text_overlay_config: video.text_overlay_config,\n    brand_validation: video.brand_validation,\n    ready_for_render: video.brand_validation.enterprise_approved\n  })),\n  \n  // Audio configuration\n  audio_config: brandedData.audio_config,\n  \n  // Brand validation summary\n  brand_summary: {\n    overall_score: brandedData.overall_brand_score,\n    standards_met: brandedData.overall_brand_score >= 0.90,\n    ready_for_enterprise_render: true\n  },\n  \n  // Package metadata\n  packaged_at: new Date().toISOString(),\n  workflow_version: '2.3_enterprise_reel'\n};\n\nconst allScenesApproved = enterprisePackage.scenes.every(scene => scene.ready_for_render);\n\nconsole.log(\"✅ Enterprise scene package finalized\");\nconsole.log(\"🏆 All scenes approved:\", allScenesApproved ? 'YES' : 'NO');\nconsole.log(\"📊 Brand score:\", (enterprisePackage.brand_summary.overall_score * 100).toFixed(1) + '%');\n\nreturn [{ json: enterprisePackage }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-1060, 180],
+      "id": "f5e58ae6-a69d-4db5-a42a-ce28a232dd7d",
+      "name": "Finalize Enterprise Scene Package"
+    }
+  ],
+  "pinData": {
+    "Enterprise Input Trigger": [
+      {
+        "json": {
+          "reelTopic": "Zomer Skincare Routine",
+          "reelContext": "Een visuele gids voor de perfecte zomer skincare routine met focus op hydratatie en zonbescherming. Laat zien hoe je je huid beschermt en verzorgt tijdens warme dagen.",
+          "chatID": "7543174110",
+          "contentStrategy": "premium",
+          "priority": "high"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Enterprise Input Trigger": {
+      "main": [
+        [
+          {
+            "node": "Enterprise Template Configuration",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enterprise Template Configuration": {
+      "main": [
+        [
+          {
+            "node": "Enterprise Workflow Registry",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enterprise Workflow Registry": {
+      "main": [
+        [
+          {
+            "node": "Create ClickUp Task",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create ClickUp Task": {
+      "main": [
+        [
+          {
+            "node": "Initialize Enterprise StateCoordinator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Initialize Enterprise StateCoordinator": {
+      "main": [
+        [
+          {
+            "node": "Enterprise Reel Script Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enterprise Script Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Enterprise Reel Script Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enterprise Reel Script Agent": {
+      "main": [
+        [
+          {
+            "node": "Process & Split Enterprise Scenes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process & Split Enterprise Scenes": {
+      "main": [
+        [
+          {
+            "node": "Generate Enterprise Scene Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Enterprise Scene Image": {
+      "main": [
+        [
+          {
+            "node": "Store Enterprise Scene Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Store Enterprise Scene Image": {
+      "main": [
+        [
+          {
+            "node": "Generate Enterprise Scene URL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Enterprise Scene URL": {
+      "main": [
+        [
+          {
+            "node": "Save Enterprise Scene Asset",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Enterprise Scene Asset": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Enterprise Scene Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate Enterprise Scene Data": {
+      "main": [
+        [
+          {
+            "node": "Update Task - Scenes Ready",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Task - Scenes Ready": {
+      "main": [
+        [
+          {
+            "node": "Prepare Telegram Scene Review",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Telegram Scene Review": {
+      "main": [
+        [
+          {
+            "node": "Enterprise Telegram Scene Review",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enterprise Telegram Scene Review": {
+      "main": [
+        [
+          {
+            "node": "Wait for Enterprise Scene Approval",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait for Enterprise Scene Approval": {
+      "main": [
+        [
+          {
+            "node": "Process Enterprise Scene Callback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Enterprise Scene Callback": {
+      "main": [
+        [
+          {
+            "node": "Enterprise Scene Action Router",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enterprise Scene Action Router": {
+      "main": [
+        [
+          {
+            "node": "Get Enterprise StateCoordinator Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Enterprise Reel Script Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Enterprise StateCoordinator Data": {
+      "main": [
+        [
+          {
+            "node": "Split Scenes for Video Generation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Scenes for Video Generation": {
+      "main": [
+        [
+          {
+            "node": "Generate Enterprise Scene Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Enterprise Scene Video": {
+      "main": [
+        [
+          {
+            "node": "Wait for Enterprise Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait for Enterprise Video": {
+      "main": [
+        [
+          {
+            "node": "Get Enterprise Video URL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Enterprise Video URL": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Enterprise Video Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate Enterprise Video Data": {
+      "main": [
+        [
+          {
+            "node": "Enterprise Audio Configuration",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enterprise Audio Configuration": {
+      "main": [
+        [
+          {
+            "node": "Enterprise Text Overlay Processor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enterprise Text Overlay Processor": {
+      "main": [
+        [
+          {
+            "node": "Enterprise Branding Validator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enterprise Branding Validator": {
+      "main": [
+        [
+          {
+            "node": "Finalize Enterprise Scene Package",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Finalize Enterprise Scene Package": {
+      "main": [
+        [
+          {
+            "node": "Update Task - Videos Ready",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Task - Videos Ready": {
+      "main": [
+        [
+          {
+            "node": "Prepare Enterprise Rendering",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Enterprise Rendering": {
+      "main": [
+        [
+          {
+            "node": "Render Final Enterprise Reel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Render Final Enterprise Reel": {
+      "main": [
+        [
+          {
+            "node": "Download Enterprise Reel Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Enterprise Reel Video": {
+      "main": [
+        [
+          {
+            "node": "Enterprise Final Reel Review",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enterprise Final Reel Review": {
+      "main": [
+        [
+          {
+            "node": "Wait for Enterprise Final Approval",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait for Enterprise Final Approval": {
+      "main": [
+        [
+          {
+            "node": "Complete Enterprise Reel Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Complete Enterprise Reel Workflow": {
+      "main": [
+        [
+          {
+            "node": "Update Task - Reel Complete",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Task - Reel Complete": {
+      "main": [
+        [
+          {
+            "node": "Enterprise Success Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "8c3daf91-4c6c-4fb6-86c9-61f1c0b4df89",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "dfdd26cd27fe046d045e60df6b98f78e52a497ca304bdcb672e06512ba750a2c"
+  },
+  "id": "xZnwrFTjxSNwMbXL",
+  "tags": []
+}

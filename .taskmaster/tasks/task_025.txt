@@ -1,0 +1,11 @@
+# Task ID: 25
+# Title: Complete Dutch Translation of BI Dashboard
+# Status: done
+# Dependencies: 7, 23
+# Priority: high
+# Description: Ensure a complete and professional Dutch translation of the entire BI Dashboard, covering all UI components, pages, and texts.
+# Details:
+This task involves translating all remaining English texts in the BI Dashboard to Dutch, ensuring a professional and consistent use of Dutch business terminology. The translation should cover all UI components and labels, dashboard pages and navigation, error messages and confirmations, AI chat interface and commands, form fields and validation messages, data visualization labels and descriptions, settings and configuration screens, and help texts and tooltips. Utilize the existing i18n structure with nl.json files, and replace any hardcoded English texts in the components with appropriate translations. Collaborate with a professional translator if necessary to ensure the translations meet business standards.
+
+# Test Strategy:
+Verify that all UI components, pages, and texts in the BI Dashboard display correctly in Dutch. Check that the nl.json files contain all necessary translations and that no English text remains hardcoded in the components. Test the dashboard in both Dutch and English to ensure that the i18n switching functionality works seamlessly. Conduct a review with a native Dutch speaker to ensure the translations are accurate and professional.

@@ -1,0 +1,293 @@
+# ====================================================================
+# Alertmanager Configuration with Telegram Integration
+# SKC BI Dashboard - Complete Alert Routing to Telegram
+# ====================================================================
+
+global:
+  # Global configuration for Alertmanager
+  smtp_smarthost: "localhost:587"
+  smtp_from: "alerts@skc-company.com"
+  smtp_auth_username: "alerts@skc-company.com"
+  smtp_auth_password: "your-smtp-password"
+  pagerduty_url: "https://events.pagerduty.com/v2/enqueue"
+  slack_api_url: "https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK"
+
+# Templates for alert formatting
+templates:
+  - "/etc/alertmanager/templates/*.tmpl"
+
+# Route configuration - ALL alerts go to Telegram + existing channels
+route:
+  group_by: ["alertname", "cluster", "service"]
+  group_wait: 10s
+  group_interval: 10s
+  repeat_interval: 1h
+  receiver: "telegram-all-alerts"
+
+  # Routing rules - ALL routes now include Telegram
+  routes:
+    # CRITICAL ALERTS - PagerDuty + Slack + Telegram
+    - match:
+        severity: critical
+      receiver: "critical-all-channels"
+      group_wait: 0s
+      repeat_interval: 5m
+      continue: true
+
+    # SLA IMPACTING ALERTS - All channels with highest priority
+    - match:
+        sla_impact: "true"
+      receiver: "sla-breach-all-channels"
+      group_wait: 0s
+      repeat_interval: 2m
+      continue: true
+
+    # WARNING ALERTS - Slack + Telegram
+    - match:
+        severity: warning
+      receiver: "warning-telegram-slack"
+      group_wait: 30s
+      repeat_interval: 30m
+
+    # INFO ALERTS - Telegram only
+    - match:
+        severity: info
+      receiver: "info-telegram-only"
+      group_wait: 1m
+      repeat_interval: 2h
+
+# Receivers - ALL alerts go to Telegram + original channels
+receivers:
+  # ====================================================================
+  # DEFAULT RECEIVER - TELEGRAM + EMAIL
+  # ====================================================================
+  - name: "telegram-all-alerts"
+    webhook_configs:
+      - url: "http://localhost:3000/api/telegram/alerts"
+        send_resolved: true
+        http_config:
+          bearer_token: "your-webhook-secret-token"
+        title: "[SKC-BI] {{ .GroupLabels.alertname }}"
+        text: '{{ template "telegram.skc.text" . }}'
+    email_configs:
+      - to: "alerts@skc-company.com"
+        subject: "[SKC-BI] {{ .GroupLabels.alertname }} Alert"
+        body: |
+          {{ range .Alerts }}
+          Alert: {{ .Annotations.summary }}
+          Description: {{ .Annotations.description }}
+          Labels: {{ range .Labels.SortedPairs }}{{ .Name }}={{ .Value }} {{ end }}
+          {{ end }}
+
+  # ====================================================================
+  # CRITICAL ALERTS - ALL CHANNELS (PagerDuty + Slack + Telegram)
+  # ====================================================================
+  - name: "critical-all-channels"
+    # Telegram webhook (primary notification)
+    webhook_configs:
+      - url: "http://localhost:3000/api/telegram/alerts"
+        send_resolved: true
+        http_config:
+          bearer_token: "your-webhook-secret-token"
+        title: "🚨 CRITICAL: {{ .GroupLabels.alertname }}"
+        text: '{{ template "telegram.skc.critical" . }}'
+
+    # PagerDuty (for on-call escalation)
+    pagerduty_configs:
+      - routing_key: "YOUR_PAGERDUTY_INTEGRATION_KEY"
+        severity: "critical"
+        client: "SKC BI Dashboard Alertmanager"
+        client_url: "http://alertmanager.localhost:9093"
+        description: "{{ .GroupLabels.alertname }}: {{ .CommonAnnotations.summary }}"
+        details:
+          firing: "{{ .Alerts.Firing | len }}"
+          resolved: "{{ .Alerts.Resolved | len }}"
+          alertname: "{{ .GroupLabels.alertname }}"
+          service: "{{ .GroupLabels.service }}"
+          instance: "{{ .GroupLabels.instance }}"
+          description: "{{ .CommonAnnotations.description }}"
+          runbook_url: "{{ .CommonAnnotations.runbook_url }}"
+
+    # Slack (for team visibility)
+    slack_configs:
+      - api_url: "https://hooks.slack.com/services/YOUR/CRITICAL/WEBHOOK"
+        channel: "#critical-alerts"
+        username: "SKC-Critical-Alert"
+        icon_emoji: ":rotating_light:"
+        title: "🚨 CRITICAL ALERT: {{ .GroupLabels.alertname }}"
+        text: |
+          *Service:* {{ .GroupLabels.service }}
+          *Alert:* {{ .CommonAnnotations.summary }}
+          *Description:* {{ .CommonAnnotations.description }}
+
+          *⚠️ This is also being sent to Telegram and PagerDuty*
+        actions:
+          - type: button
+            text: "View Runbook"
+            url: "{{ .CommonAnnotations.runbook_url }}"
+          - type: button
+            text: "Acknowledge"
+            url: "http://alertmanager.localhost:9093/#/alerts"
+
+  # ====================================================================
+  # SLA BREACH ALERTS - ALL CHANNELS (Highest Priority)
+  # ====================================================================
+  - name: "sla-breach-all-channels"
+    # Telegram webhook (instant notification)
+    webhook_configs:
+      - url: "http://localhost:3000/api/telegram/alerts"
+        send_resolved: true
+        http_config:
+          bearer_token: "your-webhook-secret-token"
+        title: "🚨 SLA BREACH: {{ .GroupLabels.alertname }}"
+        text: '{{ template "telegram.skc.sla" . }}'
+
+    # PagerDuty (immediate escalation)
+    pagerduty_configs:
+      - routing_key: "YOUR_PAGERDUTY_SLA_KEY"
+        severity: "critical"
+        client: "SKC BI Dashboard SLA Monitor"
+        description: "🚨 SLA BREACH: {{ .CommonAnnotations.summary }}"
+        details:
+          sla_impact: "true"
+          breach_details: "{{ .CommonAnnotations.description }}"
+          service: "{{ .GroupLabels.service }}"
+          timestamp: "{{ range .Alerts }}{{ .StartsAt }}{{ end }}"
+
+    # Slack (management visibility)
+    slack_configs:
+      - api_url: "https://hooks.slack.com/services/YOUR/SLA/WEBHOOK"
+        channel: "#sla-alerts"
+        username: "SKC-SLA-Monitor"
+        icon_emoji: ":rotating_light:"
+        title: "🚨 SLA BREACH DETECTED"
+        text: |
+          *Service:* {{ .GroupLabels.service }}
+          *Alert:* {{ .CommonAnnotations.summary }}
+          *Description:* {{ .CommonAnnotations.description }}
+          *Impact:* This affects our 99.99% SLA commitment
+
+          *📱 Also sent to Telegram for immediate mobile notifications*
+
+  # ====================================================================
+  # WARNING ALERTS - TELEGRAM + SLACK
+  # ====================================================================
+  - name: "warning-telegram-slack"
+    # Telegram webhook
+    webhook_configs:
+      - url: "http://localhost:3000/api/telegram/alerts"
+        send_resolved: true
+        http_config:
+          bearer_token: "your-webhook-secret-token"
+        title: "⚠️ WARNING: {{ .GroupLabels.alertname }}"
+        text: '{{ template "telegram.skc.warning" . }}'
+
+    # Slack
+    slack_configs:
+      - api_url: "https://hooks.slack.com/services/YOUR/WARNING/WEBHOOK"
+        channel: "#monitoring-warnings"
+        username: "SKC-Monitor"
+        icon_emoji: ":warning:"
+        title: "⚠️ {{ .GroupLabels.alertname }}"
+        text: |
+          *Service:* {{ .GroupLabels.service }}
+          *Summary:* {{ .CommonAnnotations.summary }}
+          *Details:* {{ .CommonAnnotations.description }}
+
+          *📱 Also sent to Telegram*
+
+  # ====================================================================
+  # INFO ALERTS - TELEGRAM ONLY
+  # ====================================================================
+  - name: "info-telegram-only"
+    webhook_configs:
+      - url: "http://localhost:3000/api/telegram/alerts"
+        send_resolved: true
+        http_config:
+          bearer_token: "your-webhook-secret-token"
+        title: "ℹ️ INFO: {{ .GroupLabels.alertname }}"
+        text: '{{ template "telegram.skc.info" . }}'
+
+  # ====================================================================
+  # INFRASTRUCTURE TEAM - TELEGRAM + SLACK + EMAIL
+  # ====================================================================
+  - name: "infrastructure-team"
+    # Telegram
+    webhook_configs:
+      - url: "http://localhost:3000/api/telegram/alerts"
+        send_resolved: true
+        http_config:
+          bearer_token: "your-webhook-secret-token"
+        title: "🖥️ INFRA: {{ .GroupLabels.alertname }}"
+        text: '{{ template "telegram.skc.infrastructure" . }}'
+
+    # Slack
+    slack_configs:
+      - api_url: "https://hooks.slack.com/services/YOUR/INFRA/WEBHOOK"
+        channel: "#infrastructure-alerts"
+        username: "SKC-Infrastructure"
+        icon_emoji: ":computer:"
+        title: "🖥️ Infrastructure Alert: {{ .GroupLabels.alertname }}"
+        text: |
+          *System:* {{ .GroupLabels.instance }}
+          *Issue:* {{ .CommonAnnotations.summary }}
+          *Details:* {{ .CommonAnnotations.description }}
+
+    # Email (backup)
+    email_configs:
+      - to: "infrastructure@skc-company.com"
+        subject: "[INFRA] {{ .GroupLabels.alertname }} on {{ .GroupLabels.instance }}"
+
+# ====================================================================
+# INHIBIT RULES (same as original)
+# ====================================================================
+inhibit_rules:
+  - source_match:
+      alertname: ApplicationDown
+    target_match:
+      service: skc-bi-dashboard
+    equal: ["instance"]
+
+  - source_match:
+      alertname: SLABreach
+    target_match:
+      alertname: HighErrorRate
+    equal: ["service"]
+
+  - source_match:
+      alertname: DiskSpaceCritical
+    target_match:
+      alertname: DiskSpaceLow
+    equal: ["instance", "mountpoint"]
+# ====================================================================
+# TELEGRAM CONFIGURATION NOTES
+# ====================================================================
+#
+# To complete Telegram setup:
+#
+# 1. Create Telegram Bot:
+#    - Message @BotFather on Telegram
+#    - Create bot with /newbot command
+#    - Get bot token and add to .env as TELEGRAM_BOT_TOKEN
+#
+# 2. Create Telegram Channels/Groups:
+#    - Critical Alerts Channel (get chat ID)
+#    - Warning Alerts Channel (get chat ID)
+#    - Info Alerts Channel (get chat ID)
+#    - SLA Alerts Channel (get chat ID)
+#
+# 3. Environment Variables needed:
+#    TELEGRAM_BOT_TOKEN=your-bot-token
+#    TELEGRAM_CRITICAL_CHAT_ID=-1001234567890
+#    TELEGRAM_WARNING_CHAT_ID=-1001234567891
+#    TELEGRAM_INFO_CHAT_ID=-1001234567892
+#    TELEGRAM_SLA_CHAT_ID=-1001234567893
+#
+# 4. Add bot to channels and make it admin
+#
+# 5. Test webhook endpoint:
+#    curl -X POST http://localhost:3000/api/telegram/alerts \
+#         -H "Content-Type: application/json" \
+#         -d '{"test": true}'
+#
+# ====================================================================

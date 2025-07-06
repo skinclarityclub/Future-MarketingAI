@@ -1,0 +1,46 @@
+# Task ID: 4
+# Title: Build Customer Intelligence Dashboard
+# Status: done
+# Dependencies: 2
+# Priority: high
+# Description: Develop a dashboard for 360° customer view and analytics.
+# Details:
+Merge customer data from Shopify, Kajabi, and social media into unified profiles. Implement real-time updates and churn prediction algorithms. Provide customer journey tracking and segmentation features.
+
+# Test Strategy:
+Test data merging and real-time updates. Validate churn prediction accuracy. Ensure customer journey tracking is comprehensive and correct.
+
+# Subtasks:
+## 1. Set Up Next.js Project with Supabase Integration [done]
+### Dependencies: None
+### Description: Initialize a Next.js project with TypeScript and integrate Supabase for backend services.
+### Details:
+Create a new Next.js project using TypeScript. Install necessary dependencies including Supabase client libraries. Configure environment variables for Supabase URL and API keys. Establish a connection to Supabase within the project.
+<info added on 2025-06-12T12:17:49.590Z>
+Implementation Summary: Created Customer Intelligence Dashboard page at /customer-intelligence with comprehensive React components (CustomerOverview, CustomerMetrics, CustomerSegments, CustomerJourney), API endpoint at /api/customer-intelligence with multiple actions, navigation link in sidebar, proper Next.js 14 App Router patterns with Suspense, Supabase integration, and mock data structure ready for real implementation.
+</info added on 2025-06-12T12:17:49.590Z>
+
+## 2. Design and Implement Unified Customer Data Model [done]
+### Dependencies: 4.1
+### Description: Develop a unified data model to merge customer information from Shopify, Kajabi, and social media platforms.
+### Details:
+Define a comprehensive customer schema in Supabase to accommodate data from Shopify, Kajabi, and social media. Implement data ingestion processes to populate this schema, ensuring data consistency and integrity.
+
+## 3. Develop Real-Time Data Synchronization Mechanism [done]
+### Dependencies: 4.2
+### Description: Implement real-time updates to keep customer profiles current with data from Shopify, Kajabi, and social media.
+### Details:
+Set up webhooks or API listeners for Shopify, Kajabi, and social media platforms to detect data changes. Develop server-side functions in Supabase to process incoming data and update customer profiles accordingly.
+
+## 4. Implement Churn Prediction Algorithms [done]
+### Dependencies: 4.2
+### Description: Develop and integrate algorithms to predict customer churn based on unified profile data.
+### Details:
+Analyze historical customer data to identify churn indicators. Develop machine learning models to predict churn likelihood. Integrate these models into the Supabase backend to provide real-time churn predictions.
+
+## 5. Create Customer Journey Tracking and Segmentation Features [done]
+### Dependencies: 4.2
+### Description: Develop frontend components to visualize customer journeys and enable segmentation within the dashboard.
+### Details:
+Design and implement interactive visualizations to display customer journey data. Develop segmentation tools to filter and group customers based on various criteria. Ensure seamless integration of these components into the Next.js frontend.
+

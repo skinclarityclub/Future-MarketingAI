@@ -1,0 +1,605 @@
+{
+  "name": "ML Auto-Retraining Workflow",
+  "description": "Task 71.5: Automatiseer retraining en deployment van ML-modellen - Geautomatiseerde workflow voor ML model retraining op basis van performance thresholds en schema's",
+  "version": "1.0.0",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "cronExpression": "0 */4 * * *"
+            }
+          ]
+        }
+      },
+      "id": "ml-performance-monitor",
+      "name": "ML Performance Monitor",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "description": "Check ML model performance every 4 hours"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "ml-retraining-webhook",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "ml-retraining-webhook",
+      "name": "ML Retraining Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 500],
+      "webhookId": "ml-retraining-trigger",
+      "description": "Manual trigger for ML retraining via webhook"
+    },
+    {
+      "parameters": {
+        "url": "={{$node['Environment'].json['DASHBOARD_URL']}}/api/workflows/ml/auto-retraining?action=check_performance",
+        "authentication": "headerAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{$node['Environment'].json['API_TOKEN']}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model_types",
+              "value": "={{$json.model_types || ['content_performance', 'engagement_prediction']}}"
+            },
+            {
+              "name": "threshold",
+              "value": "={{$json.threshold || 0.03}}"
+            },
+            {
+              "name": "time_window",
+              "value": "={{$json.time_window || 7}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "check-model-performance",
+      "name": "Check Model Performance",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 2,
+      "position": [460, 400],
+      "description": "Check current ML model performance metrics"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$json.needs_retraining}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "retraining-needed-check",
+      "name": "Retraining Needed?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [680, 400],
+      "description": "Check if models need retraining based on performance"
+    },
+    {
+      "parameters": {
+        "url": "={{$node['Environment'].json['DASHBOARD_URL']}}/api/workflows/ml/auto-retraining?action=trigger_retraining",
+        "authentication": "headerAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{$node['Environment'].json['API_TOKEN']}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "force",
+              "value": "={{$json.force || false}}"
+            },
+            {
+              "name": "model_types",
+              "value": "={{$node['Check Model Performance'].json.performance_metrics ? Object.keys($node['Check Model Performance'].json.performance_metrics).filter(type => $node['Check Model Performance'].json.performance_metrics[type].needs_retraining) : ['content_performance']}}"
+            },
+            {
+              "name": "performance_threshold",
+              "value": "={{$json.threshold || 0.03}}"
+            },
+            {
+              "name": "workflow_id",
+              "value": "={{$workflow.id}}"
+            },
+            {
+              "name": "webhook_url",
+              "value": "={{$node['Environment'].json['WEBHOOK_URL']}}/ml-retraining-status"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "trigger-retraining",
+      "name": "Trigger ML Retraining",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 2,
+      "position": [900, 300],
+      "description": "Trigger ML model retraining process"
+    },
+    {
+      "parameters": {
+        "url": "={{$node['Environment'].json['DASHBOARD_URL']}}/api/workflows/ml/auto-retraining?action=validate_models",
+        "authentication": "headerAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{$node['Environment'].json['API_TOKEN']}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model_ids",
+              "value": "={{$json.model_types || ['content_performance', 'engagement_prediction']}}"
+            },
+            {
+              "name": "validation_config",
+              "value": "={\"holdout_split\": 0.1, \"cv_folds\": 5, \"min_accuracy\": 0.75}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "validate-models",
+      "name": "Validate Retrained Models",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 2,
+      "position": [1120, 300],
+      "description": "Validate newly retrained models"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$json.validation_results.every(result => result.validation_status === 'passed')}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "validation-success-check",
+      "name": "Validation Success?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [1340, 300],
+      "description": "Check if model validation passed"
+    },
+    {
+      "parameters": {
+        "url": "={{$node['Environment'].json['DASHBOARD_URL']}}/api/workflows/ml/auto-retraining?action=deploy_model",
+        "authentication": "headerAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{$node['Environment'].json['API_TOKEN']}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model_id",
+              "value": "={{$node['Trigger ML Retraining'].json.model_version.split('_')[0]}}"
+            },
+            {
+              "name": "model_version",
+              "value": "={{$node['Trigger ML Retraining'].json.model_version}}"
+            },
+            {
+              "name": "deployment_config",
+              "value": "={\"deployment_strategy\": \"blue_green\", \"health_check_timeout\": 300, \"rollback_on_failure\": true}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "deploy-model",
+      "name": "Deploy Model",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 2,
+      "position": [1560, 200],
+      "description": "Deploy validated model to production"
+    },
+    {
+      "parameters": {
+        "to": "={{$node['Environment'].json['NOTIFICATION_EMAIL']}}",
+        "subject": "ML Model Retraining Successful - {{$node['Trigger ML Retraining'].json.model_version}}",
+        "emailFormat": "html",
+        "message": "=<h2>🎉 ML Model Retraining Successful</h2>\n<p><strong>Model Version:</strong> {{$node['Trigger ML Retraining'].json.model_version}}</p>\n<p><strong>Performance Improvement:</strong> {{(($node['Trigger ML Retraining'].json.performance_improvement || 0) * 100).toFixed(2)}}%</p>\n<p><strong>Training Data Size:</strong> {{$node['Trigger ML Retraining'].json.training_data_size}} samples</p>\n<p><strong>Deployment Status:</strong> {{$node['Deploy Model'].json.deployment_status}}</p>\n<p><strong>Validation Results:</strong></p>\n<ul>\n{{$node['Validate Retrained Models'].json.validation_results.map(result => `<li>${result.model_id}: ${result.validation_status} (Accuracy: ${(result.performance_metrics?.accuracy * 100).toFixed(1)}%)</li>`).join('')}}\n</ul>\n<p><strong>Timestamp:</strong> {{new Date().toISOString()}}</p>\n<p>View dashboard: <a href=\"{{$node['Environment'].json['DASHBOARD_URL']}}/[locale]/analytics\">Analytics Dashboard</a></p>",
+        "options": {}
+      },
+      "id": "success-notification",
+      "name": "Success Notification",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [1780, 200],
+      "description": "Send success notification email"
+    },
+    {
+      "parameters": {
+        "to": "={{$node['Environment'].json['NOTIFICATION_EMAIL']}}",
+        "subject": "ML Model Validation Failed - Action Required",
+        "emailFormat": "html",
+        "message": "=<h2>⚠️ ML Model Validation Failed</h2>\n<p>The retrained ML models failed validation and were not deployed.</p>\n<p><strong>Failed Models:</strong></p>\n<ul>\n{{$node['Validate Retrained Models'].json.validation_results.filter(result => result.validation_status !== 'passed').map(result => `<li>${result.model_id}: ${result.validation_status} - ${result.error || 'Unknown error'}</li>`).join('')}}\n</ul>\n<p><strong>Recommendations:</strong></p>\n<ul>\n<li>Check training data quality</li>\n<li>Review model hyperparameters</li>\n<li>Investigate data drift</li>\n<li>Consider manual intervention</li>\n</ul>\n<p><strong>Timestamp:</strong> {{new Date().toISOString()}}</p>\n<p>View logs: <a href=\"{{$node['Environment'].json['DASHBOARD_URL']}}/[locale]/analytics\">Analytics Dashboard</a></p>",
+        "options": {}
+      },
+      "id": "validation-failure-notification",
+      "name": "Validation Failure Notification",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [1560, 400],
+      "description": "Send validation failure notification"
+    },
+    {
+      "parameters": {
+        "to": "={{$node['Environment'].json['NOTIFICATION_EMAIL']}}",
+        "subject": "ML Models Performing Well - No Retraining Needed",
+        "emailFormat": "html",
+        "message": "=<h2>✅ ML Models Performing Well</h2>\n<p>All ML models are performing within acceptable thresholds. No retraining is needed at this time.</p>\n<p><strong>Performance Summary:</strong></p>\n<ul>\n{{Object.entries($node['Check Model Performance'].json.performance_metrics).map(([model, metrics]) => `<li>${model}: ${(metrics.current_accuracy * 100).toFixed(1)}% accuracy (Drop: ${(metrics.accuracy_drop * 100).toFixed(1)}%)</li>`).join('')}}\n</ul>\n<p><strong>Next Check:</strong> {{$node['Check Model Performance'].json.next_check}}</p>\n<p><strong>Timestamp:</strong> {{new Date().toISOString()}}</p>\n<p>View dashboard: <a href=\"{{$node['Environment'].json['DASHBOARD_URL']}}/[locale]/analytics\">Analytics Dashboard</a></p>",
+        "options": {}
+      },
+      "id": "no-retraining-notification",
+      "name": "No Retraining Notification",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [900, 500],
+      "description": "Send notification when no retraining is needed"
+    },
+    {
+      "parameters": {
+        "channel": "={{$node['Environment'].json['SLACK_CHANNEL']}}",
+        "text": "=🤖 ML Model Retraining Status Update\n\n*Workflow:* {{$workflow.name}}\n*Status:* {{$json.status || 'Unknown'}}\n*Model:* {{$json.model_version || 'N/A'}}\n*Performance:* {{(($json.performance_improvement || 0) * 100).toFixed(2)}}% improvement\n*Time:* {{new Date().toISOString()}}\n\n<{{$node['Environment'].json['DASHBOARD_URL']}}/[locale]/analytics|View Dashboard>",
+        "otherOptions": {
+          "includeLinkToWorkflow": true
+        }
+      },
+      "id": "slack-notification",
+      "name": "Slack Notification",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [1780, 400],
+      "description": "Send Slack notification for all outcomes"
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "DASHBOARD_URL",
+              "value": "http://localhost:3000"
+            },
+            {
+              "name": "API_TOKEN",
+              "value": "{{$env.N8N_API_TOKEN}}"
+            },
+            {
+              "name": "NOTIFICATION_EMAIL",
+              "value": "{{$env.NOTIFICATION_EMAIL}}"
+            },
+            {
+              "name": "SLACK_CHANNEL",
+              "value": "{{$env.SLACK_CHANNEL}}"
+            },
+            {
+              "name": "WEBHOOK_URL",
+              "value": "{{$env.WEBHOOK_URL}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "environment-config",
+      "name": "Environment",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [240, 100],
+      "description": "Environment configuration and variables"
+    },
+    {
+      "parameters": {
+        "functionCode": "// ML Auto-Retraining Workflow Logic\n// Task 71.5: Advanced error handling and retry logic\n\nconst items = $input.all();\nconst results = [];\n\nfor (const item of items) {\n  try {\n    // Extract workflow data\n    const workflowData = {\n      workflow_id: $workflow.id,\n      execution_id: $execution.id,\n      trigger_type: item.json.trigger_type || 'scheduled',\n      timestamp: new Date().toISOString(),\n      model_types: item.json.model_types || ['content_performance', 'engagement_prediction'],\n      performance_threshold: item.json.threshold || 0.03,\n      force_retrain: item.json.force || false\n    };\n\n    // Add retry logic parameters\n    workflowData.retry_config = {\n      max_retries: 3,\n      retry_delay: 30000, // 30 seconds\n      exponential_backoff: true,\n      retry_on_status_codes: [500, 502, 503, 504]\n    };\n\n    // Add performance monitoring\n    workflowData.monitoring = {\n      start_time: Date.now(),\n      metrics_collected: true,\n      alert_thresholds: {\n        accuracy_drop: 0.05,\n        validation_failure: true,\n        deployment_timeout: 600000 // 10 minutes\n      }\n    };\n\n    // Add audit trail\n    workflowData.audit = {\n      user_id: item.json.audit?.user_id || 'system',\n      reason: item.json.audit?.reason || 'automated_performance_check',\n      approval_required: item.json.audit?.approval_required || false\n    };\n\n    results.push({\n      json: workflowData,\n      pairedItem: item.pairedItem\n    });\n\n  } catch (error) {\n    // Error handling\n    results.push({\n      json: {\n        error: true,\n        error_message: error.message,\n        timestamp: new Date().toISOString(),\n        original_data: item.json\n      },\n      pairedItem: item.pairedItem\n    });\n  }\n}\n\nreturn results;"
+      },
+      "id": "workflow-preprocessor",
+      "name": "Workflow Preprocessor",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [460, 100],
+      "description": "Preprocess workflow data and add error handling"
+    },
+    {
+      "parameters": {
+        "functionCode": "// ML Training Status Logger\n// Task 71.5: Comprehensive logging and audit trail\n\nconst items = $input.all();\nconst results = [];\n\nfor (const item of items) {\n  try {\n    // Create comprehensive log entry\n    const logEntry = {\n      workflow_id: $workflow.id,\n      execution_id: $execution.id,\n      timestamp: new Date().toISOString(),\n      event_type: 'ml_retraining',\n      status: item.json.success ? 'success' : 'failed',\n      duration: Date.now() - (item.json.monitoring?.start_time || Date.now()),\n      \n      // Model information\n      model_data: {\n        model_types: item.json.model_types || [],\n        model_version: item.json.model_version || null,\n        performance_improvement: item.json.performance_improvement || 0,\n        training_data_size: item.json.training_data_size || 0,\n        validation_status: item.json.validation_status || 'unknown',\n        deployment_status: item.json.deployment_status || 'pending'\n      },\n      \n      // Performance metrics\n      performance_metrics: {\n        accuracy_before: item.json.validation_metrics?.accuracy || 0,\n        accuracy_after: item.json.validation_metrics?.accuracy || 0,\n        precision: item.json.validation_metrics?.precision || 0,\n        recall: item.json.validation_metrics?.recall || 0,\n        f1_score: item.json.validation_metrics?.f1_score || 0\n      },\n      \n      // Workflow context\n      workflow_context: {\n        trigger_type: item.json.trigger_type || 'scheduled',\n        force_retrain: item.json.force_retrain || false,\n        threshold: item.json.performance_threshold || 0.03,\n        retry_count: item.json.retry_count || 0\n      },\n      \n      // Audit information\n      audit_info: {\n        user_id: item.json.audit?.user_id || 'system',\n        reason: item.json.audit?.reason || 'automated_check',\n        approval_status: item.json.audit?.approval_required ? 'pending' : 'auto_approved'\n      },\n      \n      // Notifications sent\n      notifications: {\n        email_sent: item.json.email_sent || false,\n        slack_sent: item.json.slack_sent || false,\n        webhook_sent: item.json.webhook_sent || false\n      },\n      \n      // Error information (if any)\n      error_info: item.json.error ? {\n        error_message: item.json.error_message || 'Unknown error',\n        error_code: item.json.error_code || 'UNKNOWN',\n        stack_trace: item.json.stack_trace || null\n      } : null\n    };\n    \n    // Add log entry to results\n    results.push({\n      json: {\n        ...item.json,\n        log_entry: logEntry,\n        logging_complete: true\n      },\n      pairedItem: item.pairedItem\n    });\n    \n  } catch (error) {\n    // Error in logging itself\n    results.push({\n      json: {\n        ...item.json,\n        logging_error: true,\n        logging_error_message: error.message,\n        timestamp: new Date().toISOString()\n      },\n      pairedItem: item.pairedItem\n    });\n  }\n}\n\nreturn results;"
+      },
+      "id": "audit-logger",
+      "name": "Audit Logger",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [2000, 300],
+      "description": "Log workflow execution and audit trail"
+    },
+    {
+      "parameters": {
+        "url": "={{$node['Environment'].json['DASHBOARD_URL']}}/api/workflows/audit",
+        "authentication": "headerAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{$node['Environment'].json['API_TOKEN']}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "log_entry",
+              "value": "={{$json.log_entry}}"
+            },
+            {
+              "name": "workflow_type",
+              "value": "ml_auto_retraining"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "store-audit-log",
+      "name": "Store Audit Log",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 2,
+      "position": [2220, 300],
+      "description": "Store audit log in database"
+    }
+  ],
+  "connections": {
+    "ML Performance Monitor": {
+      "main": [
+        [
+          {
+            "node": "Workflow Preprocessor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ML Retraining Webhook": {
+      "main": [
+        [
+          {
+            "node": "Workflow Preprocessor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Workflow Preprocessor": {
+      "main": [
+        [
+          {
+            "node": "Check Model Performance",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Model Performance": {
+      "main": [
+        [
+          {
+            "node": "Retraining Needed?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retraining Needed?": {
+      "main": [
+        [
+          {
+            "node": "Trigger ML Retraining",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Retraining Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Trigger ML Retraining": {
+      "main": [
+        [
+          {
+            "node": "Validate Retrained Models",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Retrained Models": {
+      "main": [
+        [
+          {
+            "node": "Validation Success?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validation Success?": {
+      "main": [
+        [
+          {
+            "node": "Deploy Model",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Validation Failure Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Deploy Model": {
+      "main": [
+        [
+          {
+            "node": "Success Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Success Notification": {
+      "main": [
+        [
+          {
+            "node": "Slack Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validation Failure Notification": {
+      "main": [
+        [
+          {
+            "node": "Slack Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "No Retraining Notification": {
+      "main": [
+        [
+          {
+            "node": "Slack Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack Notification": {
+      "main": [
+        [
+          {
+            "node": "Audit Logger",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Audit Logger": {
+      "main": [
+        [
+          {
+            "node": "Store Audit Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": "ml-error-handler-workflow"
+  },
+  "staticData": {
+    "node:ml-performance-monitor": {},
+    "node:ml-retraining-webhook": {}
+  },
+  "tags": [
+    {
+      "createdAt": "2025-01-16T10:00:00.000Z",
+      "updatedAt": "2025-01-16T10:00:00.000Z",
+      "id": "ml-automation",
+      "name": "ML Automation"
+    },
+    {
+      "createdAt": "2025-01-16T10:00:00.000Z",
+      "updatedAt": "2025-01-16T10:00:00.000Z",
+      "id": "task-71-5",
+      "name": "Task 71.5"
+    }
+  ],
+  "triggerCount": 2,
+  "updatedAt": "2025-01-16T10:00:00.000Z",
+  "versionId": "ml-auto-retraining-v1"
+}

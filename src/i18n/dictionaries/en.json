@@ -1,0 +1,1321 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "update": "Update",
+    "search": "Search",
+    "filter": "Filter",
+    "export": "Export",
+    "import": "Import",
+    "refresh": "Refresh",
+    "close": "Close",
+    "open": "Open",
+    "yes": "Yes",
+    "no": "No",
+    "submit": "Submit",
+    "reset": "Reset",
+    "clear": "Clear",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "actions": "Actions",
+    "settings": "Settings",
+    "searchPlaceholder": "dashboards, metrics, reports...",
+    "notifications": "Notifications",
+    "new": "New",
+    "navigation": "Navigation",
+    "needHelp": "Need Help?",
+    "helpDescription": "Check our documentation or contact support",
+    "learnMore": "Learn more →",
+    "hoursAgo": "hours ago",
+    "administrator": "Administrator",
+    "minutesAgo": "minutes ago",
+    "hourAgo": "hour ago",
+    "dayAgo": "day ago",
+    "moreOptions": "More options",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "language": "Language",
+    "desktop": "Desktop",
+    "sound": "Sound",
+    "auto": "Auto",
+    "light": "Light",
+    "dark": "Dark",
+    "animations": "Animations",
+    "mode": "Mode",
+    "accuracy": "Accuracy",
+    "processing": "Processing",
+    "processingTime": "Processing Time",
+    "daily": "Daily",
+    "weekly": "Weekly",
+    "monthly": "Monthly",
+    "date": "Date",
+    "metric": "Metric",
+    "value": "Value",
+    "created": "Created",
+    "visitPage": "Visit Page",
+    "noDataAvailable": "No data available",
+    "errorLoadingChart": "Error loading chart",
+    "overallHealth": "Overall Health",
+    "status": "Status",
+    "connectionError": "Connection Error",
+    "roi": "ROI",
+    "roas": "ROAS",
+    "cpa": "CPA",
+    "ctr": "CTR",
+    "with": "with"
+  },
+  "customerJourney": {
+    "awareness": {
+      "badge": "Marketing Machine Discovery • For Scale-Ups • €300k-€5M Revenue",
+      "title": "Do You Recognize These Marketing Challenges?",
+      "subtitle": "85% of scale-ups struggle with these challenges. Select the problems you recognize and discover how our Marketing Machine solves them without additional headcount",
+      "problems": {
+        "contentCreation": {
+          "title": "Content Creation Takes Too Much Time",
+          "description": "Your marketing team spends 80% of their time creating content instead of strategy",
+          "impact": "€15k/month productivity loss"
+        },
+        "inconsistentMessaging": {
+          "title": "Inconsistent Brand Messaging",
+          "description": "Different platforms have different tone and messaging",
+          "impact": "40% loss in brand recognition"
+        },
+        "lowConversion": {
+          "title": "Low Conversion Rates",
+          "description": "Your content generates traffic but doesn't convert to leads or sales",
+          "impact": "60% missed revenue opportunity"
+        },
+        "scalingChallenges": {
+          "title": "Scaling Challenges",
+          "description": "Growth means hiring more people, but ROI decreases with scaling",
+          "impact": "€25k/month extra costs when scaling"
+        },
+        "roiTracking": {
+          "title": "No ROI Insights",
+          "description": "You don't know which marketing efforts actually generate revenue",
+          "impact": "30% budget waste"
+        },
+        "manualProcesses": {
+          "title": "Manual Processes",
+          "description": "Too much manual work prevents scalability and increases errors",
+          "impact": "85% time loss on routine tasks"
+        }
+      },
+      "solutions": {
+        "automation": {
+          "title": "Marketing Automation",
+          "subtitle": "Content on autopilot",
+          "description": "AI-driven content generation that strengthens your brand 24/7",
+          "stats": "+340% ROI",
+          "benefits": [
+            "24/7 content generation",
+            "Consistent brand messaging",
+            "Multi-platform publishing",
+            "Performance optimization"
+          ]
+        },
+        "intelligence": {
+          "title": "AI Marketing Intelligence",
+          "subtitle": "Smart targeting",
+          "description": "Advanced analytics that identifies and reaches your ideal customers",
+          "stats": "85% time savings",
+          "benefits": [
+            "Audience segmentation",
+            "Behavioral targeting",
+            "Real-time optimization",
+            "Predictive analytics"
+          ]
+        },
+        "roiOptimization": {
+          "title": "ROI Tracking & Optimization",
+          "subtitle": "Measurable results",
+          "description": "Real-time insights and ROI tracking for every marketing euro",
+          "stats": "€50k+ impact/month",
+          "benefits": [
+            "Real-time ROI dashboard",
+            "Attribution modeling",
+            "Performance benchmarks",
+            "Revenue optimization"
+          ]
+        }
+      },
+      "cta": {
+        "title": "Ready for €50k+ Extra Revenue?",
+        "subtitle": "Discover how our Marketing Machine solves your problems",
+        "buttonText": "See How It Works",
+        "urgency": "Limited availability - Q1 2025"
+      }
+    }
+  },
+  "homepage": {
+    "hero": {
+      "badge": "Enterprise AI Marketing Platform",
+      "title": {
+        "part1": "Transform",
+        "part2": "Business Growth",
+        "part3": "Enterprise Powered"
+      },
+      "description": "FutureMarketingAI delivers enterprise-grade AI marketing automation with unparalleled sophistication. Schedule a strategic consultation to discover how our premium platform revolutionizes business growth for ambitious companies.",
+      "cta": {
+        "primary": "Schedule Strategic Consultation",
+        "secondary": "Executive Demo"
+      },
+      "stats": {
+        "companies": {
+          "value": "500+",
+          "label": "Enterprise Clients"
+        },
+        "roi": {
+          "value": "340%",
+          "label": "Average ROI"
+        },
+        "automation": {
+          "value": "24/7",
+          "label": "AI Automation"
+        }
+      },
+      "features": {
+        "aiContent": {
+          "title": "AI Content Engine",
+          "description": "Enterprise-grade AI that generates and optimizes high-quality content 24/7 for maximum impact."
+        },
+        "analytics": {
+          "title": "Predictive Analytics",
+          "description": "Advanced business intelligence that predicts future trends and supports strategic decision-making."
+        },
+        "automation": {
+          "title": "Marketing Automation",
+          "description": "Fully automated workflows that optimize your marketing processes without manual intervention."
+        }
+      }
+    },
+    "sections": {
+      "platformDemo": {
+        "badge": "Enterprise Platform Demo",
+        "title": "Experience the Future",
+        "subtitle": "Witness the complete AI-driven marketing transformation that elevates Fortune 500 enterprises from content creation to predictive performance analytics."
+      },
+      "roiAssessment": {
+        "badge": "Executive ROI Assessment",
+        "title": "Quantify Your Investment",
+        "subtitle": "Discover the transformative financial impact FutureMarketingAI delivers for enterprise operations with our sophisticated ROI assessment platform."
+      },
+      "selfLearningAI": {
+        "title": "Self-Learning AI Engine",
+        "subtitle": "Our AI continuously learns from your content performance and automatically optimizes for better results."
+      },
+      "testimonials": {
+        "title": "Trusted by Industry Leaders",
+        "subtitle": "Discover why leading companies choose FutureMarketingAI and select the plan that fits your needs."
+      }
+    },
+    "valuePropositions": {
+      "enterprises": {
+        "title": "For Enterprise Organizations",
+        "benefits": [
+          "Fortune 500-level AI marketing automation",
+          "Executive dashboards with real-time performance insights",
+          "Enterprise-grade security and compliance",
+          "Dedicated success manager and 24/7 premium support"
+        ]
+      },
+      "scaleups": {
+        "title": "For Scale-up Companies",
+        "benefits": [
+          "Scalable marketing automation without additional headcount",
+          "ROI-driven content strategy with measurable results",
+          "Intelligent audience segmentation and targeting",
+          "Integrated analytics and performance tracking"
+        ]
+      },
+      "agencies": {
+        "title": "For Marketing Agencies",
+        "benefits": [
+          "White-label solution for client success",
+          "Multi-client dashboard management",
+          "Automated reporting and client communication",
+          "Scalable workflows for growing client base"
+        ]
+      }
+    },
+    "socialProof": {
+      "title": "Trusted by 500+ Companies Worldwide",
+      "metrics": {
+        "companiesServed": "500+ Companies Served",
+        "revenueGenerated": "$60M+ Additional Revenue Generated",
+        "contentPieces": "1M+ Content Pieces Automated",
+        "timesSaved": "10,000+ Hours Saved"
+      },
+      "testimonials": {
+        "enterprise": {
+          "quote": "FutureMarketingAI increased our marketing ROI by 340%. The AI-driven insights are game-changing.",
+          "author": "Sarah Mitchell",
+          "company": "TechCorp Global",
+          "position": "Chief Marketing Officer"
+        },
+        "scaleup": {
+          "quote": "We now generate 5x more qualified leads with the same marketing budget. Incredible results.",
+          "author": "Mark Thompson",
+          "company": "GrowthScale Inc.",
+          "position": "Founder & CEO"
+        },
+        "agency": {
+          "quote": "Our client retention increased to 95% since using FutureMarketingAI. Clients see immediate results.",
+          "author": "Lisa Rodriguez",
+          "company": "Digital Excellence Agency",
+          "position": "Managing Director"
+        }
+      }
+    },
+    "conversionPaths": {
+      "primary": {
+        "title": "Ready to Transform Your Marketing?",
+        "subtitle": "Join 500+ companies that have automated their growth",
+        "cta": "Start Free Consultation",
+        "urgency": "Limited availability - Only 10 spots this month"
+      },
+      "secondary": {
+        "title": "See FutureMarketingAI in Action",
+        "subtitle": "Watch our 15-minute executive demo",
+        "cta": "Watch Demo",
+        "benefits": "No obligations • Instant access • Enterprise showcases"
+      },
+      "enterprise": {
+        "title": "Enterprise-Ready Solution",
+        "subtitle": "For organizations with complex marketing needs",
+        "cta": "Schedule Enterprise Call",
+        "features": "Custom integrations • Dedicated support • SLA guarantees"
+      }
+    },
+    "footer": {
+      "company": {
+        "name": "FutureMarketingAI",
+        "description": "Next-generation AI that revolutionizes content creation and growth. On autopilot. Advanced Fortune 500-level marketing Intelligence Platform."
+      },
+      "links": {
+        "platform": {
+          "title": "Platform",
+          "items": {
+            "futureMarketingAI": "FutureMarketingAI",
+            "analyticsSuite": "Analytics Suite",
+            "automation": "Automation"
+          }
+        },
+        "resources": {
+          "title": "Resources",
+          "items": {
+            "watchDemo": "Watch Demo",
+            "caseStudies": "Case Studies",
+            "fortune500Demo": "Fortune 500 Demo"
+          }
+        },
+        "contact": {
+          "title": "Contact",
+          "items": {
+            "talkToSales": "Talk to Sales",
+            "support247": "24/7 Support",
+            "globalCoverage": "Global Coverage"
+          }
+        }
+      },
+      "legal": {
+        "copyright": "© 2024 FutureMarketingAI Intelligence Platform. All rights reserved.",
+        "privacy": "Privacy Policy",
+        "terms": "Terms of Service"
+      }
+    }
+  },
+  "navigation": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "analytics": "Analytics",
+    "reports": "Reports",
+    "customers": "Customers",
+    "settings": "Settings",
+    "help": "Help",
+    "logout": "Logout",
+    "overview": "Overview",
+    "closeSidebar": "Close sidebar",
+    "overviewDesc": "Executive summary and key metrics",
+    "revenueAnalytics": "Revenue Analytics",
+    "revenueAnalyticsDesc": "Revenue trends and forecasting",
+    "performanceMetrics": "Performance Metrics",
+    "performanceMetricsDesc": "KPIs and business performance",
+    "customerInsights": "Customer Insights",
+    "customerInsightsDesc": "Customer analytics and segmentation",
+    "customerIntelligence": "Customer Intelligence",
+    "customerIntelligenceDesc": "360° customer view and intelligence",
+    "reportsDesc": "Generate and export reports",
+    "analyticsDesc": "Advanced data analysis",
+    "calendarDesc": "Schedule and meetings",
+    "advancedChatbot": "Advanced Chatbot",
+    "advancedChatbotDesc": "AI chatbot with expandable data panels",
+    "settingsDesc": "Dashboard configuration",
+    "helpSupportDesc": "Documentation and support",
+    "smartNavigation": "Smart Navigation",
+    "noSmartSuggestionsAvailable": "No smart suggestions available",
+    "recommendationEngineDemo": "Recommendation Engine Demo",
+    "algorithms": "Algorithms",
+    "results": "Results",
+    "metrics": "Metrics",
+    "collaborativeFiltering": "Collaborative Filtering",
+    "hybridApproach": "Hybrid Approach",
+    "userSimilarityThreshold": "User Similarity Threshold",
+    "maxSimilarUsers": "Max Similar Users",
+    "decayFactor": "Decay Factor",
+    "userSimilarities": "User Similarities",
+    "contentFeatures": "Content Features"
+  },
+  "pricing": {
+    "badge": "Progressive Pricing",
+    "title": "Build The Future Today",
+    "subtitle": "Join visionary entrepreneurs shaping the future of marketing.",
+    "priceIncrease": "Prices increase automatically with every 10 sign-ups.",
+    "billing": {
+      "monthly": "Monthly",
+      "yearly": "Yearly",
+      "save": "Save 16.67%"
+    },
+    "products": {
+      "marketingMachine": {
+        "name": "MarketingMachine",
+        "description": "Fully automated AI marketing platform for exponential growth"
+      },
+      "dashboard": {
+        "name": "Intelligence Hub",
+        "description": "Advanced AI-analytics for data-driven decision making"
+      },
+      "combo": {
+        "name": "Complete Suite",
+        "description": "The ultimate AI-driven marketing solution for future-focused entrepreneurs"
+      }
+    },
+    "features": {
+      "included": "Included Features",
+      "keyBenefits": "Key Benefits",
+      "marketingMachine": [
+        "AI Content Generation",
+        "Multi-platform Publishing",
+        "Advanced Analytics",
+        "24/7 Automation",
+        "Social Media Management",
+        "SEO Optimization"
+      ],
+      "dashboard": [
+        "Real-time Analytics",
+        "Custom Dashboards",
+        "Predictive Insights",
+        "Data Integration",
+        "Advanced Reporting",
+        "Business Intelligence"
+      ],
+      "combo": [
+        "Everything from both platforms",
+        "Priority Support",
+        "Advanced Integrations",
+        "Custom Solutions",
+        "Dedicated Account Manager",
+        "Enterprise Security"
+      ]
+    },
+    "benefits": {
+      "marketingMachine": [
+        "300% faster content creation",
+        "85% increase in engagement",
+        "24/7 automated publishing",
+        "Cross-platform consistency"
+      ],
+      "dashboard": [
+        "Real-time business insights",
+        "Data-driven decisions",
+        "Performance optimization",
+        "Revenue forecasting"
+      ],
+      "combo": [
+        "Complete marketing automation",
+        "Enterprise-grade security",
+        "Unlimited scalability",
+        "Future-proof technology"
+      ]
+    },
+    "pricing": {
+      "from": "From",
+      "month": "month",
+      "year": "year",
+      "nextPrice": "Next price",
+      "spotsRemaining": "spots remaining",
+      "signedUp": "signed up",
+      "filled": "filled"
+    },
+    "cta": {
+      "joinWaitlist": "Join Waitlist",
+      "guarantee": "Price Lock Guarantee",
+      "guaranteeDescription": "Lock in today's price forever. No price increases for early adopters. Your investment is protected as our platform grows."
+    }
+  },
+  "dashboard": {
+    "title": "Executive Dashboard",
+    "subtitle": "Executive summary and key metrics",
+    "kpis": "Key Performance Indicators",
+    "revenue": "Revenue",
+    "customers": "Customers",
+    "orders": "Orders",
+    "growth": "Growth",
+    "totalRevenue": "Total Revenue",
+    "monthlyGrowth": "Monthly Growth",
+    "newCustomers": "New Customers",
+    "totalOrders": "Total Orders",
+    "conversionRate": "Conversion Rate",
+    "avgOrderValue": "Average Order Value",
+    "customerLifetimeValue": "Customer Lifetime Value",
+    "topMetrics": "Top Metrics",
+    "topMetricsDesc": "KPIs and business performance",
+    "revenueTrendDesc": "Revenue trends and forecasting",
+    "recentActivity": "Recent Activity",
+    "recentActivityDesc": "Latest updates and events",
+    "quickActions": "Quick Actions",
+    "quickActionsDesc": "Frequently used actions and shortcuts",
+    "revenueTrend": "Revenue Trend",
+    "growthRate": "Growth Rate",
+    "customerSatisfaction": "Customer Satisfaction",
+    "marketShare": "Market Share",
+    "revenueReportGenerated": "Revenue report generated",
+    "newCustomerMilestone": "New customer milestone reached",
+    "performanceMetricsUpdated": "Performance metrics updated",
+    "systemMaintenanceCompleted": "System maintenance completed",
+    "viewAnalytics": "View Analytics",
+    "nlpNavigationDemo": "NLP Navigation Demo",
+    "chartWillBeImplemented": "Chart will be implemented in next task",
+    "budgeted": "Budgeted",
+    "actual": "Actual",
+    "variance": "Variance",
+    "forecast": "Forecast",
+    "varianceAmount": "Variance Amount",
+    "onTrack": "On Track",
+    "underBudget": "Under Budget",
+    "overBudget": "Over Budget",
+    "netProfit": "Net Profit",
+    "profitMargin": "Profit Margin",
+    "averageCPA": "Average CPA",
+    "spend": "Spend",
+    "conversions": "Conversions",
+    "optimizationRecommendations": "Optimization Recommendations",
+    "revenueTrendAnalysis": "Revenue Trend Analysis",
+    "monthlyDevelopment": "Monthly Development",
+    "businessStatistics": "Business Statistics",
+    "businessStatisticsDesc": "Comprehensive business insights and performance indicators",
+    "performanceMonitor": "Performance Monitor",
+    "performanceMonitorDesc": "Real-time system performance and health monitoring",
+    "serverUptime": "Server Uptime",
+    "apiResponseTime": "API Response Time",
+    "activeUsers": "Active Users",
+    "databaseLoad": "Database Load",
+    "lastCheck": "Last Check",
+    "justNow": "Just now",
+    "responseTime24h": "Response Time (24h)"
+  },
+  "notifications": {
+    "revenueAlert": "Revenue Alert",
+    "monthlyIncreaseMessage": "Monthly revenue increased by 12%"
+  },
+  "user": {
+    "johnDoe": "John Doe",
+    "sampleEmail": "john@company.com"
+  },
+  "reports": {
+    "title": "Reports",
+    "create": "Create Report",
+    "export": "Export Report",
+    "schedule": "Schedule Report",
+    "templates": "Report Templates",
+    "history": "Report History",
+    "settings": "Report Settings",
+    "generate": "Generate and export reports",
+    "csvDescription": "Comma-separated values for spreadsheet applications",
+    "jsonDescription": "Structured data format for developers",
+    "pdfDescription": "Formatted report for sharing and printing",
+    "exportData": "Export Data",
+    "exportAll": "Export All Formats",
+    "exporting": "Exporting...",
+    "exportSuccess": "export completed successfully!",
+    "exportOptions": "Export Options"
+  },
+  "analytics": {
+    "title": "Advanced data analysis",
+    "overview": "Analytics Overview",
+    "traffic": "Traffic Analytics",
+    "conversions": "Customer analytics and segmentation",
+    "revenue": "Revenue Analytics",
+    "customers": "Customer Analytics",
+    "performance": "Performance Analytics",
+    "trends": "Trend Analysis",
+    "forecasting": "Forecasting",
+    "totalROI": "Total ROI",
+    "portfolioAverage": "Portfolio average",
+    "totalGenerated": "Total generated",
+    "topPerformers": "Top performers",
+    "gradeAContent": "Grade A content",
+    "overallAverage": "Overall average",
+    "successRate": "Success Rate",
+    "totalValueCreated": "Total Value Created",
+    "roiEstimate": "ROI Estimate",
+    "implementationMetrics": "Implementation Metrics",
+    "impactMetrics": "Impact Metrics",
+    "uptime": "Uptime",
+    "connectionDetails": "Connection details",
+    "financialIntelligence": "Financial Intelligence Dashboard",
+    "financialIntelligenceDesc": "Real-time financial performance and forecasting",
+    "general": "General",
+    "metrics": "Metrics",
+    "analysis": "Analysis",
+    "categories": "Categories",
+    "details": "Details",
+    "totalExpenses": "Total Expenses",
+    "expenses": "Expenses",
+    "profit": "Profit",
+    "healthy": "Healthy",
+    "monitor": "Monitor",
+    "revenueVsExpenses": "Revenue vs Expenses",
+    "financialPerformanceOverTime": "Financial performance over time",
+    "categoryDistribution": "Category Distribution",
+    "breakdownByCategories": "Breakdown by financial categories",
+    "profitTrendAnalysis": "Profit Trend Analysis",
+    "trackProfitabilityOverTime": "Track profitability over time",
+    "categoryPerformance": "Category Performance",
+    "financialMetricsByCategory": "Financial metrics by category",
+    "rawFinancialData": "Raw Financial Data",
+    "showingRecords": "Showing {count} records ({queryType})",
+    "lastUpdated": "Last updated",
+    "never": "Never",
+    "queryType": "Query type",
+    "records": "Records"
+  },
+  "forms": {
+    "name": "Name",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "phone": "Phone",
+    "address": "Address",
+    "city": "City",
+    "country": "Country",
+    "zipCode": "Zip Code",
+    "company": "Company",
+    "jobTitle": "Job Title",
+    "website": "Website",
+    "description": "Description",
+    "notes": "Notes",
+    "tags": "Tags",
+    "category": "Category",
+    "status": "Status",
+    "priority": "Priority",
+    "dueDate": "Due Date",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "content": "Content",
+    "platform": "Platform",
+    "searchCustomers": "Search customers...",
+    "churnRisk": "Churn Risk",
+    "period": "Period",
+    "department": "Department",
+    "sortBy": "Sort by",
+    "attributionModel": "Attribution Model",
+    "allRiskLevels": "All Risk Levels",
+    "highRisk": "High Risk",
+    "mediumRisk": "Medium Risk",
+    "lowRisk": "Low Risk",
+    "searchSegments": "Search segments...",
+    "totalSegments": "Total Segments",
+    "activeCustomerSegments": "Active customer segments",
+    "largestSegment": "Largest Segment",
+    "mostPopulatedSegment": "Most populated segment",
+    "avgSegmentValue": "Avg. Segment Value",
+    "averageCLVPerSegment": "Average CLV per segment",
+    "growthSegments": "Growth Segments",
+    "segmentsWithPositiveGrowth": "Segments with positive growth",
+    "segmentDistribution": "Segment Distribution",
+    "customerCountBySegment": "Customer count by segment",
+    "valueVsRiskAnalysis": "Value vs Risk Analysis",
+    "clvVsChurnRateBySegment": "CLV vs churn rate by segment",
+    "segmentPerformance": "Segment Performance",
+    "detailedSegmentAnalysis": "Detailed segment analysis",
+    "ofTotal": "of total",
+    "customers": "customers",
+    "churnRate": "Churn Rate",
+    "averageLTV": "Average LTV",
+    "fromLastQuarter": "from last quarter",
+    "fromLastMonth": "from last month"
+  },
+  "dates": {
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "thisWeek": "This Week",
+    "lastWeek": "Last Week",
+    "thisMonth": "This Month",
+    "lastMonth": "Last Month",
+    "thisYear": "This Year",
+    "lastYear": "Last Year",
+    "custom": "Schedule and meetings",
+    "selectDate": "Select Date",
+    "selectTime": "Select Time",
+    "dateRange": "Date Range",
+    "from": "From",
+    "to": "To",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "sevenDays": "7 days",
+    "thirtyDays": "30 days",
+    "ninetyDays": "90 days"
+  },
+  "errors": {
+    "notFound": "Page not found",
+    "serverError": "Server error",
+    "networkError": "Network error",
+    "validationError": "Validation error",
+    "unauthorized": "Unauthorized",
+    "forbidden": "Forbidden",
+    "timeout": "Request timeout",
+    "unknown": "Unknown error",
+    "tryAgain": "Try again",
+    "contactSupport": "Contact support if the problem persists",
+    "connectionError": "Connection error",
+    "errorLoadingData": "Error loading data",
+    "errorLoadingRecommendations": "Error loading recommendations"
+  },
+  "marketing": {
+    "totalSpend": "Total Spend",
+    "totalRevenue": "Total Revenue",
+    "averageROI": "Average ROI",
+    "averageROAS": "Average ROAS",
+    "roiPerformanceTrends": "ROI Performance Trends",
+    "spendVsRevenueTrends": "Spend vs Revenue Trends",
+    "channelROIComparison": "Channel ROI Comparison",
+    "revenueDistribution": "Revenue Distribution",
+    "detailedChannelPerformance": "Detailed Channel Performance",
+    "revenueShare": "Revenue Share",
+    "campaignPerformance": "Campaign Performance",
+    "campaigns": "Campaigns",
+    "channels": "Channels",
+    "optimization": "Optimization",
+    "firstTouch": "First Touch",
+    "lastTouch": "Last Touch",
+    "linear": "Linear",
+    "timeDecay": "Time Decay",
+    "positionBased": "Position Based",
+    "budgetOptimizationRecommendations": "Budget Optimization Recommendations",
+    "currentBudget": "Current Budget",
+    "recommendedBudget": "Recommended Budget",
+    "budgetChange": "Budget Change",
+    "avgConfidence": "Avg Confidence",
+    "campaignBudgetRecommendations": "Campaign Budget Recommendations",
+    "aiPoweredRecommendationsDescription": "AI-powered recommendations based on {attributionModel} attribution model",
+    "confidence": "confidence",
+    "currentSpend": "Current Spend",
+    "recommendedSpend": "Recommended Spend",
+    "expectedROIImprovement": "Expected ROI Improvement",
+    "budgetChangeLabel": "Budget change",
+    "increase": "increase",
+    "decrease": "decrease",
+    "noChange": "no change",
+    "implementationNote": "Implementation Note",
+    "implementationWarning": "These recommendations are based on historical performance data and predictive modeling. Always consider market conditions, seasonality, and business objectives before implementing budget changes. Start with smaller adjustments and monitor performance closely.",
+    "noBudgetRecommendationsMessage": "No budget optimization recommendations available for the selected period. This may be due to insufficient data or all campaigns are already optimally allocated."
+  },
+  "tracking": {
+    "userBehaviorTrackingDemo": "User Behavior Tracking Demo",
+    "trackingStatus": "Tracking Status",
+    "trackingControls": "Tracking Controls",
+    "searchTracking": "Search Tracking",
+    "modalTracking": "Modal Tracking",
+    "formTracking": "Form Tracking",
+    "eventQueue": "Event Queue",
+    "enableTracking": "Enable Tracking",
+    "disableTracking": "Disable Tracking",
+    "flushEvents": "Flush Events",
+    "navigationTracking": "Navigation Tracking",
+    "featureUsageTracking": "Feature Usage Tracking",
+    "abTestingTracking": "A/B Testing Tracking",
+    "customEventsErrorTracking": "Custom Events & Error Tracking",
+    "exportData": "Export Data",
+    "shareDashboard": "Share Dashboard",
+    "filterData": "Filter Data",
+    "trackExperimentView": "Track Experiment View",
+    "trackConversion": "Track Conversion",
+    "trackCustomEvent": "Track Custom Event",
+    "trackError": "Track Error",
+    "trackLinkClick": "Track Link Click",
+    "sessionID": "Session ID",
+    "pageViews": "Page Views",
+    "clicks": "Clicks"
+  },
+  "ui": {
+    "premiumUXSettings": "Premium UX Settings",
+    "notifications": "Notifications",
+    "highContrast": "High Contrast",
+    "largeText": "Large Text",
+    "reduceMotion": "Reduce Motion"
+  },
+  "realTime": {
+    "liveForecasts": "Live Forecasts",
+    "activeAlerts": "Active Alerts",
+    "liveInsights": "Live Insights",
+    "memoryUsage": "Memory Usage",
+    "topTopics": "Top Topics"
+  },
+  "placeholders": {
+    "enterSearchQuery": "Enter search query...",
+    "askBusinessQuestion": "Ask a business question... (e.g., 'Analyze our sales performance' or 'How can we optimize our marketing campaigns?')",
+    "shareYourThoughts": "Share your thoughts...",
+    "enterQueryForContext": "Enter a query for context...",
+    "webhookUrl": "https://your-domain.com/api/telegram/webhook",
+    "noMinimum": "No minimum",
+    "noMaximum": "No maximum",
+    "enterNavigationCommand": "Enter navigation command..."
+  },
+  "tabs": {
+    "overview": "Overview",
+    "segments": "Segments",
+    "budget": "Budget Optimization",
+    "predictions": "Predictions"
+  },
+  "components": {
+    "componentFlow": "Component Flow",
+    "keyFeatures": "Key Features",
+    "routeToAppropriateComponent": "Route to Appropriate Component",
+    "responseWithSuggestions": "Response with Suggestions"
+  },
+  "audience": {
+    "audienceInsights": "Audience Insights",
+    "segmentation": "Segmentation",
+    "demographics": "Demographics",
+    "behavior": "Behavior",
+    "preferences": "Preferences",
+    "advancedAnalysisDescription": "Advanced audience analysis and budget optimization",
+    "totalSegments": "Total Segments",
+    "activeAudiences": "Active audiences",
+    "averageClv": "Avg. CLV",
+    "customerLifetimeValue": "Customer Lifetime Value",
+    "bestPerformingSegment": "Best Performing",
+    "highestClvSegment": "Highest CLV segment",
+    "growthTrend": "Growth Trend",
+    "averageGrowth": "Average growth",
+    "segmentPerformance": "Segment Performance",
+    "clvVsConversionRate": "CLV vs Conversion Rate per audience",
+    "budgetAllocation": "Budget Allocation",
+    "currentVsRecommended": "Current vs Recommended distribution",
+    "current": "Current",
+    "recommended": "Recommended",
+    "customers": "customers",
+    "conversionRate": "Conversion Rate",
+    "primaryChannel": "Primary Channel",
+    "topChannels": "Top Channels",
+    "recommendations": "Recommendations",
+    "budgetOptimization": "Budget Optimization",
+    "aiDrivenRecommendations": "AI-driven recommendations for better ROI",
+    "currentBudget": "Current Budget",
+    "recommendedBudget": "Recommended Budget",
+    "performancePredictions": "Performance Predictions",
+    "machineLearningPredictions": "Machine learning predictions for future performance",
+    "predictionModelsLoading": "Prediction models are loading..."
+  },
+  "chart": {
+    "errorLoadingChart": "Error loading chart",
+    "noDataAvailable": "No data available",
+    "loading": "Loading chart...",
+    "total": "Total",
+    "average": "Average",
+    "minimum": "Minimum",
+    "maximum": "Maximum"
+  },
+  "budget": {
+    "budgetOptimization": "Budget Optimization",
+    "budgetAllocation": "Budget Allocation",
+    "spendAnalysis": "Spend Analysis",
+    "forecastAccuracy": "Forecast Accuracy",
+    "varianceAnalysis": "Variance Analysis"
+  },
+  "tacticalAnalysis": {
+    "realTimeInsights": "Real-time Insights",
+    "liveForecasts": "Live Forecasts",
+    "activeAlerts": "Active Alerts",
+    "successRate": "Success Rate",
+    "totalValueCreated": "Total Value Created",
+    "roiEstimate": "ROI Estimate",
+    "implementationMetrics": "Implementation Metrics",
+    "impactMetrics": "Impact Metrics",
+    "memoryUsage": "Memory Usage",
+    "uptime": "Uptime",
+    "connectionDetails": "Connection Details"
+  },
+  "tableHeaders": {
+    "date": "Date",
+    "metric": "Metric",
+    "category": "Category",
+    "value": "Value",
+    "roi": "ROI",
+    "status": "Status",
+    "priority": "Priority"
+  },
+  "buttons": {
+    "exportData": "Export Data",
+    "shareDashboard": "Share Dashboard",
+    "filterData": "Filter Data",
+    "exportAll": "Export All",
+    "enableTracking": "Enable Tracking",
+    "disableTracking": "Disable Tracking",
+    "flushEvents": "Flush Events",
+    "trackExperimentView": "Track Experiment View",
+    "trackConversion": "Track Conversion",
+    "trackCustomEvent": "Track Custom Event",
+    "trackError": "Track Error",
+    "trackLinkClick": "Track Link Click"
+  },
+  "statusIndicators": {
+    "onTrack": "On Track",
+    "underBudget": "Under Budget",
+    "overBudget": "Over Budget",
+    "active": "Active",
+    "inactive": "Inactive",
+    "processing": "Processing",
+    "completed": "Completed",
+    "failed": "Failed"
+  },
+  "tryAgain": "Try Again",
+  "contentIdeation": {
+    "title": "Content Ideation Engine",
+    "description": "AI-powered content ideas based on trends and competitor analysis",
+    "features": {
+      "aiPowered": "AI-Powered Generation",
+      "aiGeneration": "AI Generation",
+      "aiGenerationDesc": "Advanced AI algorithms generate contextual content ideas",
+      "trendAnalysis": "Trend Analysis",
+      "trendAnalysisDesc": "Real-time analysis of trending topics and keywords",
+      "competitorGaps": "Competitor Gap Analysis",
+      "competitorGapsDesc": "Identify content opportunities your competitors are missing",
+      "seoOptimization": "SEO Optimization",
+      "seoOptimizationDesc": "Ideas optimized for search engine visibility",
+      "performance": "Performance Prediction",
+      "performanceDesc": "Predict engagement and viral potential before publishing"
+    },
+    "generateIdeas": "Generate Ideas",
+    "contentIdeas": "Content Ideas",
+    "strategy": "Strategy",
+    "generate": "Generate",
+    "totalIdeas": "Total Ideas",
+    "highPriority": "High Priority",
+    "trendingNow": "Trending Now",
+    "avgConfidence": "Avg Confidence",
+    "searchPlaceholder": "Search ideas, keywords...",
+    "allCategories": "All Categories",
+    "allPriorities": "All Priorities",
+    "blog": "Blog",
+    "social": "Social",
+    "video": "Video",
+    "infographic": "Infographic",
+    "podcast": "Podcast",
+    "critical": "Critical",
+    "high": "High",
+    "medium": "Medium",
+    "low": "Low",
+    "clear": "Clear",
+    "seoScore": "SEO Score",
+    "viralScore": "Viral Score",
+    "estTime": "Est. Time",
+    "views": "Views",
+    "shares": "Shares",
+    "easy": "Easy",
+    "hard": "Hard",
+    "immediate": "Immediate",
+    "soon": "Soon",
+    "planned": "Planned",
+    "gapOpportunity": "Gap Opportunity",
+    "bestTime": "Best",
+    "noIdeasFound": "No Ideas Found",
+    "noIdeasMessage": "Try adjusting your filters or generate new content ideas.",
+    "generateContentIdeas": "Generate Content Ideas",
+    "generateDescription": "Use AI to generate personalized content ideas based on your requirements",
+    "keywords": "Keywords (comma-separated)",
+    "keywordsPlaceholder": "artificial intelligence, digital transformation",
+    "numberOfIdeas": "Number of Ideas",
+    "targetAudience": "Target Audience",
+    "audiencePlaceholder": "B2B executives, tech professionals",
+    "timeframe": "Timeframe",
+    "immediateTimeframe": "Immediate (trending now)",
+    "shortTermTimeframe": "Short-term (next month)",
+    "longTermTimeframe": "Long-term (evergreen)",
+    "includeCompetitorGaps": "Include competitor gap analysis",
+    "includeTrendingTopics": "Include trending topics",
+    "generatingIdeas": "Generating Ideas...",
+    "demo": "Demo",
+    "refresh": "Refresh",
+    "export": "Export",
+    "loadingStrategy": "Loading strategy...",
+    "keyThemes": "Key Themes",
+    "gapOpportunities": "Gap Opportunities",
+    "trendOpportunities": "Trend Opportunities",
+    "contentMixStrategy": "Content Mix Strategy",
+    "contentMixDescription": "Recommended balance of content types",
+    "competitorGaps": "Competitor Gaps",
+    "ideas5": "5 Ideas",
+    "ideas10": "10 Ideas",
+    "ideas15": "15 Ideas",
+    "ideas20": "20 Ideas",
+    "ideas25": "25 Ideas"
+  },
+  "premiumJourney": {
+    "title": "Premium Interactive Customer Journey",
+    "subtitle": "Transform Your Marketing Strategy with AI-Powered Automation",
+    "tagline": "Turn Content Into Growth On Autopilot",
+    "description": "Discover how our premium marketing platform can accelerate your business growth through intelligent automation and data-driven insights.",
+    "stages": {
+      "awareness": {
+        "title": "Awareness",
+        "subtitle": "Discover Your Growth Potential",
+        "description": "Understand your current marketing challenges and discover opportunities for exponential growth with our AI-powered solutions.",
+        "benefits": [
+          "Identify untapped market opportunities",
+          "Analyze competitor weaknesses",
+          "Discover content gaps",
+          "Understand audience behavior patterns"
+        ],
+        "cta": "Start Discovery"
+      },
+      "consideration": {
+        "title": "Consideration",
+        "subtitle": "Explore Our Capabilities",
+        "description": "Experience the power of our integrated marketing ecosystem with interactive demonstrations and real-world case studies.",
+        "features": [
+          "AI Content Generation",
+          "Multi-Platform Publishing",
+          "Performance Analytics",
+          "Lead Automation"
+        ],
+        "cta": "Explore Features"
+      },
+      "decision": {
+        "title": "Decision",
+        "subtitle": "Calculate Your ROI",
+        "description": "See exactly how much value our platform can deliver to your business with our advanced ROI calculator.",
+        "metrics": [
+          "Time Savings",
+          "Revenue Growth",
+          "Cost Reduction",
+          "Efficiency Gains"
+        ],
+        "cta": "Calculate ROI"
+      },
+      "action": {
+        "title": "Action",
+        "subtitle": "Start Your Growth Journey",
+        "description": "Ready to transform your marketing? Book a personalized demo and get started with our premium growth platform.",
+        "offers": [
+          "Free 30-day trial",
+          "Personal onboarding",
+          "Dedicated support",
+          "Money-back guarantee"
+        ],
+        "cta": "Book Demo Now"
+      }
+    },
+    "roiCalculator": {
+      "title": "ROI Calculator",
+      "description": "Calculate your potential return on investment with our marketing automation platform",
+      "inputs": {
+        "monthlyRevenue": "Monthly Revenue",
+        "currentMarketingSpend": "Current Marketing Spend",
+        "teamSize": "Marketing Team Size",
+        "contentPieces": "Content Pieces per Month",
+        "leadGoal": "Monthly Lead Goal"
+      },
+      "results": {
+        "title": "Your ROI Projection",
+        "timesSavings": "Time Savings",
+        "costReduction": "Cost Reduction",
+        "revenueIncrease": "Revenue Increase",
+        "totalRoi": "Total ROI",
+        "paybackPeriod": "Payback Period",
+        "yearlyValue": "Yearly Value Created"
+      },
+      "calculate": "Calculate ROI",
+      "recalculate": "Recalculate",
+      "disclaimer": "Results are estimates based on industry benchmarks and actual results may vary."
+    },
+    "testimonials": {
+      "title": "What Our Customers Say",
+      "subtitle": "Join thousands of businesses growing on autopilot",
+      "items": [
+        {
+          "quote": "This platform transformed our content strategy. We're now generating 3x more qualified leads with half the effort.",
+          "author": "Sarah Johnson",
+          "role": "Marketing Director",
+          "company": "TechCorp",
+          "metrics": {
+            "leadIncrease": "300%",
+            "timeReduction": "50%"
+          }
+        },
+        {
+          "quote": "The ROI has been incredible. We've automated 80% of our content creation and improved our conversion rates by 45%.",
+          "author": "Michael Chen",
+          "role": "CEO",
+          "company": "GrowthStart",
+          "metrics": {
+            "automation": "80%",
+            "conversionIncrease": "45%"
+          }
+        },
+        {
+          "quote": "Best investment we've made. Our marketing team can now focus on strategy while the platform handles execution.",
+          "author": "Lisa Martinez",
+          "role": "CMO",
+          "company": "InnovateCo",
+          "metrics": {
+            "efficiency": "120%",
+            "satisfaction": "95%"
+          }
+        }
+      ]
+    },
+    "socialProof": {
+      "trustedBy": "Trusted by 10,000+ businesses worldwide",
+      "stats": {
+        "customers": "10,000+",
+        "contentGenerated": "1M+",
+        "timeSaved": "500K+",
+        "roiAverage": "340%"
+      },
+      "labels": {
+        "customers": "Active Customers",
+        "contentGenerated": "Content Pieces Generated",
+        "timeSaved": "Hours Saved Monthly",
+        "roiAverage": "Average ROI"
+      }
+    },
+    "features": {
+      "title": "Platform Features",
+      "subtitle": "Everything you need to scale your marketing",
+      "list": [
+        {
+          "title": "AI Content Engine",
+          "description": "Generate high-quality content across all channels with advanced AI",
+          "icon": "✨"
+        },
+        {
+          "title": "Multi-Platform Publishing",
+          "description": "Distribute content seamlessly across all your marketing channels",
+          "icon": "📡"
+        },
+        {
+          "title": "Performance Analytics",
+          "description": "Track and optimize performance with real-time data insights",
+          "icon": "📊"
+        },
+        {
+          "title": "Lead Automation",
+          "description": "Automatically capture and nurture leads through the entire funnel",
+          "icon": "🎯"
+        },
+        {
+          "title": "A/B Testing",
+          "description": "Continuously optimize your campaigns with intelligent testing",
+          "icon": "🧪"
+        },
+        {
+          "title": "CRM Integration",
+          "description": "Seamlessly connect with your existing tools and workflows",
+          "icon": "🔗"
+        }
+      ]
+    },
+    "cta": {
+      "primary": "Start Free Trial",
+      "secondary": "Book Demo",
+      "urgency": "Limited Time: 50% Off First Year",
+      "guarantee": "30-Day Money Back Guarantee",
+      "noCredit": "No Credit Card Required"
+    },
+    "navigation": {
+      "previous": "Previous",
+      "next": "Next",
+      "skip": "Skip",
+      "back": "Back",
+      "continue": "Continue",
+      "getStarted": "Get Started",
+      "learnMore": "Learn More"
+    },
+    "forms": {
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email Address",
+      "company": "Company",
+      "phone": "Phone Number",
+      "jobTitle": "Job Title",
+      "companySize": "Company Size",
+      "industry": "Industry",
+      "goals": "Marketing Goals",
+      "required": "Required",
+      "submit": "Submit",
+      "submitting": "Submitting...",
+      "success": "Success! We'll be in touch within 24 hours.",
+      "error": "Something went wrong. Please try again."
+    },
+    "demo": {
+      "title": "Book Your Personalized Demo",
+      "subtitle": "See how our platform can transform your marketing in just 30 minutes",
+      "benefits": [
+        "Personalized platform walkthrough",
+        "Custom ROI analysis for your business",
+        "Integration roadmap planning",
+        "Exclusive pricing discussion"
+      ],
+      "calendly": "Schedule Demo",
+      "or": "or",
+      "contact": "Contact Sales Directly"
+    }
+  },
+  "customerIntelligence": {
+    "title": "Customer Intelligence Dashboard",
+    "description": "360° customer view, analytics, and insights for data-driven decisions",
+    "tabs": {
+      "overview": "Overview",
+      "analytics": "Analytics",
+      "churn": "Churn Prediction",
+      "segments": "Segments",
+      "journey": "Customer Journey Tracking"
+    },
+    "overview": {
+      "totalCustomers": "Total Customers",
+      "totalCustomersDesc": "All registered customers",
+      "activeCustomers": "Active Customers",
+      "activeCustomersDesc": "Currently active users",
+      "avgLifetimeValue": "Avg. Lifetime Value",
+      "avgLifetimeValueDesc": "Average customer value",
+      "churnRisk": "Churn Risk",
+      "churnRiskDesc": "Customers at risk",
+      "fromLastMonth": "from last month"
+    },
+    "segments": {
+      "title": "Customer Segments",
+      "description": "Customer distribution by value",
+      "highValue": "High Value",
+      "mediumValue": "Medium Value",
+      "lowValue": "Low Value",
+      "atRisk": "At Risk"
+    },
+    "journey": {
+      "title": "Customer Journey",
+      "description": "Conversion funnel analysis",
+      "customers": "customers",
+      "stages": {
+        "awareness": "Awareness",
+        "interest": "Interest",
+        "consideration": "Consideration",
+        "purchase": "Purchase",
+        "retention": "Retention"
+      }
+    },
+    "analytics": {
+      "title": "Advanced Analytics",
+      "description": "Detailed customer behavior analysis",
+      "comingSoon": "Advanced analytics features coming soon..."
+    },
+    "development": {
+      "title": "Development Status",
+      "description": "Feature implementation progress",
+      "complete": "✅ Complete",
+      "inProgress": "🔄 In Progress",
+      "planned": "🤖 Planned",
+      "features": {
+        "overviewMetrics": "Customer overview metrics",
+        "churnPrediction": "Churn prediction algorithms",
+        "realtimeSync": "Real-time data synchronization",
+        "segmentation": "Advanced segmentation",
+        "journeyTracking": "Customer journey tracking",
+        "mlOptimization": "ML model optimization"
+      }
+    }
+  },
+  "monitoring": {
+    "title": "Monitoring Dashboard",
+    "subtitle": "Real-time system monitoring and performance analytics",
+    "infrastructure": {
+      "title": "Infrastructure Monitoring",
+      "subtitle": "Real-time system performance and health",
+      "systemMetrics": "System Metrics",
+      "serviceHealth": "Service Health",
+      "alerts": "Alerts",
+      "networkMonitoring": "Network Monitoring",
+      "cpuUsage": "CPU Usage",
+      "memoryUsage": "Memory Usage",
+      "diskUsage": "Disk Usage",
+      "networkTraffic": "Network Traffic",
+      "uptime": "Uptime",
+      "responseTime": "Response Time",
+      "errorRate": "Error Rate",
+      "throughput": "Throughput",
+      "healthy": "Healthy",
+      "warning": "Warning",
+      "critical": "Critical",
+      "offline": "Offline",
+      "online": "Online",
+      "lastUpdate": "Last Update",
+      "performance": "Performance",
+      "availability": "Availability"
+    },
+    "workflows": {
+      "title": "Workflow Monitoring",
+      "subtitle": "N8N workflow monitoring and management",
+      "workflowOverview": "Workflow Overview",
+      "executionHistory": "Execution History",
+      "analytics": "Analytics",
+      "settings": "Settings",
+      "activeWorkflows": "Active Workflows",
+      "totalExecutions": "Total Executions",
+      "successRate": "Success Rate",
+      "avgExecutionTime": "Avg. Execution Time",
+      "workflowName": "Workflow Name",
+      "status": "Status",
+      "lastExecution": "Last Execution",
+      "actions": "Actions",
+      "execute": "Execute",
+      "activate": "Activate",
+      "deactivate": "Deactivate",
+      "view": "View",
+      "edit": "Edit",
+      "active": "Active",
+      "inactive": "Inactive",
+      "running": "Running",
+      "success": "Success",
+      "error": "Error",
+      "canceled": "Canceled",
+      "waiting": "Waiting",
+      "executionId": "Execution ID",
+      "startTime": "Start Time",
+      "endTime": "End Time",
+      "duration": "Duration",
+      "workflowId": "Workflow ID",
+      "executionsOverTime": "Executions Over Time",
+      "successFailureRate": "Success/Failure Rate",
+      "executionTimes": "Execution Times",
+      "workflowPerformance": "Workflow Performance",
+      "recentExecutions": "Recent Executions",
+      "noExecutions": "No executions found",
+      "loading": "Loading...",
+      "refreshData": "Refresh Data",
+      "autoRefresh": "Auto Refresh",
+      "filterByStatus": "Filter by Status",
+      "searchWorkflows": "Search Workflows",
+      "exportData": "Export Data",
+      "webhookUrl": "Webhook URL",
+      "triggerWorkflow": "Trigger Workflow",
+      "workflowHealth": "Workflow Health",
+      "systemHealth": "System Health"
+    }
+  }
+}

@@ -1,0 +1,1391 @@
+{
+  "name": "CarouselBuilder",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "carouselTopic"
+            },
+            {
+              "name": "carouselContext"
+            },
+            {
+              "name": "chatID"
+            },
+            {
+              "name": "contentStrategy"
+            },
+            {
+              "name": "priority"
+            },
+            {
+              "name": "numberOfSlides",
+              "type": "number"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [260, -180],
+      "id": "1825fa17-93b4-45b6-a6cc-d6778dfd696f",
+      "name": "Enterprise Input Trigger"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-4o",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [460, 140],
+      "id": "b6509671-df1d-4324-98b9-c9375ca80cc7",
+      "name": "Enterprise Visual Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "ht1g53zw1Z9E7nlN",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Carousel Topic: {{ $('Enterprise Input Trigger').first().json.carouselTopic }}\nCarousel Context: {{ $('Enterprise Input Trigger').first().json.carouselContext }}\nNumber of Slides: {{ $('Enterprise Input Trigger').first().json.numberOfSlides }}\nContent Strategy: {{ $('Enterprise Input Trigger').first().json.contentStrategy || 'premium' }}\nPriority: {{ $('Enterprise Input Trigger').first().json.priority || 'high' }}\n\nCreate a series of {{ $('Enterprise Input Trigger').first().json.numberOfSlides }} detailed, thematically consistent Instagram image prompts for a carousel, optimized for the '{{ $('Enterprise Input Trigger').first().json.contentStrategy || 'premium' }}' strategy.",
+        "options": {
+          "systemMessage": "# Enterprise Instagram Carousel Visual Creator Agent v2.1\n\nYou are an advanced Enterprise Instagram Carousel Visual Creator optimized for creating cohesive, multi-image narratives for campaigns, A/B testing, and performance optimization.\n\n## Mission:\nCreate an exceptional series of thematically consistent, detailed image prompts for an enterprise-level Instagram carousel that:\n- Tells a compelling visual story across multiple slides.\n- Maximizes engagement, saves, and scroll-through rates.\n- Aligns with specific content strategies (standard, premium, campaign).\n- Optimizes for Instagram's algorithm and user behavior.\n- Maintains SkinClarity Club's premium brand consistency.\n- Generates measurable business results.\n\n## Carousel Structure:\n- **Slide 1 (Hook):** A powerful, scroll-stopping image that introduces the topic.\n- **Slides 2-N (Body):** A sequence of images that elaborate on the topic, providing value, details, or steps.\n- **Slide N+1 (CTA):** A concluding image that encourages a specific action (e.g., visit link, save post).\n\n## Enterprise Content Strategies:\n\n### **Standard Strategy** (75% quality threshold):\n- Clear, professional, accessible content with broad audience appeal.\n\n### **Premium Strategy** (85% quality threshold):\n- Elevated, aspirational content with sophisticated messaging for premium brand positioning.\n\n### **Campaign Strategy** (90% quality threshold):\n- Maximum impact, conversion-focused content with strategic business messaging.\n\n## Enterprise Visual Standards:\n- **High contrast** for mobile viewing excellence.\n- **Clear focal points** for quick comprehension.\n- **Emotional triggers** for engagement optimization.\n- **Professional quality** for trust-building.\n- **Instagram-optimized** composition (square/portrait).\n- **Visual Cohesion**: Ensure all prompts work together as a single, unified carousel.\n\n## SkinClarity Club Enterprise Brand Elements:\n- **Color Palette**: Clean whites, soft pastels, natural earth tones.\n- **Lighting**: Soft, natural, professional studio quality.\n- **Composition**: Minimalist, premium, spacious layouts.\n- **Models**: Diverse, authentic, healthy-looking skin.\n- **Props**: Glass containers, natural ingredients, clean surfaces.\n- **Mood**: Trustworthy, aspirational, scientifically-backed.\n\n## Output Requirements:\nReturn ONLY a valid JSON array of strings, where each string is a crafted image prompt. The array must contain exactly {{ $('Enterprise Input Trigger').first().json.numberOfSlides }} elements. Do not include any other text or formatting.\n\n**Example Output for 3 slides:**\n```json\n[\n  \"Prompt for the hook slide...\",\n  \"Prompt for the body slide...\",\n  \"Prompt for the call-to-action slide...\"\n]\n```\n\n**Focus**: Create a cohesive visual story that performs exceptionally well in enterprise marketing campaigns."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [660, -200],
+      "id": "d7451360-7945-4c59-b724-e6c864e21dc3",
+      "name": "Enterprise Visual Creator"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 🏢 SPLIT ENTERPRISE IMAGE PROMPTS\nconst visualCreatorOutput = $input.first().json.output;\nconsole.log(\"📝 Visual Creator Output:\", visualCreatorOutput);\n\nlet prompts;\ntry {\n  let cleanJson = visualCreatorOutput.replace(/```json/g, '').replace(/```/g, '').trim();\n  prompts = JSON.parse(cleanJson);\n} catch (e) {\n  console.error(\"❌ Failed to parse prompts JSON:\", e);\n  throw new Error(\"Visual Creator output is not valid JSON.\");\n}\n\nif (!Array.isArray(prompts)) {\n  throw new Error(\"Visual Creator output is not a JSON array as required.\");\n}\n\nconsole.log(`Splitting into ${prompts.length} individual prompt items.`);\n\n// Return each prompt as a separate item for looping\nreturn prompts.map((prompt, index) => {\n  return {\n    json: {\n      prompt: prompt,\n      slideIndex: index\n    }\n  };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [940, -180],
+      "id": "f9a0cbcf-957c-43d5-b348-0cfa3a6cda67",
+      "name": "Split Prompts for Loop"
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "model": "gpt-image-1",
+        "prompt": "={{ $json.prompt }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [1100, -180],
+      "id": "614ecce9-80a7-4890-a773-79b07319ba2a",
+      "name": "Enterprise Image Generation",
+      "retryOnFail": true,
+      "waitBetweenTries": 2000,
+      "credentials": {
+        "openAiApi": {
+          "id": "lAcEJc06aCiCIRiF",
+          "name": "OpenAi accountFINAL"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://nurdldgqxseunotmygzn.supabase.co/storage/v1/object/content-assets/enterprise/{{ $execution.id }}/generated-image-{{ $('Split Prompts for Loop').item.json.slideIndex }}-{{ Date.now() }}-{{ Math.random().toString(36).substring(2, 8) }}.png",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im51cmRsZGdxeHNldW5vdG15Z3puIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0ODIxMDUxNCwiZXhwIjoyMDYzNzg2NTE0fQ.xsrrxjpMbKMdcJ_e_6DiBwz9eLLj3YziKE7UrTqhVCo"
+            },
+            {
+              "name": "Content-Type",
+              "value": "image/png"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1280, -160],
+      "id": "110926a5-192d-434d-9add-15a82c30391a",
+      "name": "Store Enterprise Image",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "t0Vk9fjgaIrAz1Kl",
+          "name": "SupaBase"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "tableId": "content_workflows",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "execution_id",
+              "fieldValue": "={{ $execution.id }}"
+            },
+            {
+              "fieldId": "workflow_type",
+              "fieldValue": "createCarousel_Enterprise"
+            },
+            {
+              "fieldId": "current_state",
+              "fieldValue": "INITIAL"
+            },
+            {
+              "fieldId": "user_id",
+              "fieldValue": "={{ $('Enterprise Input Trigger').first().json.chatID }}"
+            },
+            {
+              "fieldId": "chat_id",
+              "fieldValue": "={{ $('Enterprise Input Trigger').first().json.chatID }}"
+            },
+            {
+              "fieldId": "input_data",
+              "fieldValue": "={{ JSON.stringify($('Enterprise Input Trigger').first().json) }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [260, -40],
+      "id": "44129486-42d7-4c03-bff1-64f43c5777eb",
+      "name": "Enterprise Workflow Registry",
+      "credentials": {
+        "supabaseApi": {
+          "id": "DILZN3aAMdS9FL24",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// 🏢 ENTERPRISE STATE COORDINATOR INITIALIZATION\nconst supabaseWorkflow = $('Enterprise Workflow Registry').first().json;\nconst inputData = $('Enterprise Input Trigger').first().json;\n\nconsole.log(\"🎯 === ENTERPRISE STATE COORDINATOR INIT ===\");\nconsole.log(\"🆔 Execution ID:\", $execution.id);\nconsole.log(\"📊 Supabase Workflow ID:\", supabaseWorkflow.id);\nconsole.log(\"📈 Content Strategy:\", inputData.contentStrategy || 'premium');\nconsole.log(\"📊 Priority Level:\", inputData.priority || 'high');\n\ntry {\n  console.log(\"🔄 Preparing Enterprise StateCoordinator data\");\n  \n  // Enterprise StateCoordinator Data Package\n  const enterpriseStateData = {\n    action: 'create',\n    execution_id: $execution.id,\n    workflow_data: {\n      workflow_type: 'createCarousel_Enterprise',\n      workflow_version: '2.1_enterprise_carousel',\n      current_state: 'INITIAL',\n      current_phase: 'enterprise_image_generation',\n      chat_id: inputData.chatID,\n      user_id: inputData.chatID,\n      input_data: inputData,\n      supabase_workflow_id: supabaseWorkflow.id,\n      \n      // Enterprise Configuration\n      enterprise_config: {\n        content_strategy: inputData.contentStrategy || 'premium',\n        priority_level: inputData.priority || 'high',\n        enterprise_mode: true,\n        quality_threshold: inputData.contentStrategy === 'campaign' ? 0.90 : \n                          inputData.contentStrategy === 'premium' ? 0.85 : 0.75\n      }\n    }\n  };\n\n  console.log(\"✅ Enterprise StateCoordinator data prepared\");\n  console.log(\"📄 Enterprise Config:\", JSON.stringify(enterpriseStateData.workflow_data.enterprise_config, null, 2));\n\n  return [{ \n    json: { \n      ...inputData, \n      enterprise_state_data: enterpriseStateData,\n      supabase_id: supabaseWorkflow.id,\n      enterprise_ready: true,\n      \n      // Enterprise Metadata\n      content_strategy: inputData.contentStrategy || 'premium',\n      priority_level: inputData.priority || 'high',\n      workflow_version: '2.1_enterprise_carousel'\n    } \n  }];\n\n} catch (error) {\n  console.log(\"❌ Enterprise StateCoordinator preparation error:\", error.message);\n  \n  // Enterprise Fallback Mode\n  return [{ \n    json: { \n      ...inputData, \n      enterprise_state_created: false, \n      supabase_id: supabaseWorkflow.id,\n      enterprise_error: error.message,\n      fallback_mode: 'enterprise',\n      content_strategy: inputData.contentStrategy || 'premium',\n      priority_level: inputData.priority || 'high'\n    } \n  }];\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [440, -40],
+      "id": "5b76eb01-003b-4545-8856-7e2d96794a77",
+      "name": "Initialize Enterprise StateCoordinator"
+    },
+    {
+      "parameters": {
+        "tableId": "content_assets",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "workflow_id",
+              "fieldValue": "={{ $('Enterprise Workflow Registry').first().json.id }}"
+            },
+            {
+              "fieldId": "execution_id",
+              "fieldValue": "={{ $execution.id }}"
+            },
+            {
+              "fieldId": "asset_type",
+              "fieldValue": "enterprise_generated_image"
+            },
+            {
+              "fieldId": "file_metadata",
+              "fieldValue": "={{ \n  (function() {\n    const slideIndex = $('Split Prompts for Loop').item.json.slideIndex;\n    const prompt = $('Split Prompts for Loop').item.json.prompt;\n    const enterpriseData = $('Enterprise Input Trigger').first().json;\n    const executionId = $execution.id;\n    const timestamp = Date.now();\n    const uniqueId = Math.random().toString(36).substring(2, 8);\n    \n    // Generate comprehensive metadata\n    return JSON.stringify({\n      \"slide_index\": slideIndex,\n      \"prompt_used\": prompt,\n      \"execution_id\": executionId,\n      \"timestamp\": timestamp,\n      \"unique_id\": uniqueId,\n      \"file_version\": `${slideIndex}-${timestamp}-${uniqueId}`,\n      \n      // Enterprise configuration\n      \"content_strategy\": enterpriseData.contentStrategy || 'premium',\n      \"priority_level\": enterpriseData.priority || 'high',\n      \"workflow_version\": \"2.1_enterprise_carousel\",\n      \"enterprise_mode\": true,\n      \n      // Carousel context\n      \"carousel_topic\": enterpriseData.carouselTopic,\n      \"carousel_context\": enterpriseData.carouselContext,\n      \"total_slides\": enterpriseData.numberOfSlides,\n      \"slide_position\": slideIndex + 1,\n      \n      // Quality tracking\n      \"quality_tier\": enterpriseData.contentStrategy === 'campaign' ? 'ultra' : \n                     enterpriseData.contentStrategy === 'premium' ? 'high' : 'standard',\n      \n      // OpenAI response data\n      \"openai_model\": $('Enterprise Image Generation').item.json.model || 'gpt-image-1',\n      \n      // Storage info\n      \"bucket_name\": \"content-assets\",\n      \"storage_path\": `enterprise/${executionId}/generated-image-${slideIndex}-${timestamp}-${uniqueId}.png`,\n      \n      // Timestamps\n      \"generated_at\": new Date().toISOString(),\n      \"created_at\": new Date().toISOString()\n    });\n  })()\n}}"
+            },
+            {
+              "fieldId": "created_at",
+              "fieldValue": "={{ $now.toISODate() }}"
+            },
+            {
+              "fieldId": "file_url",
+              "fieldValue": "={{ \n  (function() {\n    const storeResponse = $('Store Enterprise Image').item.json;\n    \n    if (storeResponse.Key) {\n      // Key already contains the full path including bucket name\n      return `https://nurdldgqxseunotmygzn.supabase.co/storage/v1/object/public/${storeResponse.Key}`;\n    } else {\n      console.error(\"No Key found in Store Enterprise Image response\");\n      return \"https://error-no-key-found.com\";\n    }\n  })()\n}}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [1020, 180],
+      "id": "53fbcbac-7a2f-48ba-88f3-61670705245a",
+      "name": "Save Enterprise Image Asset",
+      "credentials": {
+        "supabaseApi": {
+          "id": "DILZN3aAMdS9FL24",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// 🏢 SIMPLIFIED AGGREGATE CAROUSEL IMAGE DATA\nconsole.log(\"🔄 === SIMPLIFIED CAROUSEL DATA AGGREGATION ===\");\n\n// Get data from Save Enterprise Image Asset (now contains everything)\nconst assetData = $('Save Enterprise Image Asset').all();\nconst originalInputs = $('Enterprise Input Trigger').first().json;\n\nconsole.log(`📊 Asset Data items: ${assetData.length}`);\n\n// Parse file_metadata and combine with asset data\nconst combinedData = assetData.map(asset => {\n  const metadata = JSON.parse(asset.json.file_metadata);\n  \n  return {\n    // Core slide info\n    slide_index: metadata.slide_index,\n    slide_position: metadata.slide_position,\n    \n    // File information (now from asset.json.file_url)\n    file_url: asset.json.file_url,\n    storage_path: metadata.storage_path,\n    bucket_name: metadata.bucket_name,\n    file_version: metadata.file_version,\n    timestamp: metadata.timestamp,\n    unique_id: metadata.unique_id,\n    \n    // Content info\n    prompt_used: metadata.prompt_used,\n    openai_model: metadata.openai_model,\n    \n    // Enterprise configuration\n    content_strategy: metadata.content_strategy,\n    priority_level: metadata.priority_level,\n    workflow_version: metadata.workflow_version,\n    enterprise_mode: metadata.enterprise_mode,\n    \n    // Carousel context\n    carousel_topic: metadata.carousel_topic,\n    total_slides: metadata.total_slides,\n    quality_tier: metadata.quality_tier,\n    \n    // Asset metadata\n    asset_id: asset.json.id,\n    workflow_id: asset.json.workflow_id,\n    \n    // Timestamps\n    generated_at: metadata.generated_at,\n    created_at: metadata.created_at\n  };\n}).sort((a, b) => a.slide_index - b.slide_index);\n\n// Create the final result object\nconst result = {\n  // Original input data\n  ...originalInputs,\n  \n  // Enhanced image data\n  images: combinedData,\n  \n  // Convenience arrays (for backward compatibility)\n  image_urls: combinedData.map(img => img.file_url),\n  prompts_used: combinedData.map(img => img.prompt_used),\n  \n  // Enhanced metadata\n  aggregation_metadata: {\n    total_slides: combinedData.length,\n    content_strategy: originalInputs.contentStrategy || 'premium',\n    priority_level: originalInputs.priority || 'high',\n    workflow_version: '2.1_enterprise_carousel',\n    aggregated_at: new Date().toISOString(),\n    execution_id: $execution.id\n  },\n  \n  // Quality metrics\n  quality_metrics: {\n    slides_generated: combinedData.length,\n    expected_slides: originalInputs.numberOfSlides,\n    generation_complete: combinedData.length === originalInputs.numberOfSlides,\n    all_urls_present: combinedData.every(item => !!item.file_url),\n    enterprise_validated: true\n  }\n};\n\nconsole.log(\"📊 === AGGREGATION SUMMARY ===\");\nconsole.log(`🖼️ Total slides processed: ${result.images.length}`);\nconsole.log(`🎯 Expected slides: ${originalInputs.numberOfSlides}`);\nconsole.log(`✅ Generation complete: ${result.quality_metrics.generation_complete}`);\nconsole.log(`🔗 All URLs present: ${result.quality_metrics.all_urls_present}`);\nconsole.log(`📈 Content Strategy: ${result.aggregation_metadata.content_strategy}`);\nconsole.log(`📊 Priority Level: ${result.aggregation_metadata.priority_level}`);\n\n// Validation check\nif (!result.quality_metrics.generation_complete) {\n  console.warn(`⚠️ Warning: Expected ${originalInputs.numberOfSlides} slides, got ${result.images.length}`);\n}\n\nif (!result.quality_metrics.all_urls_present) {\n  console.warn(\"⚠️ Warning: Some slides missing file URLs\");\n}\n\nconsole.log(\"🚀 SIMPLIFIED CAROUSEL AGGREGATION COMPLETE!\");\n\nreturn [{ json: result }];"
+      },
+      "id": "31ec0439-7767-414f-86ab-99527c3be4a1",
+      "name": "Aggregate Image Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [640, -80]
+    },
+    {
+      "parameters": {
+        "jsCode": "// 🏢 ENTERPRISE STATE UPDATE - IMAGES GENERATED (CAROUSEL)\nconst aggregatedData = $('Aggregate Image Data').first().json;\n\nconsole.log(\"⚡ === ENTERPRISE STATE UPDATE (CAROUSEL) ===\");\nconsole.log(`🖼️ ${aggregatedData.images.length} Enterprise Image URLs generated.`);\nconsole.log(\"📈 Content Strategy:\", aggregatedData.content_strategy);\nconsole.log(\"📊 Priority Level:\", aggregatedData.priority_level);\nconsole.log(\"🏢 Enterprise Mode: true\");\n\n// Enterprise State Update Package for Carousel\nconst enterpriseStateUpdate = {\n  image_data: aggregatedData.images,\n  state_updated: true,\n  execution_id: $execution.id,\n  enterprise_mode: true,\n  \n  // Enterprise Configuration\n  content_strategy: aggregatedData.content_strategy,\n  priority_level: aggregatedData.priority_level,\n  workflow_version: '2.1_enterprise_carousel',\n  \n  // State Transition Data\n  current_state: 'IMAGES_GENERATED',\n  previous_state: 'INITIAL',\n  updated_at: new Date().toISOString()\n};\n\nconsole.log(\"✅ Enterprise state update prepared for carousel\");\nconsole.log(\"🚀 ENTERPRISE STATE UPDATE COMPLETE!\");\n\nreturn [{ json: enterpriseStateUpdate }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [640, 80],
+      "id": "70b27c0e-c863-4e59-9bb8-cbdf7af664d9",
+      "name": "Update Enterprise State - Image Generated"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ⚙️ PREPARE TELEGRAM MEDIA GROUP - TELEGRAM OPTIMIZED\nconst aggregatedData = $('Aggregate Image Data').first().json;\nconst images = aggregatedData.images;\n\nconsole.log(\"📱 === PREPARING TELEGRAM MEDIA GROUP (OPTIMIZED) ===\");\nconsole.log(`📊 Processing ${images.length} images for Telegram`);\n\n// Create Telegram-compliant media array\nconst mediaGroup = [];\n\nfor (let i = 0; i < images.length; i++) {\n  const image = images[i];\n  let mediaUrl = image.file_url;\n  \n  console.log(`🔍 Original URL ${i}: ${mediaUrl}`);\n  \n  // Telegram URL cleaning and validation\n  if (mediaUrl && typeof mediaUrl === 'string') {\n    // Remove any potential problematic characters\n    mediaUrl = mediaUrl.trim();\n    \n    // Ensure proper HTTPS protocol\n    if (mediaUrl.startsWith('http://')) {\n      mediaUrl = mediaUrl.replace('http://', 'https://');\n    }\n    \n    // URL encode any special characters (but keep the basic structure)\n    mediaUrl = mediaUrl.replace(/ /g, '%20');\n    \n    // Validate URL structure for Telegram\n    const urlPattern = /^https:\\/\\/[a-zA-Z0-9.-]+\\/[a-zA-Z0-9.\\/_-]+\\.(jpg|jpeg|png|gif|webp)$/i;\n    \n    if (urlPattern.test(mediaUrl)) {\n      mediaGroup.push({\n        type: 'photo',\n        media: mediaUrl\n      });\n      console.log(`✅ Added valid URL ${i}: ${mediaUrl}`);\n    } else {\n      console.error(`❌ Invalid URL ${i}: ${mediaUrl}`);\n      \n      // Fallback: Try to construct a simple filename\n      const fallbackUrl = `https://via.placeholder.com/800x800/f0f0f0/333333?text=Image+${i+1}`;\n      mediaGroup.push({\n        type: 'photo',\n        media: fallbackUrl\n      });\n      console.log(`🔄 Using fallback for ${i}: ${fallbackUrl}`);\n    }\n  } else {\n    console.error(`❌ No valid URL found for image ${i}`);\n  }\n}\n\n// Add caption only to first item (if any valid items exist)\nif (mediaGroup.length > 0) {\n  mediaGroup[0].caption = `🎨 Nieuwe Instagram carousel gegenereerd! (${images.length} slides)\n📈 Strategy: ${aggregatedData.aggregation_metadata.content_strategy.toUpperCase()}\n📊 Priority: ${aggregatedData.aggregation_metadata.priority_level.toUpperCase()}\n🏆 Quality: Enterprise Grade\n\n⏰ Wat vind je van deze afbeeldingen?`;\n}\n\nconsole.log(`✅ Telegram media group prepared with ${mediaGroup.length} items`);\nconsole.log(\"📋 Final media URLs:\");\nmediaGroup.forEach((item, index) => {\n  console.log(`  ${index}: ${item.media}`);\n});\n\nreturn [{ \n  json: { \n    media: mediaGroup,\n    chatID: aggregatedData.chatID,\n    strategy: aggregatedData.aggregation_metadata.content_strategy,\n    priority: aggregatedData.aggregation_metadata.priority_level,\n    slideCount: mediaGroup.length,\n    originalImageCount: images.length\n  } \n}];"
+      },
+      "id": "2fad652e-49e6-41e8-aae4-91d802e71ad8",
+      "name": "Prepare Telegram Media Group",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [820, -20]
+    },
+    {
+      "parameters": {
+        "operation": "sendMediaGroup",
+        "chatId": "=6475835412",
+        "media": {
+          "media": [
+            {
+              "media": "={{ $json.media[0].media }}",
+              "additionalFields": {
+                "caption": "={{ $json.media[0].caption }}"
+              }
+            },
+            {
+              "media": "={{ $json.media[1].media }}",
+              "additionalFields": {}
+            },
+            {
+              "media": "={{ $json.media[2].media }}",
+              "additionalFields": {}
+            },
+            {
+              "media": "={{ $json.media[3].media }}",
+              "additionalFields": {}
+            },
+            {
+              "media": "={{ $json.media[4].media }}",
+              "additionalFields": {}
+            }
+          ]
+        },
+        "additionalFields": {}
+      },
+      "id": "9a6a52d0-ceb5-486e-b7a6-cf3a0a7bb363",
+      "name": "Enterprise Telegram Image Review",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [1040, 0],
+      "webhookId": "enterprise-image-review",
+      "credentials": {
+        "telegramApi": {
+          "id": "ioh9vLdQ3pzyX0kw",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// 🔬 ENTERPRISE CALLBACK DEBUG & FIX - DUAL FORMAT SUPPORT\nconst webhookData = $input.first().json;\n\nconsole.log(\"🔬 === CALLBACK DATA PROCESSING ===\");\nconsole.log(\"📥 RAW Input:\", JSON.stringify($input.first(), null, 2));\n\n// Check voor Telegram's directe approval format\nif (webhookData.data && typeof webhookData.data.approved !== 'undefined') {\n    console.log(\"📱 Direct Telegram approval detected\");\n    \n    // Converteer naar verwacht format\n    const result = {\n        action: webhookData.data.approved ? \"approved\" : \"rejected\",\n        execution_id: $execution.id, // Gebruik huidige execution ID\n        user_id: \"direct_approval\",\n        chat_id: $('Enterprise Input Trigger').first().json.chatID,\n        callback_type: \"direct_telegram\",\n        timestamp: new Date().toISOString(),\n        feedback: '',\n        resume_source: 'telegram_direct',\n        phase: 'enterprise_image_approval',\n        enterprise_mode: true,\n        valid_callback: true\n    };\n    \n    console.log(\"✅ Converted to standard format:\", JSON.stringify(result, null, 2));\n    return [{ json: result }];\n}\n\n// Check voor Callback Handler format\nif (webhookData.body) {\n    console.log(\"📦 Callback Handler format detected\");\n    const bodyData = webhookData.body;\n    \n    const result = {\n        action: bodyData.action,\n        execution_id: bodyData.execution_id,\n        user_id: bodyData.user_id,\n        chat_id: bodyData.chat_id,\n        callback_type: bodyData.callback_type,\n        timestamp: bodyData.timestamp,\n        feedback: bodyData.feedback || '',\n        resume_source: bodyData.resume_source,\n        phase: 'enterprise_image_approval',\n        enterprise_mode: true,\n        valid_callback: true\n    };\n    \n    console.log(\"✅ Callback Handler format processed\");\n    return [{ json: result }];\n    \n} else {\n    // Direct webhookData format\n    const result = {\n        action: webhookData.action,\n        execution_id: webhookData.execution_id,\n        user_id: webhookData.user_id,\n        chat_id: webhookData.chat_id,\n        callback_type: webhookData.callback_type,\n        timestamp: webhookData.timestamp,\n        feedback: webhookData.feedback || '',\n        resume_source: webhookData.resume_source,\n        phase: 'enterprise_image_approval',\n        enterprise_mode: true,\n        valid_callback: true\n    };\n    \n    console.log(\"✅ Direct format processed\");\n    return [{ json: result }];\n}"
+      },
+      "id": "a0733f07-abc3-40ed-8ff9-ce1ad2f22162",
+      "name": "Process Enterprise Image Callback",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 500]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.action }}",
+                    "rightValue": "approved",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Approved"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.action }}",
+                    "rightValue": "modify",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Modify"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "b63e7b34-054d-4371-a7b4-2cb26d1c7627",
+      "name": "Enterprise Image Action Router",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [620, 500]
+    },
+    {
+      "parameters": {
+        "jsCode": "// 🏢 ENTERPRISE REGENERATE IMAGE PROCESSOR\nconst callbackData = $input.first().json;\nconst feedback = callbackData.feedback || '';\n\nconsole.log(\"🔄 === ENTERPRISE REGENERATE PROCESSOR ===\");\nconsole.log(\"💬 Enterprise user feedback:\", feedback);\n\n// Get original enterprise input data\nconst originalInputs = $('Enterprise Input Trigger').first().json;\n\nconsole.log(\"📊 Original Strategy:\", originalInputs.contentStrategy || 'premium');\nconsole.log(\"📈 Original Priority:\", originalInputs.priority || 'high');\n\n// Enterprise Modify Prompt Generation\nlet enterpriseModifyPrompt;\nif (feedback && feedback.trim()) {\n  // User provided specific feedback\n  enterpriseModifyPrompt = `Carousel Topic: ${originalInputs.carouselTopic}\\nCarousel Context: ${originalInputs.carouselContext}\\nNumber of Slides: ${originalInputs.numberOfSlides}\\nContent Strategy: ${originalInputs.contentStrategy || 'premium'}\\nPriority: ${originalInputs.priority || 'high'}\\n\\nUser Feedback: ${feedback}\\n\\nPlease create a refined set of enterprise-grade image prompts for the carousel based on this feedback, optimized for ${originalInputs.contentStrategy || 'premium'} strategy.`;\n  console.log(\"✏️ Using enterprise user feedback for modification\");\n} else {\n  // No feedback, just regenerate with enterprise standards\n  enterpriseModifyPrompt = `Carousel Topic: ${originalInputs.carouselTopic}\\nCarousel Context: ${originalInputs.carouselContext}\\nNumber of Slides: ${originalInputs.numberOfSlides}\\nContent Strategy: ${originalInputs.contentStrategy || 'premium'}\\nPriority: ${originalInputs.priority || 'high'}\\n\\nCreate a new set of enterprise-grade variations of these image prompts with fresh creative elements, optimized for ${originalInputs.contentStrategy || 'premium'} strategy.`;\n  console.log(\"🔄 Creating enterprise variation without specific feedback\");\n}\n\n// Enterprise Regenerate Result\nconst enterpriseRegenerateResult = {\n  output: enterpriseModifyPrompt,\n  isRegenerate: true,\n  hasFeedback: !!(feedback && feedback.trim()),\n  originalInputs: originalInputs,\n  feedback: feedback,\n  timestamp: new Date().toISOString(),\n  \n  // Enterprise Metadata\n  enterprise_mode: true,\n  content_strategy: originalInputs.contentStrategy || 'premium',\n  priority_level: originalInputs.priority || 'high',\n  regeneration_tier: 'enterprise'\n};\n\nconsole.log(\"✅ Enterprise regenerate prompt prepared\");\nconsole.log(\"🚀 ENTERPRISE REGENERATE PROCESSING COMPLETE!\");\n\nreturn [{ json: enterpriseRegenerateResult }];"
+      },
+      "id": "e50f0f48-b09a-4e94-942d-4a86f46bd7c3",
+      "name": "Prepare Enterprise Regenerate Image",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [780, 620]
+    },
+    {
+      "parameters": {
+        "jsCode": "// 🏢 GET ENTERPRISE STATE COORDINATOR DATA (CAROUSEL)\nconsole.log(\"📊 === ENTERPRISE STATE DATA RETRIEVAL (CAROUSEL) ===\");\nconsole.log(\"🆔 Execution ID:\", $execution.id);\n\n// Get aggregated image data\nconst aggregatedData = $('Aggregate Image Data').first().json;\n\n// Enterprise State Data Simulation (in production: call actual StateCoordinator)\nconst enterpriseStateData = {\n  execution_id: $execution.id,\n  current_state: 'IMAGES_APPROVED',\n  workflow_type: 'createCarousel_Enterprise',\n  enterprise_mode: true,\n  \n  // Enhanced Input Data\n  input_data: {\n    carouselTopic: aggregatedData.carouselTopic,\n    carouselContext: aggregatedData.carouselContext,\n    chatID: aggregatedData.chatID,\n    contentStrategy: aggregatedData.contentStrategy || 'premium',\n    priority: aggregatedData.priority || 'high',\n    numberOfSlides: aggregatedData.numberOfSlides\n  },\n  \n  // Enhanced Output Data (now an array)\n  output_data: {\n    images: aggregatedData.images,\n    image_urls: aggregatedData.image_urls,\n    prompts_used: aggregatedData.images.map(img => img.prompt_used), // Assuming prompt is stored in metadata\n    content_strategy: aggregatedData.content_strategy,\n    priority_level: aggregatedData.priority_level,\n    enterprise_mode: true,\n    quality_tier: 'enterprise'\n  },\n  \n  // Enterprise Configuration\n  enterprise_config: {\n    content_strategy: aggregatedData.contentStrategy || 'premium',\n    priority_level: aggregatedData.priority || 'high',\n    quality_threshold: (aggregatedData.contentStrategy === 'campaign') ? 0.90 : \n                      (aggregatedData.contentStrategy === 'premium') ? 0.85 : 0.75,\n    approval_level_required: (aggregatedData.contentStrategy === 'campaign') ? 'executive' : \n                            (aggregatedData.contentStrategy === 'premium') ? 'brand_manager' : 'content_team',\n    enterprise_features_enabled: true\n  }\n};\n\nconsole.log(\"✅ Enterprise state data retrieved for carousel\");\nconsole.log(\"📈 Strategy:\", enterpriseStateData.enterprise_config.content_strategy);\nconsole.log(\"📊 Priority:\", enterpriseStateData.enterprise_config.priority_level);\n\n// Return clean enterprise state data for content creation\nconst enterpriseStateResult = {\n  state_data: enterpriseStateData,\n  execution_id: $execution.id,\n  enterprise_tier: 'premium',\n  content_generation_ready: true\n};\n\nconsole.log(\"🚀 ENTERPRISE STATE DATA RETRIEVAL COMPLETE!\");\n\nreturn [{ json: enterpriseStateResult }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [780, 420],
+      "id": "27149e71-4836-47d4-9e04-6e1a37cb2cca",
+      "name": "Get Enterprise StateCoordinator Data"
+    },
+    {
+      "parameters": {
+        "model": "anthropic/claude-sonnet-4",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [920, 580],
+      "id": "f30c530e-2ac7-46fc-8b7d-c25ba373b55f",
+      "name": "Enterprise Content Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "ht1g53zw1Z9E7nlN",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Analyze this enterprise carousel and create optimized Dutch content:\n\n**Carousel Topic:** {{ $('Get Enterprise StateCoordinator Data').first().json.state_data.input_data.carouselTopic }}\n**Carousel Context:** {{ $('Get Enterprise StateCoordinator Data').first().json.state_data.input_data.carouselContext }}\n**Number of Slides:** {{ $('Get Enterprise StateCoordinator Data').first().json.state_data.input_data.numberOfSlides }}\n**Image URLs:**\n{{ $('Get Enterprise StateCoordinator Data').first().json.state_data.output_data.image_urls.map(url => `- ${url}`).join('\\n') }}\n\n**Content Strategy:** {{ $('Get Enterprise StateCoordinator Data').first().json.state_data.enterprise_config.content_strategy }}\n**Priority Level:** {{ $('Get Enterprise StateCoordinator Data').first().json.state_data.enterprise_config.priority_level }}\n\nCreate enterprise-level content for each slide (for overlay text) and a single Instagram caption for the entire carousel, optimized for the '{{ $('Get Enterprise StateCoordinator Data').first().json.state_data.enterprise_config.content_strategy }}' strategy.\n\nReturn as JSON format.",
+        "options": {
+          "systemMessage": "# Enterprise Instagram Carousel Content Creator v2.1\n\nYou are an advanced Enterprise Instagram content creator optimized for creating compelling, high-performance carousel content.\n\n## Mission:\nCreate enterprise-level Dutch Instagram content for a carousel that:\n- Tells a cohesive story across multiple slides.\n- Maximizes engagement, scroll-through, and business conversions.\n- Aligns with specific content strategies (standard, premium, campaign).\n- Maintains SkinClarity Club's premium brand consistency.\n\n## Carousel Content Structure:\n- **Slide 1 (Hook):** A powerful title and subtitle to grab attention.\n- **Slides 2-N (Body):** Informative, value-driven content on each slide.\n- **Slide N+1 (CTA):** A strong call-to-action on the final slide.\n- **Main Caption:** A single, compelling caption for the entire carousel post.\n\n## Enterprise Template Text Requirements (per slide):\n- **Title**: Max 25 characters for premium visibility.\n- **Subtitle**: Max 50 characters for optimal mobile display.\n- **High contrast** and **performance optimized** for readability and impact.\n\n## Enterprise Caption Requirements (for the whole post):\n- **Hook optimization**: First line designed for maximum engagement.\n- **Value delivery**: Summarize the carousel's value.\n- **CTA optimization**: Strategic calls-to-action (e.g., 'Swipe left', 'Save this post').\n- **Hashtag strategy**: Performance-optimized tag selection.\n\n## SkinClarity Club Enterprise Brand Voice:\n- **Expert Authority**: Science-backed, trustworthy.\n- **Accessible Premium**: High-end but approachable.\n- **Empowering**: Confidence-building messaging.\n\n## Dutch Language Excellence:\n- **Conversational Dutch**: Natural, engaging 'jij' form.\n- **Premium terminology**: Elevated but accessible language.\n\n## Enterprise Output Format (JSON):\n```json\n{\n  \"slides\": [\n    {\n      \"slide_index\": 0,\n      \"title\": \"Pakkende Titel 1\",\n      \"subtitle\": \"Ondertitel die waarde biedt 1\"\n    },\n    {\n      \"slide_index\": 1,\n      \"title\": \"Titel 2\",\n      \"subtitle\": \"Interessante info 2\"\n    }\n  ],\n  \"caption\": {\n    \"text\": \"Een boeiende hoofdtekst voor de hele carousel, die de slides samenvat en aanzet tot actie.\",\n    \"hashtags\": \"#strategischehashtags #carousel #waardevol\"\n  },\n  \"performance_prediction\": {\n    \"engagement_score\": 0.88,\n    \"conversion_potential\": \"high\",\n    \"brand_alignment\": \"perfect\"\n  }\n}\n```\n\n**Focus**: Create cohesive content that drives exceptional business results."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [940, 440],
+      "id": "509b08f0-9fbd-4777-a1d8-a141a72e33b7",
+      "name": "Enterprise Content Creator",
+      "retryOnFail": true,
+      "maxTries": 2,
+      "waitBetweenTries": 5000,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 🏢 ENTERPRISE CONTENT DATA PREPARATION (CAROUSEL)\nconst rawOutput = $input.first().json.output;\nconst stateData = $('Get Enterprise StateCoordinator Data').first().json.state_data;\n\nconsole.log(\"📝 === ENTERPRISE CONTENT PREPARATION (CAROUSEL) ===\");\nconsole.log(\"📥 Enterprise content creator output received\");\n\n// Clean and parse JSON output\nconst cleanJson = rawOutput.replace(/```json\\n?/g, '').replace(/```\\n?/g, '');\nlet contentData;\n\ntry {\n    contentData = JSON.parse(cleanJson);\n    console.log(\"✅ Enterprise content data parsed successfully\");\n} catch (error) {\n    console.error(\"❌ Failed to parse enterprise content JSON:\", error);\n    throw new Error(\"Enterprise content parsing failed\");\n}\n\n// Enterprise Content Validation for Carousel\nconst enterpriseValidation = {\n    has_slides: !!(contentData.slides && Array.isArray(contentData.slides) && contentData.slides.length > 0),\n    slides_have_content: contentData.slides?.every(s => s.title && s.subtitle) || false,\n    has_caption_text: !!(contentData.caption?.text),\n    has_hashtags: !!(contentData.caption?.hashtags),\n    has_performance_prediction: !!(contentData.performance_prediction),\n    slide_count_matches: (contentData.slides?.length || 0) === stateData.input_data.numberOfSlides,\n    strategy_aligned: stateData.enterprise_config.content_strategy !== 'unknown'\n};\n\nconst validationScore = Object.values(enterpriseValidation).filter(Boolean).length / Object.keys(enterpriseValidation).length;\n\nconsole.log(\"📋 === ENTERPRISE CONTENT VALIDATION (CAROUSEL) ===\");\nObject.entries(enterpriseValidation).forEach(([check, passed]) => {\n    console.log(`${passed ? '✅' : '❌'} ${check}: ${passed}`);\n});\nconsole.log(\"🎯 Enterprise Validation Score:\", (validationScore * 100).toFixed(1) + '%');\n\n// Enterprise Quality Gate\nconst qualityThreshold = stateData.enterprise_config.quality_threshold;\nif (validationScore < qualityThreshold) {\n    console.log(\"🚨 ENTERPRISE QUALITY GATE FAILED\");\n    throw new Error(`Enterprise quality standards not met: ${(validationScore * 100).toFixed(1)}%`);\n}\n\nconsole.log(\"🏆 ENTERPRISE QUALITY GATE PASSED!\");\n\n// Enterprise Content Package for Carousel\nconst enterpriseContentPackage = {\n    // Carousel Data\n    slides: contentData.slides,\n    captionText: contentData.caption.text,\n    hashtags: contentData.caption.hashtags,\n    imageUrls: stateData.output_data.image_urls,\n    execution_id: stateData.execution_id,\n    \n    // ENTERPRISE METADATA\n    content_strategy: stateData.enterprise_config.content_strategy,\n    priority_level: stateData.enterprise_config.priority_level,\n    quality_threshold: stateData.enterprise_config.quality_threshold,\n    validation_score: validationScore,\n    enterprise_validated: true,\n    \n    // PERFORMANCE DATA\n    performance_prediction: contentData.performance_prediction,\n    \n    // SOURCE DATA\n    source_state_data: stateData,\n    parsed_content_data: contentData\n};\n\nconsole.log(\"🚀 ENTERPRISE CAROUSEL CONTENT PREPARATION SUCCESS!\");\n\nreturn [{ json: enterpriseContentPackage }];"
+      },
+      "id": "ac94250f-597f-4ba1-8cb6-e0b6f596af4c",
+      "name": "Prepare Enterprise Content Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1300, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "// ⚙️ ENHANCED SPLIT SLIDE DATA FOR PLACID - MET TEMPLATE INFO\nconst contentPackage = $input.first().json;\nconst enhancedSlides = contentPackage.enhanced_slides;\nconst imageUrls = contentPackage.imageUrls;\n\nconsole.log(\"⚙️ === ENHANCED SPLIT FOR PLACID ===\");\nconsole.log(`📊 Processing ${enhancedSlides.length} enhanced slides`);\n\n// Split enhanced slides met alle template informatie\nconst splitResults = enhancedSlides.map((slide, index) => {\n  const slideData = {\n    // Content data\n    title: slide.title,\n    subtitle: slide.subtitle,\n    \n    // Template specifics\n    template_uuid: slide.template_uuid,\n    slide_type: slide.slide_type,\n    slide_index: slide.slide_index,\n    slide_position: slide.slide_position,\n    \n    // Image data\n    imageUrl: imageUrls[index],\n    \n    // Template configuration\n    template_fields: slide.template_fields,\n    text_limits: slide.text_limits,\n    \n    // Voor debugging\n    original_slide_data: slide\n  };\n  \n  console.log(`📝 Slide ${index + 1}:`);\n  console.log(`   🎨 Template: ${slideData.template_uuid}`);\n  console.log(`   📱 Type: ${slideData.slide_type}`);\n  console.log(`   🖼️ Image: ${slideData.imageUrl ? 'YES' : 'NO'}`);\n  \n  return { json: slideData };\n});\n\nconsole.log(\"✅ Enhanced split complete!\");\nconsole.log(`📋 Total items prepared for Placid: ${splitResults.length}`);\n\nreturn splitResults;"
+      },
+      "id": "e9437f3d-60d4-4afd-a978-e94fe019104e",
+      "name": "Split Slide Data for Placid",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1260, 660]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.placid.app/api/rest/images",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.placid_body }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1560, 380],
+      "id": "e21047ac-e45c-474c-bb2b-4a1e7ed3f7cc",
+      "name": "Create Enterprise Final Post Image",
+      "retryOnFail": true,
+      "waitBetweenTries": 3000,
+      "maxTries": 2,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "tY4cJaC6fBEnWZOB",
+          "name": "Placid"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 🏢 AGGREGATE FINAL CAROUSEL IMAGES - SAFE VERSION\nconst allPlacidData = $input.all();\n\nconsole.log(\"🔄 === FINAL IMAGE AGGREGATION ===\");\nconsole.log(`📊 Processing ${allPlacidData.length} Placid responses`);\n\n// Verwerk alle Placid responses\nconst finalSlides = allPlacidData.map((item, index) => {\n  const placidResponse = item.json;\n  \n  console.log(`📝 Slide ${index + 1}:`);\n  console.log(`   🖼️ Final URL: ${placidResponse.image_url}`);\n  console.log(`   ✅ Status: ${placidResponse.status}`);\n  \n  return {\n    // Placid response data\n    placid_id: placidResponse.id,\n    placid_status: placidResponse.status,\n    image_url: placidResponse.image_url,\n    placid_response: placidResponse,\n    \n    // Basic slide data\n    slide_index: index,\n    slide_position: index + 1,\n    title: placidResponse.title || `Slide ${index + 1}`,\n    subtitle: placidResponse.subtitle || '',\n    \n    // Template information (van de input data)\n    template_uuid: placidResponse.template_uuid || 'unknown',\n    slide_type: placidResponse.slide_type || 'unknown',\n    \n    // Success indicators\n    generation_successful: placidResponse.status === 'finished',\n    has_image_url: !!placidResponse.image_url\n  };\n});\n\n// Success metrics\nconst successMetrics = {\n  total_slides: finalSlides.length,\n  successful_generations: finalSlides.filter(s => s.generation_successful).length,\n  all_images_ready: finalSlides.every(s => s.has_image_url)\n};\n\nconsole.log(\"📊 === SUCCESS METRICS ===\");\nconsole.log(`✅ Successful: ${successMetrics.successful_generations}/${successMetrics.total_slides}`);\n\n// Simple result object\nconst result = {\n  // Final slides\n  final_slides: finalSlides,\n  \n  // Success metrics\n  success_metrics: successMetrics,\n  \n  // Basic info\n  execution_id: $execution.id,\n  generation_complete: successMetrics.all_images_ready,\n  generation_timestamp: new Date().toISOString()\n};\n\nconsole.log(\"🚀 FINAL IMAGE AGGREGATION COMPLETE!\");\n\nreturn [{ json: result }];"
+      },
+      "id": "f4699940-8d48-4632-b30a-8d17fa287477",
+      "name": "Aggregate Final Images",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1800, 380]
+    },
+    {
+      "parameters": {
+        "jsCode": "// 🏢 ENTERPRISE STATE UPDATE - CONTENT GENERATED (CAROUSEL)\nconst finalData = $('Aggregate Final Images').first().json;\n\nconsole.log(\"📝 === ENTERPRISE CONTENT GENERATED UPDATE (CAROUSEL) ===\");\nconsole.log(\"🎯 Execution ID:\", finalData.execution_id);\n\n// Enterprise State Update Data\nconst enterpriseStateUpdate = {\n    execution_id: finalData.execution_id,\n    current_state: 'CONTENT_GENERATED',\n    previous_state: 'IMAGES_APPROVED',\n    current_phase: 'enterprise_content_creation',\n    \n    // Enterprise Output Data\n    output_data: {\n        final_carousel: {\n            slides: finalData.final_slides.map(s => ({...s})),\n            caption: finalData.captionText,\n            hashtags: finalData.hashtags\n        },\n        content_generated_at: new Date().toISOString(),\n        quality_score: finalData.validation_score,\n        performance_prediction: finalData.performance_prediction,\n        content_strategy: finalData.content_strategy,\n        priority_level: finalData.priority_level,\n        enterprise_validated: finalData.enterprise_validated\n    },\n    \n    // Enterprise Metadata\n    enterprise_mode: true,\n    workflow_version: '2.1_enterprise_carousel',\n    updated_at: new Date().toISOString()\n};\n\nconsole.log(\"✅ Enterprise state updated to CONTENT_GENERATED\");\n\nreturn [{ json: enterpriseStateUpdate }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1580, 600],
+      "id": "218a2290-e18d-42f1-a2f6-c18b7cdb27a0",
+      "name": "Update Enterprise State - Content Generated"
+    },
+    {
+      "parameters": {
+        "operation": "sendMediaGroup",
+        "chatId": "={{ $('Enterprise Input Trigger').first().json.chatID }}",
+        "media": {
+          "media": [
+            {
+              "media": "={{ $('Aggregate Final Images').item.json.final_slides[0].image_url }}",
+              "additionalFields": {}
+            },
+            {
+              "media": "={{ $('Aggregate Final Images').item.json.final_slides[1].image_url }}",
+              "additionalFields": {}
+            },
+            {
+              "media": "={{ $('Aggregate Final Images').item.json.final_slides[2].image_url }}",
+              "additionalFields": {}
+            },
+            {
+              "media": "={{ $('Aggregate Final Images').item.json.final_slides[3].image_url }}",
+              "additionalFields": {}
+            },
+            {
+              "media": "={{ $('Aggregate Final Images').item.json.final_slides[4].image_url }}",
+              "additionalFields": {}
+            }
+          ]
+        },
+        "additionalFields": {}
+      },
+      "id": "c39212d2-7646-4cbb-8534-23e879785c5d",
+      "name": "Enterprise Telegram Final Review",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [1960, 600],
+      "webhookId": "enterprise-final-review",
+      "credentials": {
+        "telegramApi": {
+          "id": "ioh9vLdQ3pzyX0kw",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract input data\nconst inputData = $input.first().json;\nconst telegramData = inputData.body || inputData;\n\n// Extract the action from the callback\nlet action = '';\nif (telegramData.action) {\n    action = telegramData.action;\n} else if (telegramData.callback_query && telegramData.callback_query.data) {\n    // Parse callback data if it's in Telegram callback format\n    const callbackData = telegramData.callback_query.data;\n    if (callbackData.includes('approve')) {\n        action = 'approved';\n    } else if (callbackData.includes('modify')) {\n        action = 'modify';\n    }\n}\n\n// Enterprise Metadata\nconst enterpriseMetadata = {\n    enterprise_mode: true,\n    valid_callback: true,\n    phase: 'enterprise_final_approval',\n    callback_version: '2.1_enterprise_carousel',\n    processing_tier: 'enterprise',\n    final_review: true\n};\n\n// Create the result object that the router expects\nconst enterpriseFinalCallbackResult = {\n    ...enterpriseMetadata,\n    action: action,  // ← Dit is wat de router nodig heeft!\n    execution_id: inputData.execution_id || telegramData.execution_id,\n    user_id: telegramData.user_id,\n    chat_id: telegramData.chat_id,\n    callback_type: telegramData.callback_type,\n    timestamp: new Date().toISOString(),\n    resume_source: 'callback_handler',\n    originalData: telegramData\n};\n\n// Log voor debugging\nconsole.log('✅ Enterprise final callback processed successfully');\nconsole.log('📋 Enterprise Final Result:', JSON.stringify(enterpriseFinalCallbackResult, null, 2));\nconsole.log('🎯 Action extracted:', action);\n\nreturn [{ json: enterpriseFinalCallbackResult }];"
+      },
+      "id": "68bab898-12a9-47cf-8915-5163a5fc7ed2",
+      "name": "Process Enterprise Final Callback",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1560, 80]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.action }}",
+                    "rightValue": "approved",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Approved"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.action }}",
+                    "rightValue": "modify",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Modify"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "4ed75871-4713-4d7c-a734-b9035762de98",
+      "name": "Enterprise Final Action Router",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [1740, 80]
+    },
+    {
+      "parameters": {
+        "jsCode": "// 🏢 ENTERPRISE REGENERATE FINAL PROCESSOR\nconst callbackData = $input.first().json;\nconst feedback = callbackData.feedback || '';\n\nconsole.log(\"🔄 === ENTERPRISE REGENERATE FINAL PROCESSOR ===\");\nconsole.log(\"💬 Enterprise user feedback:\", feedback);\n\n// Get current enterprise state data\nconst stateData = $('Get Enterprise StateCoordinator Data').first().json.state_data;\nconst imageUrls = stateData.output_data?.image_urls;\n\nconsole.log(\"📊 Current Strategy:\", stateData.enterprise_config.content_strategy);\nconsole.log(\"📈 Current Priority:\", stateData.enterprise_config.priority_level);\nconsole.log(\"🖼️ Image URLs:\", imageUrls.join(', '));\n\n// Enterprise Content Regeneration Prompt\nlet enterpriseContentPrompt;\nif (feedback && feedback.trim()) {\n  // User provided specific feedback\n  enterpriseContentPrompt = `Analyze this enterprise carousel and create optimized Dutch content:\\n\\n**Carousel Topic:** ${stateData.input_data.carouselTopic}\\n**Image URLs:**\\n${imageUrls.map(url => `- ${url}`).join('\\n')}\\n**Content Strategy:** ${stateData.enterprise_config.content_strategy}\\n\\n**User Feedback:** ${feedback}\\n\\nPlease modify the enterprise-level content based on this feedback while maintaining the same images and strategy standards.\\n\\nReturn as JSON format.`;\n  console.log(\"✏️ Using enterprise user feedback for content modification\");\n} else {\n  // No feedback, just regenerate with enterprise standards\n  enterpriseContentPrompt = `Analyze this enterprise carousel and create optimized Dutch content:\\n\\n**Carousel Topic:** ${stateData.input_data.carouselTopic}\\n**Image URLs:**\\n${imageUrls.map(url => `- ${url}`).join('\\n')}\\n**Content Strategy:** ${stateData.enterprise_config.content_strategy}\\n\\nCreate a completely new enterprise-grade variation of the content for this carousel.\\n\\nReturn as JSON format.`;\n  console.log(\"🔄 Creating enterprise content variation without specific feedback\");\n}\n\n// Enterprise Regenerate Final Result\nconst enterpriseRegenerateFinalResult = {\n  output: enterpriseContentPrompt,\n  isRegenerate: true,\n  hasFeedback: !!(feedback && feedback.trim()),\n  stateData: stateData,\n  feedback: feedback,\n  timestamp: new Date().toISOString(),\n  \n  // Enterprise Metadata\n  enterprise_mode: true,\n  content_strategy: stateData.enterprise_config.content_strategy,\n  priority_level: stateData.enterprise_config.priority_level,\n  quality_threshold: stateData.enterprise_config.quality_threshold,\n  regeneration_tier: 'enterprise_final'\n};\n\nconsole.log(\"✅ Enterprise regenerate final content prompt prepared\");\n\nreturn [{ json: enterpriseRegenerateFinalResult }];"
+      },
+      "id": "a02321c4-c96f-428e-bbc2-4c6e33ead930",
+      "name": "Prepare Enterprise Regenerate Final",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1560, -140]
+    },
+    {
+      "parameters": {
+        "jsCode": "// 🏢 COMPLETE ENTERPRISE WORKFLOW\nconsole.log(\"🏁 === ENTERPRISE WORKFLOW COMPLETION ===\");\nconsole.log(\"🆔 Execution ID:\", $execution.id);\n\n// Get current enterprise state data\nconst currentStateData = $('Update Enterprise State - Content Generated').first().json.updated_state || {};\n\nconsole.log(\"📊 Current State:\", currentStateData.current_state);\n\n// Enterprise Completion Data\nconst enterpriseCompletionData = {\n    execution_id: $execution.id,\n    current_state: 'COMPLETED',\n    final_carousel: currentStateData.output_data?.final_carousel || {},\n    completed_at: new Date().toISOString(),\n    \n    // Enterprise Results\n    enterprise_results: {\n        workflow_version: '2.1_enterprise_carousel',\n        content_strategy: currentStateData.output_data?.content_strategy,\n        priority_level: currentStateData.output_data?.priority_level,\n        quality_score: currentStateData.output_data?.quality_score,\n        performance_prediction: currentStateData.output_data?.performance_prediction,\n        enterprise_validated: currentStateData.output_data?.enterprise_validated,\n        \n        // Success Metrics\n        workflow_success: true,\n        completion_tier: 'enterprise',\n        user_approved: true\n    },\n    \n    // Enterprise Metadata\n    enterprise_mode: true,\n    processing_tier: 'enterprise',\n    state_response: 'enterprise_completion_success'\n};\n\nconsole.log(\"✅ Enterprise workflow completed successfully\");\n\nreturn [{ json: enterpriseCompletionData }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1840, -120],
+      "id": "d05d15b2-4f4f-42f5-a690-251760df4b86",
+      "name": "Complete Enterprise Workflow"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Enterprise Input Trigger').item.json.chatID }}",
+        "text": "=🏢 **ENTERPRISE WORKFLOW COMPLETED!**\n\n🎉 **Success!** Je Instagram carousel is klaar!\n📊 **Quality Score:** {{ ($json.enterprise_results.quality_score * 100).toFixed(1) }}%\n📈 **Strategy:** {{ $json.enterprise_results.content_strategy.toUpperCase() }}\n🚀 **Ready for Publication!**\n\n🆔 Execution ID: {{ $json.execution_id }}\n🏢 Workflow: CarouselBuilder v2.1",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "1c790065-5c9e-4299-a126-5c3b4743b4da",
+      "name": "Enterprise Success Notification",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [2320, -20],
+      "webhookId": "enterprise-success-notification",
+      "credentials": {
+        "telegramApi": {
+          "id": "ioh9vLdQ3pzyX0kw",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "# 🏢 FASE 1: Image Generation",
+        "height": 580,
+        "width": 1260,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [220, -260],
+      "id": "c787456e-4a30-418d-9183-1fc77b725995",
+      "name": "Enterprise Phase 1"
+    },
+    {
+      "parameters": {
+        "content": "# 📊 FASE 2: Template + Caption Creation",
+        "height": 440,
+        "width": 1940,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [420, 360],
+      "id": "e7f63161-ae1b-4882-aa1d-7dcc80e29c63",
+      "name": "Enterprise Phase 2"
+    },
+    {
+      "parameters": {
+        "content": "# 🚀 FASE 3: Final Review & Completion",
+        "height": 580,
+        "width": 960,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [1500, -260],
+      "id": "d61b9f3c-3315-4f39-babe-3e3b387c3640",
+      "name": "Enterprise Phase 3"
+    },
+    {
+      "parameters": {
+        "team": "90151264028",
+        "space": "90155049265",
+        "folder": "90157459408",
+        "list": "901511913287",
+        "name": "=📝 Carousel: {{ $('Enterprise Input Trigger').first().json.carouselTopic }}",
+        "additionalFields": {
+          "customFieldsJson": "={ \n  \"execution_id\": \"{{ $execution.id }}\",\n  \"content_strategy\": \"{{ $('Enterprise Input Trigger').first().json.contentStrategy || 'premium' }}\",\n  \"workflow_version\": \"2.1_enterprise_carousel\",\n  \"current_phase\": \"image_generation\",\n  \"chat_id\": \"{{ $('Enterprise Input Trigger').first().json.chatID }}\"\n}",
+          "content": "=🏢 Enterprise CarouselBuilder gestart!\n- **Topic:** {{ $('Enterprise Input Trigger').first().json.carouselTopic }}\n- **Slides:** {{ $('Enterprise Input Trigger').first().json.numberOfSlides }}\n- **Strategy:** {{ $('Enterprise Input Trigger').first().json.contentStrategy || 'premium' }}\n- **Priority:** {{ $('Enterprise Input Trigger').first().json.priority || 'high' }}\n- **Quality target:** {{ $('Enterprise Input Trigger').first().json.contentStrategy === 'campaign' ? '90%' : $('Enterprise Input Trigger').first().json.contentStrategy === 'premium' ? '85%' : '75%' }}",
+          "priority": "={{ $('Enterprise Input Trigger').first().json.contentStrategy === 'campaign' ? 4 : $('Enterprise Input Trigger').first().json.contentStrategy === 'premium' ? 3 : 2 }}",
+          "startDate": "={{ $now.toISODate() }}",
+          "status": "planning"
+        }
+      },
+      "type": "n8n-nodes-base.clickUp",
+      "typeVersion": 1,
+      "position": [260, 160],
+      "id": "af278f3d-629a-4aee-839b-577c4244214f",
+      "name": "Create ClickUp Task",
+      "credentials": {
+        "clickUpApi": {
+          "id": "3GNKK7vXdnhoVmRl",
+          "name": "ClickUp"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "id": "={{ $('Create ClickUp Task').first().json.id }}",
+        "updateFields": {
+          "content": "=🖼️ Afbeeldingen voor carousel gegenereerd en klaar voor review!\n📈 Strategy: {{ $('Aggregate Image Data').first().json.aggregation_metadata.content_strategy }}\n⏰ Images ready: {{ $now.toISO() }}\n🎯 Volgende stap: Image goedkeuring via Telegram",
+          "name": "=📝 Carousel: {{ $('Enterprise Input Trigger').first().json.carouselTopic }} - Images Ready",
+          "priority": "={{ $('Enterprise Input Trigger').first().json.contentStrategy === 'campaign' ? 4 : $('Enterprise Input Trigger').first().json.contentStrategy === 'premium' ? 3 : 2 }}",
+          "status": "IMAGE REVIEW"
+        }
+      },
+      "type": "n8n-nodes-base.clickUp",
+      "typeVersion": 1,
+      "position": [840, 140],
+      "id": "62a0eae3-9df8-47bf-8b5c-43155b0106ed",
+      "name": "Update Task - Image Ready",
+      "credentials": {
+        "clickUpApi": {
+          "id": "3GNKK7vXdnhoVmRl",
+          "name": "ClickUp"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "id": "={{ $('Create ClickUp Task').first().json.id }}",
+        "updateFields": {
+          "content": "=📝 Content gegenereerd en finale carousel klaar!\n🎯 Quality Score: {{ ($('Aggregate Final Images').first().json.validation_score * 100).toFixed(1) }}%\n🖼️ Eerste slide: {{ $('Aggregate Final Images').first().json.final_slides[0].image_url }}\n📈 Strategy: {{ $('Aggregate Final Images').first().json.content_strategy }}\n⏰ Content ready: {{ $now.toISO() }}\n🚀 Klaar voor finale review en publicatie!",
+          "name": "=📝 Carousel: {{ $('Enterprise Input Trigger').first().json.carouselTopic }} - Content Ready",
+          "priority": "={{ $('Aggregate Final Images').first().json.content_strategy === 'campaign' ? 4 : 3 }}",
+          "status": "FINAL REVIEW"
+        }
+      },
+      "type": "n8n-nodes-base.clickUp",
+      "typeVersion": 1,
+      "position": [1760, 600],
+      "id": "bd2a3c5e-7fb9-403e-9106-18f24bd41d09",
+      "name": "Update Task - Content Ready",
+      "credentials": {
+        "clickUpApi": {
+          "id": "3GNKK7vXdnhoVmRl",
+          "name": "ClickUp"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "id": "={{ $('Create ClickUp Task').first().json.id }}",
+        "updateFields": {
+          "content": "=🏆 Enterprise workflow succesvol voltooid!\n📊 Final Quality: {{ ($json.enterprise_results.quality_score * 100).toFixed(1) }}%\n📈 Strategy: {{ $json.enterprise_results.content_strategy.toUpperCase() }}\n🚀 READY FOR PUBLICATION!\n⏰ Completed: {{ $now.toISO() }}",
+          "name": "=🚀 Carousel: {{ $('Enterprise Input Trigger').first().json.carouselTopic }} - READY TO PUBLISH",
+          "priority": "=4",
+          "status": "READY TO PUBLISH"
+        }
+      },
+      "type": "n8n-nodes-base.clickUp",
+      "typeVersion": 1,
+      "position": [1960, 140],
+      "id": "3d1ecc18-c82b-4798-b14d-bf3be737cc03",
+      "name": "Update Task - Content Ready1",
+      "credentials": {
+        "clickUpApi": {
+          "id": "3GNKK7vXdnhoVmRl",
+          "name": "ClickUp"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// 📊 UNIVERSAL DATA SCHEMA VOOR UI/API\nconst workflowData = $input.first().json;\n\nconsole.log(\"📊 === UNIVERSAL DATA SCHEMA CREATION ===\");\nconsole.log(\"🆔 Execution ID:\", $execution.id);\n\n// Universeel schema voor alle content types\nconst universalSchema = {\n  // CORE IDENTIFIERS\n  id: $execution.id,\n  type: 'instagram_carousel',\n  \n  // CONTENT DATA\n  content: {\n    caption: workflowData.enterprise_results?.final_carousel?.caption,\n    hashtags: workflowData.enterprise_results?.final_carousel?.hashtags,\n    slides: workflowData.enterprise_results?.final_carousel?.slides.map(s => ({ title: s.title, subtitle: s.subtitle, image_url: s.image_url }))\n  },\n  \n  // METADATA\n  metadata: {\n    strategy: workflowData.enterprise_results?.content_strategy,\n    priority: workflowData.enterprise_results?.priority_level,\n    quality_score: workflowData.enterprise_results?.quality_score,\n    performance_prediction: workflowData.enterprise_results?.performance_prediction\n  },\n  \n  // PLATFORM SPECIFICS\n  platforms: {\n    instagram: {\n      account_id: null,\n      scheduled_time: null,\n      published: false,\n      insights: {}\n    }\n  },\n  \n  // WORKFLOW TRACKING\n  workflow: {\n    name: 'CarouselBuilder',\n    version: '2.1_enterprise_carousel',\n    execution_id: $execution.id,\n    created_at: new Date().toISOString(),\n    completed_at: workflowData.completed_at\n  },\n  \n  // UI SPECIFIC FIELDS\n  ui: {\n    status: 'completed',\n    editable: true,\n    actions: ['publish', 'edit', 'duplicate', 'archive'],\n    tags: ['enterprise', 'carousel', workflowData.enterprise_results?.content_strategy]\n  }\n};\n\nconsole.log(\"✅ Universal schema created\");\n\nreturn [{ json: universalSchema }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2200, -180],
+      "id": "74d8c0af-0477-4b36-8237-bde4110b0d96",
+      "name": "Normalize for UI/API"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 🎨 ENTERPRISE TEMPLATE CONFIGURATION SYSTEM\nconst input = $input.first().json;\n\nconsole.log(\"🎨 === ENTERPRISE TEMPLATE CONFIGURATION ===\");\nconsole.log(\"📱 Content Type: carousel\");\nconsole.log(\"📈 Strategy:\", input.contentStrategy || 'premium');\nconsole.log(\"🔢 Number of Slides:\", input.numberOfSlides);\n\n// Jouw nieuwe template mapping!\nconst TEMPLATE_MAPPING = {\n  hook_slide: \"hd2zzqam0pn1q\",        // 1e slide (hook)\n  image_slide: \"xplwcslheyelb\",       // Core slide met afbeelding  \n  text_slide: \"ec79jy3qrdxlk\",        // Core slide met tekst\n  product_slide: \"0lotrhg5uhueo\"      // Core slide met 3 producten\n};\n\n// Template field mapping (jouw velden)\nconst FIELD_MAPPING = {\n  images: [\"picture_1\", \"picture_2\", \"picture_3\"],\n  texts: [\"title\", \"tekst_1\", \"tekst_2\", \"tekst_3\"]\n};\n\nconst templateConfig = {\n  // Content type specifics\n  content_type: 'carousel',\n  aspect_ratio: '1:1',\n  slide_count: input.numberOfSlides,\n  \n  // Template system\n  templates: TEMPLATE_MAPPING,\n  fields: FIELD_MAPPING,\n  \n  // Slide type determination rules\n  slide_rules: {\n    first_slide: 'hook_slide',           // Slide 1 = altijd hook\n    has_products: 'product_slide',       // Product content = product template\n    has_image: 'image_slide',            // Heeft afbeelding = image template\n    default: 'text_slide'                // Standaard = text template\n  },\n  \n  // Text limits per template\n  text_limits: {\n    title_max: 25,\n    subtitle_max: 50,\n    text_max: 80\n  },\n  \n  // AI models per strategy\n  ai_models: {\n    visual: 'openai/gpt-4o',\n    content: input.contentStrategy === 'campaign' ? 'anthropic/claude-sonnet-4' : 'anthropic/claude-sonnet-4'\n  },\n  \n  // Strategy-based quality settings\n  quality_settings: {\n    strategy: input.contentStrategy || 'premium',\n    priority: input.priority || 'high',\n    quality_threshold: input.contentStrategy === 'campaign' ? 0.90 : \n                      input.contentStrategy === 'premium' ? 0.85 : 0.75\n  }\n};\n\nconsole.log(\"✅ Template mapping configureerd:\");\nconsole.log(\"🎯 Hook template:\", TEMPLATE_MAPPING.hook_slide);\nconsole.log(\"🖼️ Image template:\", TEMPLATE_MAPPING.image_slide); \nconsole.log(\"📝 Text template:\", TEMPLATE_MAPPING.text_slide);\nconsole.log(\"🛍️ Product template:\", TEMPLATE_MAPPING.product_slide);\n\nreturn [{ json: { ...input, template_config: templateConfig } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [440, -180],
+      "id": "3bdbafbe-d6d3-42ff-8c13-160526a354dc",
+      "name": "Template Configuration"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 📡 API-READY OUTPUT BUILDER\nconst workflowData = $input.first().json;\nconst executionId = $execution.id;\n\nconsole.log(\"📡 === API RESPONSE BUILDER ===\");\n\n// Build comprehensive API response\nconst apiResponse = {\n  // RESPONSE METADATA\n  success: true,\n  timestamp: new Date().toISOString(),\n  execution_id: executionId,\n  workflow: \"CarouselBuilder\",\n  version: \"2.1_enterprise_carousel\",\n  \n  // CORE DATA\n  data: {\n    content: workflowData.content,\n    status: workflowData.ui.status,\n    actions: workflowData.ui.actions\n  },\n  \n  // METADATA FOR TRACKING\n  metadata: workflowData.metadata,\n  \n  // UI SPECIFIC DATA\n  ui: workflowData.ui\n};\n\nconsole.log(\"📡 PERFECT API RESPONSE READY FOR FRONTEND! 🚀\");\n\nreturn [{ json: apiResponse }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2080, -20],
+      "id": "67a8b2a8-8c42-4f3f-80ae-7d30a156ff07",
+      "name": "API Response Builder"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 🚨 API ERROR RESPONSE BUILDER\nconst errorData = $input.first().json;\nconst executionId = $execution.id;\n\nconst errorResponse = {\n  success: false,\n  timestamp: new Date().toISOString(),\n  execution_id: executionId,\n  workflow: \"CarouselBuilder\",\n  version: \"2.1_enterprise_carousel\",\n  \n  error: {\n    type: errorData.error_type || \"WorkflowExecutionError\",\n    message: errorData.error_message || \"Content generation failed\",\n    code: \"CAROUSEL_GEN_001\",\n    phase: errorData.current_phase || \"unknown\",\n    recoverable: true\n  },\n  \n  data: {\n    partial_content: errorData.partial_results || null,\n    fallback_available: true,\n    retry_recommended: true\n  },\n  \n  actions: {\n    retry: {\n      url: `/api/content/retry/${executionId}`,\n      method: \"POST\",\n      description: \"Retry content generation\"\n    },\n    manual_review: {\n      url: `/api/content/${executionId}/review`,\n      method: \"GET\", \n      description: \"Manual review required\"\n    }\n  },\n  \n  ui: {\n    display: {\n      title: \"❌ Carousel Generation Failed\",\n      status_color: \"red\",\n      status_icon: \"⚠️\",\n      error_message: \"Please try again or contact support\"\n    },\n    operations: [\"retry\", \"manual_review\"]\n  }\n};\n\nreturn [{ json: errorResponse }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2220, 180],
+      "id": "a42402ca-4920-4bd0-88d9-7b0b390dff91",
+      "name": "API Error Response Builder"
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "chatId": "={{ $json.result[0].chat.id }}",
+        "message": "Wat vind je ervan?",
+        "approvalOptions": {
+          "values": {
+            "approvalType": "double"
+          }
+        },
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [1260, 100],
+      "id": "7a431dd8-0945-44e0-b3da-1c2e0df9eeea",
+      "name": "Telegram Controle",
+      "webhookId": "78ad6ffc-c3a7-4fa1-904c-21c4b232ce2b",
+      "credentials": {
+        "telegramApi": {
+          "id": "ioh9vLdQ3pzyX0kw",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "chatId": "={{ $json.result[0].chat.id }}",
+        "message": "Wat vind je ervan?",
+        "approvalOptions": {
+          "values": {
+            "approvalType": "double"
+          }
+        },
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [2140, 600],
+      "id": "17c527c1-c37a-4b8f-86d0-3b3ee88052f6",
+      "name": "Telegram Controle1",
+      "webhookId": "78ad6ffc-c3a7-4fa1-904c-21c4b232ce2b",
+      "credentials": {
+        "telegramApi": {
+          "id": "ioh9vLdQ3pzyX0kw",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// 🎯 INTELLIGENT TEMPLATE SELECTOR\nconst contentPackage = $input.first().json;\nconst slides = contentPackage.slides;\nconst templateConfig = $('Template Configuration').first().json.template_config;\n\nconsole.log(\"🎯 === TEMPLATE SELECTOR ===\");\nconsole.log(`📊 Processing ${slides.length} slides`);\nconsole.log(\"🎨 Available templates:\", templateConfig.templates);\n\n// Template selectie logica per slide\nconst enhancedSlides = slides.map((slide, index) => {\n  let selectedTemplate;\n  let slideType;\n  \n  // Slide 1 = altijd hook template\n  if (index === 0) {\n    selectedTemplate = templateConfig.templates.hook_slide;\n    slideType = 'hook';\n    console.log(`📌 Slide ${index + 1}: HOOK template (${selectedTemplate})`);\n  }\n  // Product content detectie\n  else if (slide.title.toLowerCase().includes('product') || \n           slide.subtitle.toLowerCase().includes('product') ||\n           slide.title.toLowerCase().includes('ingrediënt') ||\n           slide.subtitle.toLowerCase().includes('ingrediënt')) {\n    selectedTemplate = templateConfig.templates.product_slide;\n    slideType = 'product';\n    console.log(`🛍️ Slide ${index + 1}: PRODUCT template (${selectedTemplate})`);\n  }\n  // Heeft afbeelding = image template  \n  else if (slide.imageUrl && slide.imageUrl.length > 0) {\n    selectedTemplate = templateConfig.templates.image_slide;\n    slideType = 'image';\n    console.log(`🖼️ Slide ${index + 1}: IMAGE template (${selectedTemplate})`);\n  }\n  // Standaard = text template\n  else {\n    selectedTemplate = templateConfig.templates.text_slide;\n    slideType = 'text';\n    console.log(`📝 Slide ${index + 1}: TEXT template (${selectedTemplate})`);\n  }\n  \n  return {\n    ...slide,\n    template_uuid: selectedTemplate,\n    slide_type: slideType,\n    slide_index: index,\n    slide_position: index + 1,\n    \n    // Template configuratie meenemen\n    template_fields: templateConfig.fields,\n    text_limits: templateConfig.text_limits\n  };\n});\n\nconsole.log(\"✅ Template selection complete!\");\nconsole.log(\"📋 Slide breakdown:\");\nenhancedSlides.forEach((slide, i) => {\n  console.log(`  Slide ${i + 1}: ${slide.slide_type} (${slide.template_uuid})`);\n});\n\n// Return enhanced slides met template info\nconst result = {\n  ...contentPackage,\n  enhanced_slides: enhancedSlides,\n  template_selection_complete: true,\n  total_slides: enhancedSlides.length\n};\n\nreturn [{ json: result }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1080, 660],
+      "id": "1cfe8e39-7a8c-42ff-9a37-850641561ced",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// 🎨 PLACID JSON BODY BUILDER - FOR EACH ITEM MODE\nconst slideData = $input.item.json;\n\nconsole.log(\"🎨 === PLACID JSON BUILDER ===\");\nconsole.log(\"📝 Template:\", slideData.template_uuid);\nconsole.log(\"📱 Type:\", slideData.slide_type);\nconsole.log(\"📍 Slide:\", slideData.slide_position);\n\n// Bouw de perfecte Placid JSON body voor DEZE slide\nconst placidBody = {\n  template_uuid: slideData.template_uuid,\n  create_now: true,\n  layers: {\n    title: {\n      text: slideData.title\n    },\n    tekst_1: {\n      text: slideData.subtitle\n    }\n  }\n};\n\n// Voeg afbeelding toe als deze bestaat\nif (slideData.imageUrl && slideData.imageUrl.trim() !== '') {\n  placidBody.layers.picture_1 = {\n    image: slideData.imageUrl\n  };\n}\n\nconsole.log(\"✅ Placid body prepared for slide\", slideData.slide_position);\n\nreturn { \n  json: { \n    ...slideData,\n    placid_body: placidBody \n  } \n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1420, 580],
+      "id": "119183e0-ef5b-4af8-80bb-474df23f60a2",
+      "name": "Code1"
+    }
+  ],
+  "pinData": {
+    "Enterprise Input Trigger": [
+      {
+        "json": {
+          "carouselTopic": "acne tijdens zwangerschap",
+          "carouselContext": "Zwangerschapsveilige acne behandeling, hormonale veranderingen en huidproblemen, veilige ingrediënten vs te vermijden producten, natuurlijke alternatieven, wanneer een dermatoloog raadplegen, praktische tips voor zwangere vrouwen",
+          "chatID": "6475835412",
+          "contentStrategy": "educational_carousel",
+          "priority": "normal",
+          "numberOfSlides": 5
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Enterprise Input Trigger": {
+      "main": [
+        [
+          {
+            "node": "Template Configuration",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enterprise Visual Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Enterprise Visual Creator",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enterprise Visual Creator": {
+      "main": [
+        [
+          {
+            "node": "Split Prompts for Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Prompts for Loop": {
+      "main": [
+        [
+          {
+            "node": "Enterprise Image Generation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enterprise Image Generation": {
+      "main": [
+        [
+          {
+            "node": "Store Enterprise Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Store Enterprise Image": {
+      "main": [
+        [
+          {
+            "node": "Save Enterprise Image Asset",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Enterprise Image Asset": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Image Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate Image Data": {
+      "main": [
+        [
+          {
+            "node": "Update Enterprise State - Image Generated",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enterprise Workflow Registry": {
+      "main": [
+        [
+          {
+            "node": "Create ClickUp Task",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Initialize Enterprise StateCoordinator": {
+      "main": [
+        [
+          {
+            "node": "Enterprise Visual Creator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Enterprise State - Image Generated": {
+      "main": [
+        [
+          {
+            "node": "Update Task - Image Ready",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Task - Image Ready": {
+      "main": [
+        [
+          {
+            "node": "Prepare Telegram Media Group",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Telegram Media Group": {
+      "main": [
+        [
+          {
+            "node": "Enterprise Telegram Image Review",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enterprise Telegram Image Review": {
+      "main": [
+        [
+          {
+            "node": "Telegram Controle",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Enterprise Image Callback": {
+      "main": [
+        [
+          {
+            "node": "Enterprise Image Action Router",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enterprise Image Action Router": {
+      "main": [
+        [
+          {
+            "node": "Get Enterprise StateCoordinator Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prepare Enterprise Regenerate Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Enterprise Regenerate Image": {
+      "main": [
+        [
+          {
+            "node": "Enterprise Visual Creator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Enterprise StateCoordinator Data": {
+      "main": [
+        [
+          {
+            "node": "Enterprise Content Creator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enterprise Content Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Enterprise Content Creator",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enterprise Content Creator": {
+      "main": [
+        [
+          {
+            "node": "Prepare Enterprise Content Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Enterprise Content Data": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Slide Data for Placid": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Enterprise Final Post Image": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Final Images",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate Final Images": {
+      "main": [
+        [
+          {
+            "node": "Update Enterprise State - Content Generated",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Enterprise State - Content Generated": {
+      "main": [
+        [
+          {
+            "node": "Update Task - Content Ready",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Task - Content Ready": {
+      "main": [
+        [
+          {
+            "node": "Enterprise Telegram Final Review",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enterprise Telegram Final Review": {
+      "main": [
+        [
+          {
+            "node": "Telegram Controle1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Enterprise Final Callback": {
+      "main": [
+        [
+          {
+            "node": "Enterprise Final Action Router",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enterprise Final Action Router": {
+      "main": [
+        [
+          {
+            "node": "Complete Enterprise Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prepare Enterprise Regenerate Final",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Enterprise Regenerate Final": {
+      "main": [
+        [
+          {
+            "node": "Process Enterprise Final Callback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Complete Enterprise Workflow": {
+      "main": [
+        [
+          {
+            "node": "Update Task - Content Ready1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create ClickUp Task": {
+      "main": [
+        [
+          {
+            "node": "Initialize Enterprise StateCoordinator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Task - Content Ready1": {
+      "main": [
+        [
+          {
+            "node": "API Response Builder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Template Configuration": {
+      "main": [
+        [
+          {
+            "node": "Enterprise Workflow Registry",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize for UI/API": {
+      "main": [
+        [
+          {
+            "node": "Enterprise Success Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "API Response Builder": {
+      "main": [
+        [
+          {
+            "node": "Normalize for UI/API",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "API Error Response Builder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Controle": {
+      "main": [
+        [
+          {
+            "node": "Process Enterprise Image Callback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Controle1": {
+      "main": [
+        [
+          {
+            "node": "Prepare Enterprise Regenerate Final",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Split Slide Data for Placid",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Create Enterprise Final Post Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "eebfc0ea-fb91-4c35-a29e-d5d952809ffd",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "dfdd26cd27fe046d045e60df6b98f78e52a497ca304bdcb672e06512ba750a2c"
+  },
+  "id": "ZWZCdY3BDj8XeZf2",
+  "tags": []
+}

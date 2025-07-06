@@ -1,0 +1,85 @@
+# Task ID: 82
+# Title: Develop Integrated Admin Dashboard (Master Command Center)
+# Status: pending
+# Dependencies: 2, 4, 8, 30, 31, 36, 37, 53, 54, 58, 59, 60, 63, 64, 65, 66, 67, 68, 70, 71, 72, 73, 80, 81
+# Priority: high
+# Description: Build a secure, role-restricted admin dashboard providing real-time system health, business analytics, workflow performance, customer intelligence, operational controls, and security/compliance monitoring for the entire FutureMarketingAI platform.
+# Details:
+Design and implement a comprehensive admin dashboard accessible only to the platform owner via robust role-based access control. Integrate real-time data streaming for system health (uptime, performance, resource utilization, API/third-party status), revenue/business analytics (MRR, CAC, LTV, funnel, geo, pricing), workflow performance (n8n stats, content success, publishing, A/B, AI usage, satisfaction), customer intelligence (active users, adoption, support, health, anomalies, churn), operational controls (kill switches, feature flags, A/B config, maintenance, comms, bulk ops, export/backup), and security/compliance (login monitoring, audit logs, GDPR, incidents, API usage, suspicious activity). Use a modular, mobile-responsive UI with customizable widgets, export/reporting, and alert notification system (email, Telegram). Integrate with existing dashboard navigation and ensure seamless data aggregation from all relevant subsystems. Prioritize clarity, actionable insights, and intuitive controls, following dashboard UX best practices (clear KPIs, logical grouping, interactivity, and at-a-glance visibility).
+
+# Test Strategy:
+1. Verify access control restricts dashboard to the intended admin user only. 2. Test real-time data feeds for all system health, analytics, workflow, and security metrics using simulated and live data. 3. Validate accuracy and timeliness of business and customer analytics by cross-referencing with source systems. 4. Trigger operational controls (e.g., kill switch, feature flags) and confirm correct system response. 5. Simulate security incidents and confirm alerting, logging, and compliance tracking. 6. Test export/reporting and notification delivery (email, Telegram). 7. Conduct usability testing for widget customization, navigation, and mobile responsiveness. 8. Review dashboard for clarity, actionable insights, and adherence to best practices.
+
+# Subtasks:
+## 1. Define Dashboard Goals and KPIs [pending]
+### Dependencies: None
+### Description: Identify and document the primary objectives, user needs, and key performance indicators (KPIs) for the admin dashboard, ensuring alignment with business and operational priorities.
+### Details:
+Conduct stakeholder interviews and requirements gathering to clarify which metrics and insights are most valuable for the platform owner, focusing on system health, analytics, workflow, customer intelligence, operational controls, and compliance.
+
+## 2. Design Role-Based Access Control (RBAC) [pending]
+### Dependencies: 82.1
+### Description: Architect and implement a secure RBAC system to restrict dashboard access exclusively to the platform owner and authorized personnel.
+### Details:
+Define user roles, permissions, and authentication flows. Integrate with existing authentication systems if available.
+
+## 3. Establish Real-Time Data Integration Framework [pending]
+### Dependencies: 82.1
+### Description: Set up a scalable data streaming and aggregation framework to collect real-time data from all relevant subsystems (system health, analytics, workflows, etc.).
+### Details:
+Select appropriate technologies (e.g., WebSockets, message queues, APIs) and define data ingestion pipelines for each data source.
+
+## 4. Develop System Health Monitoring Module [pending]
+### Dependencies: 82.3
+### Description: Implement a dashboard module to display real-time system health metrics, including uptime, performance, resource utilization, and third-party API status.
+### Details:
+Integrate with infrastructure monitoring tools and visualize key metrics using clear, actionable widgets.
+
+## 5. Build Revenue & Business Analytics Module [pending]
+### Dependencies: 82.3
+### Description: Create a module to visualize business analytics such as MRR, CAC, LTV, funnel performance, geo distribution, and pricing insights.
+### Details:
+Aggregate financial and business data, and design interactive charts and tables for at-a-glance analysis.
+
+## 6. Implement Workflow Performance Monitoring [pending]
+### Dependencies: 82.3
+### Description: Develop a module to track workflow performance, including n8n stats, content success rates, publishing status, A/B test results, AI usage, and satisfaction scores.
+### Details:
+Integrate with workflow engines and analytics sources to provide real-time and historical performance insights.
+
+## 7. Integrate Customer Intelligence Analytics [pending]
+### Dependencies: 82.3
+### Description: Add a module for customer intelligence, tracking active users, adoption rates, support tickets, health scores, anomalies, and churn metrics.
+### Details:
+Connect to user analytics and support systems, and design dashboards for actionable customer insights.
+
+## 8. Develop Operational Controls Interface [pending]
+### Dependencies: 82.1, 82.2
+### Description: Create an interface for operational controls, including kill switches, feature flags, A/B test configuration, maintenance mode, communications, bulk operations, and export/backup tools.
+### Details:
+Ensure controls are secure, clearly labeled, and provide confirmation dialogs for critical actions.
+
+## 9. Implement Security & Compliance Monitoring [pending]
+### Dependencies: 82.3
+### Description: Build a module to monitor security and compliance, including login activity, audit logs, GDPR compliance, incident tracking, API usage, and suspicious activity alerts.
+### Details:
+Integrate with security tools and compliance systems, and provide clear, actionable alerts and logs.
+
+## 10. Design Modular, Mobile-Responsive UI [pending]
+### Dependencies: 82.1, 82.4, 82.5, 82.6, 82.7, 82.8, 82.9
+### Description: Design and implement a modular, mobile-responsive user interface with customizable widgets and logical grouping of dashboard modules.
+### Details:
+Follow dashboard UX best practices, ensuring clarity, interactivity, and at-a-glance visibility of key metrics.
+
+## 11. Integrate Export, Reporting, and Notification System [pending]
+### Dependencies: 82.4, 82.5, 82.6, 82.7, 82.9
+### Description: Enable data export, reporting features, and an integrated alert notification system (email, Telegram) for critical events and insights.
+### Details:
+Allow users to export data and reports in common formats, and configure real-time notifications for key events.
+
+## 12. Integrate with Existing Dashboard Navigation and Final QA [pending]
+### Dependencies: 82.10, 82.11
+### Description: Seamlessly integrate the new admin dashboard with existing navigation structures and perform comprehensive quality assurance testing.
+### Details:
+Ensure smooth user experience, consistent navigation, and robust data aggregation across all modules.
+

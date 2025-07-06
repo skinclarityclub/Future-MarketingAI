@@ -1,0 +1,99 @@
+{
+  "summary": {
+    "total": 5,
+    "passed": 5,
+    "failed": 0,
+    "warnings": 0,
+    "successRate": "100%",
+    "overallStatus": "ALL_PASSED"
+  },
+  "details": [
+    {
+      "timestamp": "2025-06-22T19:37:47.371Z",
+      "testName": "Data Quality Assessment",
+      "status": "PASSED",
+      "duration": 823,
+      "details": {
+        "dataQuality": {
+          "totalPosts": 48,
+          "totalAnalytics": 150,
+          "totalAccounts": 18,
+          "totalCampaigns": 6,
+          "postsWithContent": 0,
+          "analyticsWithEngagement": 150
+        },
+        "completenessScore": {
+          "contentCompleteness": 0,
+          "analyticsCompleteness": 1,
+          "overallCompleteness": 0.76
+        },
+        "readyForProduction": true
+      }
+    },
+    {
+      "timestamp": "2025-06-22T19:37:47.457Z",
+      "testName": "Confidence Scoring with Real Data",
+      "status": "PASSED",
+      "duration": 84,
+      "details": {
+        "totalPosts": 5,
+        "successfulTests": 5,
+        "sampleResults": [
+          {
+            "postId": "4a1db0cb-4fa3-4e01-92a2-3466584db816",
+            "content": "AI-gedreven content optimalisatie zorgt voor 40% m...",
+            "platform": "instagram",
+            "confidenceScore": 0.66425,
+            "riskLevel": "medium"
+          },
+          {
+            "postId": "0b5168f3-d422-4495-8c42-c2151a4f63ee",
+            "content": "AI-gedreven content optimalisatie zorgt voor 40% m...",
+            "platform": "instagram",
+            "confidenceScore": 0.66425,
+            "riskLevel": "medium"
+          }
+        ]
+      }
+    },
+    {
+      "timestamp": "2025-06-22T19:37:47.459Z",
+      "testName": "Model Validation Framework",
+      "status": "PASSED",
+      "duration": 0,
+      "details": {
+        "frameworkAvailable": true,
+        "mockTestPassed": true,
+        "testDataPoints": 5,
+        "averageAccuracy": 0.96,
+        "averageError": 0.044,
+        "validationReady": true
+      }
+    },
+    {
+      "timestamp": "2025-06-22T19:37:47.460Z",
+      "testName": "Continuous Data Workflow",
+      "status": "PASSED",
+      "duration": 0,
+      "details": {
+        "statusAvailable": true,
+        "metricsAvailable": true,
+        "configAvailable": true,
+        "currentStatus": "idle"
+      }
+    },
+    {
+      "timestamp": "2025-06-22T19:37:47.559Z",
+      "testName": "Integrated ML Pipeline",
+      "status": "PASSED",
+      "duration": 98,
+      "details": {
+        "processedItems": 3,
+        "averageConfidence": 0.9,
+        "averageAccuracy": 0.94,
+        "pipelineEffective": true
+      }
+    }
+  ],
+  "timestamp": "2025-06-22T19:37:47.561Z"
+}

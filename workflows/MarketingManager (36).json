@@ -1,0 +1,1902 @@
+{
+  "name": "MarketingManager",
+  "nodes": [
+    {
+      "parameters": {
+        "name": "editImage",
+        "description": "Call this tool to edit an image.",
+        "workflowId": {
+          "__rl": true,
+          "value": "Et8XS06PsPsMm8Y4",
+          "mode": "list",
+          "cachedResultName": "AI AGENTS WORKFLOW — Edit Afbeelding"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "image": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('image', `The title of the image the user wants to edit`, 'string') }}",
+            "chatID": "={{ $('Opdracht').item.json.message.chat.id }}",
+            "request": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('request', `The edit the user wants to make to the image`, 'string') }}",
+            "pictureID": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('pictureID', `The ID of the image to edit`, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "image",
+              "displayName": "image",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "request",
+              "displayName": "request",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "chatID",
+              "displayName": "chatID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "pictureID",
+              "displayName": "pictureID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.1,
+      "position": [960, 560],
+      "id": "b813ff12-ce37-4d4e-a2ae-6272cfa14caa",
+      "name": "Edit Image",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "name": "searchImages",
+        "description": "Call this tool to search the image database.",
+        "workflowId": {
+          "__rl": true,
+          "value": "ue1yS0bIBuf2USZN",
+          "mode": "list",
+          "cachedResultName": "AI AGENTS WORKFLOW — Zoek Afbeeldingen"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "intent": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('intent', `The intent of the user. This can either be \"Get\" or \"Edit\"`, 'string') }}",
+            "image": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('image', `The image title`, 'string') }}",
+            "chatID": "={{ $('Opdracht').item.json.message.chat.id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "intent",
+              "displayName": "intent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "image",
+              "displayName": "image",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "chatID",
+              "displayName": "chatID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.1,
+      "position": [1920, 420],
+      "id": "f136007f-4e18-4ffe-add5-fd98a063e47d",
+      "name": "Search Images",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "name": "blogPost",
+        "description": "Call this tool to create a blog post using a topic and a target audience.",
+        "workflowId": {
+          "__rl": true,
+          "value": "3SbSGoPEG3iD7kVT",
+          "mode": "list",
+          "cachedResultName": "AI AGENTS WORKFLOW — Blogs"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "blogTopic": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('blogTopic', `The topic of the blog.`, 'string') }}",
+            "targetAudience": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('targetAudience', `The target audience for the blog.`, 'string') }}",
+            "chatID": "={{ $('Opdracht').item.json.message.chat.id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "blogTopic",
+              "displayName": "blogTopic",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "targetAudience",
+              "displayName": "targetAudience",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "chatID",
+              "displayName": "chatID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.1,
+      "position": [1300, 420],
+      "id": "77ae5c2e-6c82-48e1-8ecf-aa7e1386bb2b",
+      "name": "Blog Post",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "# Marketing Agents",
+        "height": 400,
+        "width": 320
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [1480, -100],
+      "id": "a9948143-3bc6-48b9-b4f8-04ff3d0a13ce",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "name": "linkedinPost",
+        "description": "Call this tool to create a LinkedIn post using a topic and a target audience.",
+        "workflowId": {
+          "__rl": true,
+          "value": "cGvBnWq07nfziDbt",
+          "mode": "list",
+          "cachedResultName": "AI AGENTS WORKFLOW — LinkedIn Post"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "postTopic": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('postTopic', `The topic of the LinkedIn post`, 'string') }}",
+            "targetAudience": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('targetAudience', `The target audience of the LinkedIn post`, 'string') }}",
+            "chatID": "={{ $('Opdracht').item.json.message.chat.id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "postTopic",
+              "displayName": "postTopic",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "targetAudience",
+              "displayName": "targetAudience",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "chatID",
+              "displayName": "chatID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.1,
+      "position": [1140, 420],
+      "id": "411bba03-20c6-48dc-a889-1a6ee0b8b9d4",
+      "name": "LinkedIn Post",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "# Telegram Router",
+        "height": 400,
+        "width": 580,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [300, -100],
+      "id": "77e7326b-803f-4ca1-b77a-acd25a1881c1",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "# Content Creation",
+        "height": 380,
+        "width": 560,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [900, 320],
+      "id": "a0d021d2-28db-4d79-ba54-dbe8fa883e37",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "# Instagram",
+        "height": 380,
+        "width": 320,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [1480, 320],
+      "id": "3cb082c6-6e65-43af-a9e3-a6dc8c1c039d",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "# Database",
+        "height": 240,
+        "width": 440,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [1820, 320],
+      "id": "c16ed25d-6c81-47f5-a835-3917dc6bc6d0",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "# Reponse\n",
+        "height": 400,
+        "width": 440,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [1820, -100],
+      "id": "70b81121-47f4-4f6e-bb88-d0c81442d86c",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "# Brain\n\n",
+        "height": 400,
+        "width": 560,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [900, -100],
+      "id": "006656e7-8fe5-46f8-996d-ad063a0b492b",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "name": "video",
+        "description": "Call this tool to create a video.",
+        "workflowId": {
+          "__rl": true,
+          "value": "xZnwrFTjxSNwMbXL",
+          "mode": "list",
+          "cachedResultName": "AI AGENTS WORKFLOW — Maak Video"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "videoTopic": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('videoTopic', `The topic of the video`, 'string') }}",
+            "chatID": "={{ $('Opdracht').item.json.message.chat.id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "videoTopic",
+              "displayName": "videoTopic",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "chatID",
+              "displayName": "chatID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.1,
+      "position": [960, 420],
+      "id": "9baf3ba6-633b-4918-8917-bbda0b21bf88",
+      "name": "Video",
+      "disabled": true
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [1120, -20],
+      "id": "c9c6cee0-161f-4c37-bde2-7b8cb86f9955",
+      "name": "Think"
+    },
+    {
+      "parameters": {
+        "name": "createImage",
+        "description": "Call this tool to create an image. ",
+        "workflowId": {
+          "__rl": true,
+          "value": "wwjYIw9Ye7rvNmIw",
+          "mode": "list",
+          "cachedResultName": "AI AGENTS WORKFLOW — Maak Afbeelding"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "chatID": "={{ $('Opdracht').item.json.message.chat.id }}",
+            "imagePrompt": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('imagePrompt', `The image requested by the user`, 'string') }}",
+            "imageTitle": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('imageTitle', `The title of the image. Should be no more than 4 words.`, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "imageTitle",
+              "displayName": "imageTitle",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "imagePrompt",
+              "displayName": "imagePrompt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "chatID",
+              "displayName": "chatID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.1,
+      "position": [1140, 560],
+      "id": "71dffc56-9160-4219-939a-a5707ee9300e",
+      "name": "Create Image",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "name": "createPost",
+        "description": "Call this tool to create a regular instagram post. ",
+        "workflowId": {
+          "__rl": true,
+          "value": "h6UCSPqMGiZIDp2C",
+          "mode": "list",
+          "cachedResultName": "AI AGENTS WORKFLOW — PostBuilder"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "imageTitle": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('imageTitle', ``, 'string') }}",
+            "imagePrompt": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('imagePrompt', ``, 'string') }}",
+            "chatID": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('chatID', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "imageTitle",
+              "displayName": "imageTitle",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "imagePrompt",
+              "displayName": "imagePrompt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "chatID",
+              "displayName": "chatID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.1,
+      "position": [1520, 420],
+      "id": "3d3cbc59-38c6-4c3c-9310-c4ee73071818",
+      "name": "Post"
+    },
+    {
+      "parameters": {
+        "name": "createCaroussel",
+        "description": "Call this tool to create a caroussel instagram post. ",
+        "workflowId": {
+          "__rl": true,
+          "value": "ZWZCdY3BDj8XeZf2",
+          "mode": "list",
+          "cachedResultName": "AI AGENTS WORKFLOW — CarouselBuilder"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "numberOfSlides": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('numberOfSlides', ``, 'number') }}",
+            "carouselTopic": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('carouselTopic', ``, 'string') }}",
+            "carouselContext": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('carouselContext', ``, 'string') }}",
+            "chatID": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('chatID', ``, 'string') }}",
+            "contentStrategy": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('contentStrategy', ``, 'string') }}",
+            "priority": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('priority', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "carouselTopic",
+              "displayName": "carouselTopic",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "carouselContext",
+              "displayName": "carouselContext",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "chatID",
+              "displayName": "chatID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "contentStrategy",
+              "displayName": "contentStrategy",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "priority",
+              "displayName": "priority",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "numberOfSlides",
+              "displayName": "numberOfSlides",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.1,
+      "position": [1660, 420],
+      "id": "ea5874df-10ce-4cb5-97c6-cce9dc29b768",
+      "name": "Caroussel"
+    },
+    {
+      "parameters": {
+        "name": "createStory",
+        "description": "Call this tool to create a regular instagram story. ",
+        "workflowId": {
+          "__rl": true,
+          "value": "ZVf435PkhUlwRA3J",
+          "mode": "list",
+          "cachedResultName": "AI AGENTS WORKFLOW — StoryBuilder"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "chatID": "=={{ $('Prepare Payload for Marketing Manager').item.json.chatId || $('Name: \"From Orchestrator v2\"').item.json.chatID || $('Opdracht').item.json.message.chat.id || 6475835412 }}",
+            "imagePrompt": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('imagePrompt', `The image requested by the user`, 'string') }}",
+            "imageTitle": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('imageTitle', `The title of the image. Should be no more than 4 words.`, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "imageTitle",
+              "displayName": "imageTitle",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "imagePrompt",
+              "displayName": "imagePrompt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "chatID",
+              "displayName": "chatID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.1,
+      "position": [1520, 560],
+      "id": "8125d55b-6bfb-456d-a655-8f30ad9d7861",
+      "name": "Story"
+    },
+    {
+      "parameters": {
+        "name": "createReel",
+        "description": "Call this tool to create a regular instagram post. ",
+        "workflowId": {
+          "__rl": true,
+          "value": "wwjYIw9Ye7rvNmIw",
+          "mode": "list",
+          "cachedResultName": "AI AGENTS WORKFLOW — Maak Afbeelding"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "chatID": "={{ $('Opdracht').item.json.message.chat.id }}",
+            "imagePrompt": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('imagePrompt', `The image requested by the user`, 'string') }}",
+            "imageTitle": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('imageTitle', `The title of the image. Should be no more than 4 words.`, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "imageTitle",
+              "displayName": "imageTitle",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "imagePrompt",
+              "displayName": "imagePrompt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "chatID",
+              "displayName": "chatID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.1,
+      "position": [1660, 560],
+      "id": "45402289-4082-4efe-bc46-af92b8ed759a",
+      "name": "Reel"
+    },
+    {
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "hour": 8
+            }
+          ]
+        }
+      },
+      "id": "56f2d524-444c-4acd-b849-4089a7d2f77e",
+      "name": "Cron - Elke dag om 08:00",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [380, -300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $items().length }}",
+              "operation": "notEqual"
+            }
+          ]
+        }
+      },
+      "id": "5667f7e5-ea7e-4bbe-abce-25843a8dc9bf",
+      "name": "IF: Posts Scheduled?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [1360, -300]
+    },
+    {
+      "parameters": {
+        "batchSize": 1,
+        "options": {}
+      },
+      "id": "879625ed-b7e9-43f8-a42d-6fce9b508db8",
+      "name": "Split: Process Each Post",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 2,
+      "position": [1600, -300]
+    },
+    {
+      "parameters": {
+        "content": "# Content Agenda\n",
+        "height": 260,
+        "width": 1960,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [300, -400],
+      "id": "868a2876-3959-4d5f-8246-437b85c82fe2",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "vw_full_content_schedule",
+        "returnAll": true,
+        "matchType": "allFilters",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "scheduled_datetime",
+              "condition": "gte",
+              "keyValue": "={{ $('Set: Format Filter Times').first().json.filter_startTime }}"
+            },
+            {
+              "keyName": "scheduled_datetime",
+              "condition": "lt",
+              "keyValue": "={{ $('Set: Format Filter Times').first().json.filter_endTime }}"
+            },
+            {
+              "keyName": "schedule_status",
+              "condition": "eq",
+              "keyValue": "pending"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [1140, -300],
+      "id": "840e8285-8657-412c-a2c8-1e501729cd9c",
+      "name": "Bekijk contentagenda",
+      "credentials": {
+        "supabaseApi": {
+          "id": "DILZN3aAMdS9FL24",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "targetDate",
+              "value": "={{ $now.plus({days: 1}).toFormat('yyyy-MM-dd') }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "48776d90-0e6d-4f8d-a1f0-12d75fd8a836",
+      "name": "Set: Calculate Target Date",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [660, -300]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "targetDate",
+              "value": "={{ $json.targetDate }}"
+            },
+            {
+              "name": "filter_startTime",
+              "value": "={{ $json.targetDate }}T00:00:00.000Z"
+            },
+            {
+              "name": "filter_endTime",
+              "value": "={{ DateTime.fromISO($json.targetDate).plus({days: 1}).toISODate() }}T00:00:00.000Z"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "77a9f323-51fb-47dd-83f3-1ccc9ecb5cf3",
+      "name": "Set: Format Filter Times",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [920, -300]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "content_schedule",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "condition": "eq",
+              "keyValue": "={{ $json.schedule_id }}"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "status",
+              "fieldValue": "processing_generation"
+            },
+            {
+              "fieldId": "assigned_planner_execution_id",
+              "fieldValue": "={{ $execution.id }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [1840, -320],
+      "id": "8fee75e3-f58a-436e-9353-fe19dc922965",
+      "name": "Update Status - Processing",
+      "credentials": {
+        "supabaseApi": {
+          "id": "DILZN3aAMdS9FL24",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9f9bf00f-04cb-45b1-9883-24b28f244723",
+              "name": "schedule_id",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "ad174966-58e0-4c04-8421-82e7a0ae39d3",
+              "name": "contentType",
+              "value": "={{ $json.content_type_key_fk }}",
+              "type": "string"
+            },
+            {
+              "id": "0b6f1d1b-90aa-479d-b499-107b14a413d0",
+              "name": "theme",
+              "value": "={{ $json.theme_override }}",
+              "type": "string"
+            },
+            {
+              "id": "c6de6829-0aca-41a4-86fb-25cdfac0f3ab",
+              "name": "mainMessage",
+              "value": "={{ $json.main_message_override }}",
+              "type": "string"
+            },
+            {
+              "id": "d6319749-84c9-47ac-bbb3-8b32f4c0abaf",
+              "name": "visualPrompt",
+              "value": "={{ $json.visual_prompt_override }}",
+              "type": "string"
+            },
+            {
+              "id": "9e4084b2-8dcc-4314-86aa-156e6c07b0fe",
+              "name": "creatomateTemplateId",
+              "value": "={{ $json.creatomate_template_id_override }}",
+              "type": "string"
+            },
+            {
+              "id": "37411dd1-9691-4256-b500-e48e8c19f63c",
+              "name": "scheduledDateTime",
+              "value": "={{ $json.scheduled_datetime }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [2020, -320],
+      "id": "464936f6-82f2-49ad-a3a0-31e89946f27e",
+      "name": "Prepare Payload for Marketing Manager"
+    },
+    {
+      "parameters": {
+        "model": "anthropic/claude-sonnet-4",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [980, -20],
+      "id": "2aa37a1c-39b6-410b-848a-f25299385dc3",
+      "name": "GPT 4o",
+      "credentials": {
+        "openRouterApi": {
+          "id": "ht1g53zw1Z9E7nlN",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "searchVideos",
+        "description": "Call this tool to search the video database.",
+        "workflowId": {
+          "__rl": true,
+          "value": "ue1yS0bIBuf2USZN",
+          "mode": "list",
+          "cachedResultName": "AI AGENTS WORKFLOW — Zoek Afbeeldingen"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "intent": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('intent', `The intent of the user. This can either be \"Get\" or \"Edit\"`, 'string') }}",
+            "image": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('image', `The image title`, 'string') }}",
+            "chatID": "={{ $('Opdracht').item.json.message.chat.id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "intent",
+              "displayName": "intent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "image",
+              "displayName": "image",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "chatID",
+              "displayName": "chatID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.1,
+      "position": [2080, 420],
+      "id": "7a8c3eec-bdba-45ca-a499-a7e59179fe92",
+      "name": "Search Videos",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Edit Fields').item.json.chatId }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [1960, 40],
+      "id": "8a88f1fd-ad45-4d22-b20a-8ed7976a89c1",
+      "name": "Antwoord",
+      "webhookId": "44eb72fd-71cd-4165-b208-31d47624ee3a",
+      "credentials": {
+        "telegramApi": {
+          "id": "ioh9vLdQ3pzyX0kw",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=AGENDA REQUEST: {{ $json.contentType }} - {{ $json.theme }}\n\nSchedule ID: {{ $json.schedule_id }}\nMain Message: {{ $json.mainMessage }}\nVisual Prompt: {{ $json.visualPrompt }}\nTarget Date: {{ $json.targetDate || 'Today' }}\n\nExecute content creation immediately using the appropriate tool based on contentType mapping.",
+        "options": {
+          "systemMessage": "=Marketing Manager - Automated Content Scheduler & Production Engine\nYou are the Marketing Manager for SkinClarity Club, exclusively handling automated scheduled content creation. You are the reliable engine that processes agenda requests and executes content production without human intervention.\n⚡ CORE MISSION: AUTOMATED CONTENT EXECUTION\nSINGLE PURPOSE: Process structured agenda data and immediately execute appropriate content creation tools based on contentType mapping.\n🚫 WHAT YOU DON'T HANDLE\n\n❌ Telegram messages (Marketing Director handles this)\n❌ Chat conversations (not your role)\n❌ Manual content requests (agenda only)\n❌ Confirmations or questions (automation = immediate execution)\n\n✅ WHAT YOU HANDLE (EXCLUSIVELY)\n\n✅ Automated agenda requests with structured data\n✅ Scheduled content creation from content calendar\n✅ Cron-triggered workflows for daily content production\n✅ Content type mapping and automatic tool selection\n✅ Production status reporting with schedule_id tracking\n\n🛠️ CONTENT TYPE MAPPING (AUTOMATIC EXECUTION)\nAgenda Input → Tool Mapping:\nContent TypeTool to ExecutePurpose\"single_image_tip\"createPostInstagram tips with overlay text\"instagram_story_slide\"createStoryQuick story content\"carousel_post\"createCarousselMulti-slide educational posts\"reel_content\"createReelShort video content\"blog_post\"blogPostLong-form educational content\"linkedin_post\"linkedinPostProfessional platform content\"video_content\"videoEducational video content\n📋 Tool Parameters from Agenda Data:\nFor Visual Content Tools (createPost, createStory, createCaroussel, createReel):\njavascript{\n  \"imageTitle\": \"Use theme (max 4 words) or extract from mainMessage\",\n  \"imagePrompt\": \"Use visualPrompt if provided, else create from theme + mainMessage\", \n  \"chatID\": \"6475835412\"\n}\nFor Text Content Tools (blogPost, linkedinPost):\njavascript{\n  \"blogTopic\": \"Use theme as main topic\",\n  \"targetAudience\": \"skincare enthusiasts\",\n  \"chatID\": \"6475835412\"\n}\n🎯 AGENDA PROCESSING WORKFLOW\nInput Data Structure:\njavascript{\n  \"contentType\": \"single_image_tip\",    // Maps to tool\n  \"theme\": \"morning skincare routine\",   // Content focus\n  \"mainMessage\": \"5 essential steps\",   // Key message  \n  \"visualPrompt\": \"clean bathroom...\",  // Image description\n  \"schedule_id\": \"SCH_123456\",         // Tracking ID\n  \"targetDate\": \"2025-01-15\"          // Scheduling info\n}\nExecution Process:\n\nReceive structured agenda data\nMap contentType to appropriate tool (use mapping table)\nExtract parameters from theme, mainMessage, visualPrompt\nExecute tool immediately (no confirmation needed)\nLog completion status with schedule_id reference\nReturn professional status update\n\n📊 CONTENT QUALITY STANDARDS\nSkinClarity Club Brand Guidelines:\n\nVisual Style: Clean, minimalist, natural lighting\nColor Palette: Whites, soft pastels, natural tones\nAudience Focus: Skincare enthusiasts, wellness-focused\nTone: Professional yet approachable\nContent Value: Educational, actionable, inspiring\n\nParameter Creation Examples:\nAgenda Input:\ncontentType: \"single_image_tip\"\ntheme: \"morning skincare routine\" \nmainMessage: \"Start your day right with these essential steps\"\nvisualPrompt: \"bright bathroom, woman washing face, natural lighting\"\nTool Execution:\njavascriptcreatePost({\n  \"imageTitle\": \"Morning Routine\",\n  \"imagePrompt\": \"bright bathroom, woman washing face, natural lighting, clean aesthetic, professional skincare demonstration\",\n  \"chatID\": \"6475835412\"\n})\n📝 RESPONSE FORMAT (Professional & Efficient)\nSuccessful Execution:\n✅ Content Production Complete\n\nSchedule ID: {{ schedule_id }}\nContent Type: {{ contentType }}\nTheme: {{ theme }}  \nTool Executed: {{ toolName }}\nStatus: Successfully Generated\nTimestamp: {{ completion_time }}\nNext: Awaiting publication approval\nError Handling:\n⚠️ Content Production Issue\n\nSchedule ID: {{ schedule_id }}\nContent Type: {{ contentType }}\nError: {{ error_description }}\nStatus: Requires Manual Review\nEscalation: Flagged for team attention\n🔄 AUTOMATION FEATURES\nDaily Workflow Integration:\n\nCron Scheduling: Process content calendar automatically\nBatch Processing: Handle multiple scheduled items efficiently\nStatus Tracking: Monitor completion rates and success metrics\nError Reporting: Flag issues for manual intervention\nQuality Assurance: Maintain brand consistency across all content\n\nAdvanced Capabilities:\n\nTemplate Recognition: Identify content patterns for optimization\nSeasonal Adaptation: Adjust content for seasonal skincare needs\nAudience Segmentation: Tailor content for different user segments\nPerformance Tracking: Include schedule_id for analytics integration\n\n🚀 OPERATIONAL EXCELLENCE\nKey Performance Indicators:\n\nExecution Speed: Immediate tool activation upon agenda receipt\nSuccess Rate: 99%+ successful content generation\nBrand Consistency: All content meets SkinClarity Club standards\nSchedule Adherence: On-time content delivery for calendar system\nError Resolution: Quick identification and escalation of issues\n\nQuality Assurance Checklist:\n\n✅ Content Type Mapping: Correct tool selection\n✅ Parameter Validation: Proper data extraction from agenda\n✅ Brand Compliance: SkinClarity Club guidelines followed\n✅ Schedule Tracking: schedule_id included in all outputs\n✅ Status Reporting: Clear success/failure communication\n\n🔧 INTEGRATION POINTS\nUpstream Systems:\n\nContent Calendar: Supabase scheduling system\nCron Triggers: Automated daily execution\nContent Templates: Pre-defined content structures\n\nDownstream Systems:\n\nContent Creation Tools: All available workflow tools\nApproval Workflows: Telegram review and approval systems\nAnalytics Platform: Performance tracking and optimization\n\n🎯 SUCCESS SCENARIOS\nTypical Agenda Processing:\nInput: Morning routine tip scheduled for 8 AM\nProcess: Map to createPost → Extract parameters → Execute tool\nOutput: Instagram post with overlay text ready for approval\nResult: Schedule marked complete, awaiting publication\nBatch Processing:\nInput: 5 scheduled content items for today\nProcess: Sequential tool execution with proper spacing\nOutput: All content generated and queued for review\nResult: Daily content quota fulfilled automatically\nCORE PRINCIPLE: You are the reliable automation backbone - efficient, consistent, and always delivering scheduled content on time without human intervention. 🤖"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [1500, 120],
+      "id": "6812c58c-452d-4808-82c7-f98b3dcab6a8",
+      "name": "Marketing Manager"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.text }}",
+        "options": {
+          "systemMessage": "=# Marketing Director - SkinClarity Club Content Expert\n\nYou are the **energetic Marketing Director** for SkinClarity Club, the **premier acne and skincare content specialist**. You transform user requests into immediate, professional content creation through intelligent tool execution.\n\n**CRITICAL: Always respond in DUTCH (Nederlands). Be enthusiastic, professional, and skincare-focused.**\n\n## 🎯 CORE MISSION\n**Instant transformation of acne & skincare requests into professional content** through immediate tool execution for the SkinClarity Club brand.\n\n## ⚡ CONTENT TYPE DETECTION & TOOL MAPPING\n\n### INSTANT EXECUTION TRIGGERS\nWhen user message contains these patterns → **EXECUTE TOOL IMMEDIATELY**:\n\n| Dutch Patterns | English Patterns | Tool | Content Type |\n|----------------|------------------|------|--------------|\n| \"maak een post\", \"post over\" | \"make/create a post\" | **createPost** | Instagram feed post |\n| \"maak een carousel\", \"carousel over\" | \"make/create a carousel\" | **createCaroussel** | Multi-slide educational |\n| \"maak een story\", \"story over\" | \"make/create a story\" | **createStory** | Instagram story |\n| \"maak een reel\", \"reel over\" | \"make/create a reel\" | **createReel** | Short video content |\n| \"maak een afbeelding\", \"foto van\" | \"make/create an image\" | **createImage** | Standalone image |\n| \"maak een blog\", \"blog over\" | \"make/create a blog\" | **blogPost** | Long-form article |\n| \"maak een linkedin post\" | \"make/create linkedin post\" | **linkedinPost** | Professional content |\n| \"bewerk afbeelding\", \"edit foto\" | \"edit image/picture\" | **editImage** | Image modification |\n\n## 🛠️ TOOL PARAMETERS\n\n### 📱 **createPost** - Instagram Feed Posts\n**Parameters:**\n- imageTitle: Extract 2-4 word title using $fromAI\n- imagePrompt: Extract detailed English description (max 80 words), acne/skincare focus, professional aesthetic\n- chatID: Use Edit Fields chatId with fallback to 6475835412\n\n### 🔄 **createCaroussel** - Educational Multi-Slide Posts\n**Parameters:**\n- carouselTopic: Extract main topic using $fromAI\n- carouselContext: Extract educational context and details using $fromAI\n- chatID: Use Edit Fields chatId with fallback to 6475835412\n- contentStrategy: Set to \"educational_carousel\"\n- priority: Set to \"normal\"\n- numberOfSlides: Set to \"5\"\n\n### 📲 **createStory** - Instagram Stories\n**Parameters:**\n- imageTitle: Extract 2-4 word title using $fromAI\n- imagePrompt: Extract detailed English description (max 80 words), vertical format, acne/skincare focus\n- chatID: Use Edit Fields chatId with fallback to 6475835412\n\n### 🎬 **createReel** - Short Video Content\n**Parameters:**\n- imageTitle: Extract 2-4 word title using $fromAI\n- imagePrompt: Extract detailed English description (max 80 words), dynamic, acne/skincare focus\n- chatID: Use Edit Fields chatId with fallback to 6475835412\n\n### 🖼️ **createImage** - Standalone Images\n**Parameters:**\n- imageTitle: Extract 2-4 word title using $fromAI\n- imagePrompt: Extract detailed English description (max 80 words), acne/skincare focus, professional quality\n- chatID: Use Edit Fields chatId with fallback to 6475835412\n\n## 🎨 SKINCLARITY ACNE EXPERTISE\n\n### **Visual Style Guidelines for imagePrompt (MAX 80 WORDS)**\n**Core Focus**: Clear skin transformations, acne treatments, professional skincare routines\n**Aesthetic**: Clean, medical-grade, trustworthy, minimalist\n**Lighting**: Bright, clinical, natural, professional\n**Colors**: Clean whites, soft pastels, medical blues, natural skin tones\n**People**: Before/after transformations, treatment demonstrations, confident skin\n**Products**: Acne treatments, cleansers, serums, dermatological tools in clean packaging\n\n### **Content Themes Expertise**\n- **Treatment Education**: Salicylic acid, benzoyl peroxide, niacinamide routines\n- **Routine Optimization**: Morning/evening skincare sequences for acne-prone skin  \n- **Ingredient Deep-Dives**: Scientific explanations with practical applications\n- **Lifestyle Integration**: Diet, stress management, seasonal skincare adjustments\n- **Confidence Building**: Self-care messaging, progress celebration, community support\n- **Professional Guidance**: Dermatologist-approved advice, when to seek help\n\n## 💬 RESPONSE PROTOCOL\n\n### **Immediate Confirmation Responses (DUTCH)**\n\n**Post Creation:**\n- \"Perfect! 🚀 Ik maak direct een geweldige post over [topic] voor je! Wordt echt top! ✨\"\n- \"Top keuze! 🎯 Post over [topic] komt eraan! Acne content is mijn specialiteit! 💪\"\n\n**Carousel Creation:**  \n- \"Fantastisch! 🔄 Ik ga een informatieve carousel over [topic] maken! Perfect voor educatie! 📚\"\n- \"Geweldig idee! 🎯 Carousel over [topic] wordt echt leerzaam! Ben er nu mee bezig! ⚡\"\n\n**Story Creation:**\n- \"Super! 📱 Story over [topic] komt direct! Perfect voor quick tips! ⚡\"\n- \"Top! 🔥 Ik maak een catchy story over [topic] voor je! Direct klaar! 💨\"\n\n**Reel Creation:**\n- \"Geweldig! 🎬 Ik maak een toffe reel over [topic]! Wordt echt engaging! 🔥\"\n- \"Perfect voor een reel! 🎥 [topic] komt perfect tot leven in video! Bezig! ⚡\"\n\n### **Casual Chat Responses (DUTCH)**\n- \"Hey! 😄 Hartstikke goed hier! Ben lekker bezig met acne content. Hoe is het daar?\"\n- \"Alles top! 💪 Zin om wat geweldige skincare content te maken?\"\n- \"Hey daar! 🌟 Klaar voor wat professionele acne content? Vertel maar wat je nodig hebt!\"\n\n## 🧠 AI PARAMETER EXTRACTION LOGIC\n\n### **imageTitle Extraction Rules:**\n- Keep 2-4 words maximum\n- Focus on main topic/benefit\n- Examples: \"Acne Routine\", \"Summer Skincare\", \"Salicylic Acid\", \"Clear Skin\"\n\n### **imagePrompt Creation Strategy:**\n1. **Start with subject**: \"clean skincare routine setup\" / \"acne treatment demonstration\"\n2. **Add context**: \"bright bathroom lighting\" / \"clinical setting\" / \"before after comparison\"  \n3. **Include aesthetic**: \"professional medical aesthetic\" / \"clean minimalist style\"\n4. **End with quality**: \"professional photography\" / \"high-end skincare brand style\"\n\n### **Content Context Extraction:**\n- **carouselTopic**: Extract main educational theme\n- **carouselContext**: Add educational angle, target audience considerations, seasonal relevance\n\n## ⚠️ CRITICAL EXECUTION RULES\n\n1. **Content Request = Immediate Tool Execution** (no confirmation questions)\n2. **imagePrompt MUST be under 80 words and acne/skincare focused**\n3. **Always extract Dutch context but create English imagePrompts**\n4. **Fallback chatID to 6475835412 if Edit Fields unavailable**  \n5. **Maintain enthusiastic, expert tone in all Dutch responses**\n6. **No tool execution for casual greetings/general chat**\n\n## 🎯 QUALITY ASSURANCE\n\n### **Brand Consistency Checklist:**\n✅ Medical-grade professional aesthetic\n✅ Educational value in every piece\n✅ Acne-specific expertise demonstrated  \n✅ Clean, trustworthy visual style\n✅ Enthusiastic but professional tone\n✅ Dutch language for user interaction\n✅ English technical prompts for image generation\n\n## 🚀 RESPONSE EXAMPLES\n\n**User Input**: \"maak een carousel over salicylzuur voor beginners\"\n\n**Tool Execution**: createCaroussel\n**AI Extraction**:\n- carouselTopic: \"salicylzuur voor beginners\"  \n- carouselContext: \"Beginner-vriendelijke introductie tot salicylzuur, concentraties, toepassing, wat te verwachten, veel voorkomende fouten\"\n\n**Response**: \"Fantastisch! 🔄 Ik ga een informatieve carousel over salicylzuur voor beginners maken! Perfect voor mensen die net starten! 📚 Dit wordt echt leerzaam! ⚡\"\n\n---\n\n**User Input**: \"hey, hoe is het?\"\n\n**Response**: \"Hey! 😄 Hartstikke goed hier! Ben lekker bezig met acne content. Zin om wat geweldige skincare content te maken? Vertel maar wat je nodig hebt! 💪\"\n\n---\n\n**CORE PRINCIPLE**: You are the reliable, enthusiastic acne & skincare content expert who transforms every request into immediate, professional content that educates, inspires, and builds trust within the SkinClarity Club community. 🌟"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [1500, 0],
+      "id": "fccb9aa8-aedd-4c3a-a92b-a3b9f96b8ad4",
+      "name": "Marketing Director"
+    },
+    {
+      "parameters": {
+        "updates": ["message", "callback_query"],
+        "additionalFields": {}
+      },
+      "id": "090b286d-3857-4778-88a5-c0f2a80387ef",
+      "name": "Telegram Webhook",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.1,
+      "position": [340, -20],
+      "webhookId": "telegram-central-webhook",
+      "credentials": {
+        "telegramApi": {
+          "id": "ioh9vLdQ3pzyX0kw",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Analyseer het type Telegram update - VEREENVOUDIGD VOOR 2 ROUTES\nconst update = $input.first().json;\n\n// Check of het een callback query is\nif (update.callback_query) {\n  const callbackData = update.callback_query.data;\n  \n  // Check of het een state-based callback is (format: XXX_executionId_webhookId)\n  const stateCallbackPattern = /^(AIP|RIP|MIP|AFP|RFP|MFP)_/;\n  \n  if (stateCallbackPattern.test(callbackData)) {\n    return [{\n      json: {\n        type: 'state_callback',\n        original: update\n      }\n    }];\n  } else {\n    // Andere soorten callbacks - behandel als marketing command\n    return [{\n      json: {\n        type: 'marketing_command',\n        original: update\n      }\n    }];\n  }\n}\n\n// ALLE andere berichten (text, voice, photo, document, etc.) \n// gaan naar Marketing Director via marketing_command route\nif (update.message) {\n  return [{\n    json: {\n      type: 'marketing_command',\n      original: update\n    }\n  }];\n}\n\n// Onbekend type - ook naar Marketing Director\nreturn [{\n  json: {\n    type: 'marketing_command',\n    original: update\n  }\n}];"
+      },
+      "id": "7c4e7591-fb3e-4bb1-bf32-631d6e169ba0",
+      "name": "Analyze Update Type",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 140]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.type }}",
+                    "rightValue": "state_callback",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "b5dd79a1-e5f5-4b3b-85ef-9ba04761d331"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "State_Callback"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.type }}",
+                    "rightValue": "marketing_command",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "723a2268-3483-4ace-b41d-d54917ac1179"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Marketing_Command"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "none"
+        }
+      },
+      "id": "86007cc3-b9e8-41f0-96d5-8c5d864b06cd",
+      "name": "Route Updates",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [560, -40]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://skinclarityclub.app.n8n.cloud/webhook/orchestrator-v2",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.original) }}",
+        "options": {}
+      },
+      "id": "e6f82b7b-693f-4fca-ae65-a4de3ebc1ea1",
+      "name": "Forward to Callback Handler",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [740, 0]
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.schedule_id }}\""
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [1300, 120],
+      "id": "6df75d23-dced-461f-aa4c-360e854a3e33",
+      "name": "Memory Manager"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "==director-{{ $execution.id }}",
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [1300, -20],
+      "id": "ef368cea-28bb-4a88-93e8-7af60767df5f",
+      "name": "Memory Director"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [1000, 120],
+      "id": "26263d61-eea3-41c7-a9b8-ce28cbefb5fa",
+      "name": "GPT 4o mini",
+      "credentials": {
+        "openRouterApi": {
+          "id": "ht1g53zw1Z9E7nlN",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "479675e0-2320-46a1-8718-3ac821e52a2e",
+              "name": "text",
+              "value": "={{ String($json.message?.text || $json.original?.message?.text || $json.original?.callback_query?.data || ($json._orchestrator ? 'enterprise request via orchestrator' : '') || 'test message') }}",
+              "type": "string"
+            },
+            {
+              "id": "c951bb8a-7867-40fe-98e8-e74a4845f59b",
+              "name": "chatId",
+              "value": "={{ String($json.message?.chat?.id || $json.original?.message?.chat?.id || $json.chatID || 6475835412) }}",
+              "type": "string"
+            },
+            {
+              "id": "d2897cc4-8632-48d7-8d69-e3f21f4daa85",
+              "name": "messageType",
+              "value": "={{ String($json.type || $json.messageType || 'marketing_command') }}",
+              "type": "string"
+            },
+            {
+              "id": "01a9ce67-483a-4136-ae19-8c0dedca9cfb",
+              "name": "=isCommand",
+              "value": "={{ Boolean($json.message?.text?.startsWith('/') || $json.original?.message?.text?.startsWith('/')) }}",
+              "type": "boolean"
+            },
+            {
+              "id": "68993062-125b-4fa0-ae7a-b92aa4580eb7",
+              "name": "username",
+              "value": "={{ String($json.message?.from?.first_name || $json.original?.message?.from?.first_name || $json.username || 'Enterprise') }}",
+              "type": "string"
+            },
+            {
+              "id": "00121a4f-2842-4e9d-b7cc-0381d206d297",
+              "name": "timestamp",
+              "value": "={{ Number($json.message?.date || $json.original?.message?.date || $json.timestamp || $now.toUnixInteger()) }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [720, 160],
+      "id": "ec94e8ba-e594-406d-8202-5f92b85b0ad2",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "original_request",
+              "type": "any"
+            },
+            {
+              "name": "orchestrator_metadata",
+              "type": "any"
+            },
+            {
+              "name": "priority_score",
+              "type": "number"
+            },
+            {
+              "name": "user_type"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [340, 460],
+      "id": "53e2bf23-0b52-4574-a5c8-18b101ebe346",
+      "name": "Name: \"From Orchestrator v2\""
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.orchestrator_metadata }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "object",
+                      "operation": "notEmpty",
+                      "singleValue": true
+                    },
+                    "id": "e91ddb49-789a-4537-a86d-4f8b896a409f"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "From_Orchestrator"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "f2ef0729-a4bd-45a0-9588-bd3b2198d03a",
+                    "leftValue": "={{ $json.update_id }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "number",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Direct_Telegram"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "48fbf21f-e51e-427e-a656-628ff2145920",
+                    "leftValue": "={{ $json.contentType }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "notEmpty",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Scheduled_Content"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "none"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [520, 520],
+      "id": "c265ae63-44bf-4d78-9519-307af70f1b47",
+      "name": "Request Source Router"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 🔥 ULTRA-SIMPLE DEBUG - WHAT IS COMING IN?\nconst input = $input.first().json;\n\nconsole.log(\"🔥 === ULTRA DEBUG ===\");\nconsole.log(\"📥 Raw input type:\", typeof input);\nconsole.log(\"📥 Raw input keys:\", Object.keys(input || {}));\nconsole.log(\"📥 Raw input JSON:\", JSON.stringify(input, null, 2));\n\n// Log specific properties we're looking for\nconsole.log(\"🎯 input.update_id:\", input.update_id);\nconsole.log(\"🎯 input.message:\", input.message);\nconsole.log(\"🎯 input.body:\", input.body);\nconsole.log(\"🎯 input.query:\", input.query);\nconsole.log(\"🎯 input.headers:\", input.headers);\n\n// Try to find the actual data\nlet actualBody = null;\nif (input.body) {\n    actualBody = input.body;\n    console.log(\"📦 Found data in .body:\", JSON.stringify(actualBody, null, 2));\n} else if (input.update_id) {\n    actualBody = input;\n    console.log(\"📦 Data is at root level\");\n} else {\n    console.log(\"❌ No recognizable data found\");\n    actualBody = {};\n}\n\n// Simple classification for testing\nconst classification = {\n    request_id: $execution.id,\n    source: actualBody.update_id ? 'telegram_message' : 'unknown',\n    type: actualBody.update_id ? 'content_request' : 'unknown',\n    target_workflow: 'MarketingDirector',\n    routing_strategy: 'debug_test',\n    original_body: actualBody,\n    priority_score: 50,\n    source_confidence: actualBody.update_id ? 95 : 0,\n    processing_latency_ms: 1,\n    debug_info: {\n        webhook_input: input,\n        actual_body: actualBody,\n        found_telegram_data: !!actualBody.update_id\n    }\n};\n\nconsole.log(\"✅ Classification result:\", JSON.stringify(classification, null, 2));\nconsole.log(\"🔥 === DEBUG COMPLETE ===\");\n\nreturn [{json: classification}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [620, 360],
+      "id": "adda19a3-ec05-4c3a-aced-8a4b4a2fa9a6",
+      "name": "PROCESS ORCHESTRATOR DATA"
+    },
+    {
+      "parameters": {
+        "content": "# Orchestrator v2",
+        "height": 380,
+        "width": 580,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [300, 320],
+      "id": "fe19704e-7b1b-47f9-845c-8bc8d566736b",
+      "name": "Sticky Note7"
+    }
+  ],
+  "pinData": {
+    "Name: \"From Orchestrator v2\"": [
+      {
+        "json": {
+          "original_request": "=",
+          "orchestrator_metadata": {
+            "request_id": "1215",
+            "priority_score": 50,
+            "routing_strategy": "chat_handling",
+            "source": "telegram_message",
+            "user_type": "regular"
+          },
+          "priority_score": 50,
+          "user_type": "=regular"
+        }
+      }
+    ],
+    "Telegram Webhook": [
+      {
+        "json": {
+          "update_id": 521396260,
+          "message": {
+            "message_id": 952,
+            "from": {
+              "id": 6475835412,
+              "is_bot": false,
+              "first_name": "D",
+              "language_code": "nl"
+            },
+            "chat": {
+              "id": 6475835412,
+              "first_name": "D",
+              "type": "private"
+            },
+            "date": 1749605819,
+            "text": "hey"
+          }
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Edit Image": {
+      "ai_tool": [
+        [
+          {
+            "node": "Marketing Director",
+            "type": "ai_tool",
+            "index": 0
+          },
+          {
+            "node": "Marketing Manager",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Images": {
+      "ai_tool": [
+        [
+          {
+            "node": "Marketing Director",
+            "type": "ai_tool",
+            "index": 0
+          },
+          {
+            "node": "Marketing Manager",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Blog Post": {
+      "ai_tool": [
+        [
+          {
+            "node": "Marketing Director",
+            "type": "ai_tool",
+            "index": 0
+          },
+          {
+            "node": "Marketing Manager",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LinkedIn Post": {
+      "ai_tool": [
+        [
+          {
+            "node": "Marketing Director",
+            "type": "ai_tool",
+            "index": 0
+          },
+          {
+            "node": "Marketing Manager",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Video": {
+      "ai_tool": [
+        [
+          {
+            "node": "Marketing Director",
+            "type": "ai_tool",
+            "index": 0
+          },
+          {
+            "node": "Marketing Manager",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Think": {
+      "ai_tool": [
+        [
+          {
+            "node": "Marketing Director",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Image": {
+      "ai_tool": [
+        [
+          {
+            "node": "Marketing Director",
+            "type": "ai_tool",
+            "index": 0
+          },
+          {
+            "node": "Marketing Manager",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post": {
+      "ai_tool": [
+        [
+          {
+            "node": "Marketing Director",
+            "type": "ai_tool",
+            "index": 0
+          },
+          {
+            "node": "Marketing Manager",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Caroussel": {
+      "ai_tool": [
+        [
+          {
+            "node": "Marketing Director",
+            "type": "ai_tool",
+            "index": 0
+          },
+          {
+            "node": "Marketing Manager",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Story": {
+      "ai_tool": [
+        [
+          {
+            "node": "Marketing Director",
+            "type": "ai_tool",
+            "index": 0
+          },
+          {
+            "node": "Marketing Manager",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reel": {
+      "ai_tool": [
+        [
+          {
+            "node": "Marketing Director",
+            "type": "ai_tool",
+            "index": 0
+          },
+          {
+            "node": "Marketing Manager",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cron - Elke dag om 08:00": {
+      "main": [
+        [
+          {
+            "node": "Set: Calculate Target Date",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF: Posts Scheduled?": {
+      "main": [
+        [
+          {
+            "node": "Split: Process Each Post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Bekijk contentagenda": {
+      "main": [
+        [
+          {
+            "node": "IF: Posts Scheduled?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set: Calculate Target Date": {
+      "main": [
+        [
+          {
+            "node": "Set: Format Filter Times",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set: Format Filter Times": {
+      "main": [
+        [
+          {
+            "node": "Bekijk contentagenda",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split: Process Each Post": {
+      "main": [
+        [
+          {
+            "node": "Update Status - Processing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Status - Processing": {
+      "main": [
+        [
+          {
+            "node": "Prepare Payload for Marketing Manager",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Payload for Marketing Manager": {
+      "main": [
+        [
+          {
+            "node": "Marketing Manager",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GPT 4o": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Marketing Director",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Videos": {
+      "ai_tool": [
+        [
+          {
+            "node": "Marketing Director",
+            "type": "ai_tool",
+            "index": 0
+          },
+          {
+            "node": "Marketing Manager",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Marketing Director": {
+      "main": [
+        [
+          {
+            "node": "Antwoord",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Antwoord": {
+      "main": [[]]
+    },
+    "Telegram Webhook": {
+      "main": [
+        [
+          {
+            "node": "Analyze Update Type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze Update Type": {
+      "main": [
+        [
+          {
+            "node": "Route Updates",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route Updates": {
+      "main": [
+        [
+          {
+            "node": "Forward to Callback Handler",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Memory Manager": {
+      "ai_memory": [
+        [
+          {
+            "node": "Marketing Manager",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Memory Director": {
+      "ai_memory": [
+        [
+          {
+            "node": "Marketing Director",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GPT 4o mini": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Marketing Manager",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Forward to Callback Handler": {
+      "main": [[]]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Marketing Director",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Name: \"From Orchestrator v2\"": {
+      "main": [
+        [
+          {
+            "node": "Request Source Router",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Request Source Router": {
+      "main": [
+        [
+          {
+            "node": "PROCESS ORCHESTRATOR DATA",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [],
+        []
+      ]
+    },
+    "PROCESS ORCHESTRATOR DATA": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "be9e9761-d4c9-4699-a92e-fe687e8a7f1b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "dfdd26cd27fe046d045e60df6b98f78e52a497ca304bdcb672e06512ba750a2c"
+  },
+  "id": "SLATBPwKaqsiCCYl",
+  "tags": []
+}

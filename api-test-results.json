@@ -1,0 +1,792 @@
+{
+  "timestamp": "2025-06-18T17:12:17.789Z",
+  "summary": {
+    "total": 11,
+    "passed": 11,
+    "failed": 0,
+    "successRate": "100.0"
+  },
+  "details": [
+    {
+      "test": "GET /health",
+      "status": "PASSED",
+      "response": {
+        "status": "healthy",
+        "timestamp": "2025-06-18T17:12:07.580Z",
+        "version": "1.0.0",
+        "services": {
+          "api": "operational",
+          "database": "operational",
+          "ai": "operational"
+        },
+        "uptime": "operational"
+      },
+      "responseTime": "N/A"
+    },
+    {
+      "test": "GET /test-supabase",
+      "status": "PASSED",
+      "response": {
+        "success": true,
+        "message": "Supabase connection successful",
+        "user": null,
+        "databaseConnected": true,
+        "connectionTest": "Connected successfully",
+        "tableTests": {
+          "business_kpi_daily": {
+            "accessible": true,
+            "count": 1
+          },
+          "content_posts": {
+            "accessible": true,
+            "count": 0
+          },
+          "kajabi_sales": {
+            "accessible": true,
+            "count": 0
+          }
+        },
+        "availableTables": [
+          "business_kpi_daily",
+          "content_posts",
+          "kajabi_sales",
+          "shopify_sales",
+          "google_ads_performance",
+          "meta_ads_performance",
+          "ai_business_insights",
+          "content_calendar",
+          "revenue_attribution",
+          "unified_customer_profiles"
+        ],
+        "timestamp": "2025-06-18T17:12:10.675Z"
+      },
+      "responseTime": "N/A"
+    },
+    {
+      "test": "GET /monitoring/health-check",
+      "status": "PASSED",
+      "response": {
+        "success": true,
+        "message": "✅ Monitoring system is healthy!",
+        "timestamp": "2025-06-18T17:12:12.050Z",
+        "database_connection": "✅ Connected",
+        "monitoring_tables": "✅ Ready for Subtask 8.1"
+      },
+      "responseTime": "N/A"
+    },
+    {
+      "test": "GET /budget",
+      "status": "PASSED",
+      "response": {
+        "data": [
+          {
+            "id": "1",
+            "category": "Marketing",
+            "department": "Marketing & Sales",
+            "subcategory": "Digital Advertising",
+            "budgeted_amount": 50000,
+            "actual_amount": 47500,
+            "variance": -2500,
+            "variance_percentage": -5,
+            "period": "2024-Q1",
+            "status": "under_budget",
+            "forecast": 48000,
+            "ytd_budgeted": 150000,
+            "ytd_actual": 142500,
+            "last_updated": "2024-01-15T10:30:00Z",
+            "responsible_person": "Sarah Johnson",
+            "notes": "Optimized ad spend resulted in cost savings",
+            "tags": ["digital", "advertising", "performance"]
+          },
+          {
+            "id": "2",
+            "category": "Operations",
+            "department": "Operations",
+            "subcategory": "Software Licenses",
+            "budgeted_amount": 25000,
+            "actual_amount": 28500,
+            "variance": 3500,
+            "variance_percentage": 14,
+            "period": "2024-Q1",
+            "status": "over_budget",
+            "forecast": 29000,
+            "ytd_budgeted": 75000,
+            "ytd_actual": 85500,
+            "last_updated": "2024-01-14T14:20:00Z",
+            "responsible_person": "Mike Chen",
+            "notes": "Additional licenses required for new team members",
+            "tags": ["software", "licenses", "tools"]
+          },
+          {
+            "id": "3",
+            "category": "Human Resources",
+            "department": "HR",
+            "subcategory": "Recruitment",
+            "budgeted_amount": 15000,
+            "actual_amount": 15200,
+            "variance": 200,
+            "variance_percentage": 1.3,
+            "period": "2024-Q1",
+            "status": "on_track",
+            "forecast": 15100,
+            "ytd_budgeted": 45000,
+            "ytd_actual": 45600,
+            "last_updated": "2024-01-13T09:15:00Z",
+            "responsible_person": "Lisa Wang",
+            "notes": "Recruitment costs within expected range",
+            "tags": ["recruitment", "hiring", "talent"]
+          },
+          {
+            "id": "4",
+            "category": "Technology",
+            "department": "IT",
+            "subcategory": "Cloud Infrastructure",
+            "budgeted_amount": 35000,
+            "actual_amount": 42000,
+            "variance": 7000,
+            "variance_percentage": 20,
+            "period": "2024-Q1",
+            "status": "critical",
+            "forecast": 43000,
+            "ytd_budgeted": 105000,
+            "ytd_actual": 126000,
+            "last_updated": "2024-01-16T16:45:00Z",
+            "responsible_person": "David Rodriguez",
+            "notes": "Unexpected scaling requirements due to increased usage",
+            "tags": ["cloud", "infrastructure", "scaling"]
+          },
+          {
+            "id": "5",
+            "category": "Sales",
+            "department": "Marketing & Sales",
+            "subcategory": "Travel & Entertainment",
+            "budgeted_amount": 20000,
+            "actual_amount": 18500,
+            "variance": -1500,
+            "variance_percentage": -7.5,
+            "period": "2024-Q1",
+            "status": "under_budget",
+            "forecast": 19000,
+            "ytd_budgeted": 60000,
+            "ytd_actual": 55500,
+            "last_updated": "2024-01-12T11:30:00Z",
+            "responsible_person": "Emma Thompson",
+            "notes": "Reduced travel due to virtual meetings",
+            "tags": ["travel", "entertainment", "client"]
+          },
+          {
+            "id": "6",
+            "category": "Research & Development",
+            "department": "R&D",
+            "subcategory": "Product Development",
+            "budgeted_amount": 75000,
+            "actual_amount": 78500,
+            "variance": 3500,
+            "variance_percentage": 4.7,
+            "period": "2024-Q1",
+            "status": "over_budget",
+            "forecast": 79000,
+            "ytd_budgeted": 225000,
+            "ytd_actual": 235500,
+            "last_updated": "2024-01-17T13:20:00Z",
+            "responsible_person": "Alex Kim",
+            "notes": "Additional prototype development costs",
+            "tags": ["development", "innovation", "prototype"]
+          }
+        ],
+        "summary": {
+          "total_budgeted": 220000,
+          "total_actual": 230200,
+          "total_variance": 10200,
+          "variance_percentage": 4.636363636363637,
+          "categories_over_budget": 3,
+          "categories_under_budget": 2,
+          "categories_on_track": 1,
+          "forecast_accuracy": 92.5
+        },
+        "metadata": {
+          "count": 6,
+          "period": "all",
+          "timestamp": "2025-06-18T17:12:12.906Z"
+        }
+      },
+      "responseTime": "N/A"
+    },
+    {
+      "test": "GET /financial",
+      "status": "PASSED",
+      "response": {
+        "data": [
+          {
+            "id": "787bebb2-d82e-44e7-80da-7b81dfcb053a",
+            "date": "2025-06-11",
+            "total_revenue": 0,
+            "shopify_revenue": 0,
+            "kajabi_revenue": 0,
+            "content_attributed_revenue": 0,
+            "subscription_revenue": 0,
+            "one_time_revenue": 0,
+            "new_customers": 0,
+            "returning_customers": 0,
+            "churned_customers": 0,
+            "total_active_customers": 0,
+            "customer_acquisition_cost": 0,
+            "content_pieces_published": 0,
+            "total_content_engagement": 0,
+            "average_engagement_rate": 0,
+            "content_conversion_rate": 0,
+            "top_performing_content_type": null,
+            "total_marketing_spend": 0,
+            "google_ads_spend": 0,
+            "meta_ads_spend": 0,
+            "email_marketing_spend": 0,
+            "content_marketing_cost": 0,
+            "conversion_rate": 0,
+            "website_visitors": 0,
+            "email_open_rate": 0,
+            "email_click_rate": 0,
+            "gross_margin": 0,
+            "net_profit_margin": 0,
+            "operating_expenses": 0,
+            "return_on_ad_spend": 0,
+            "content_roi": 0,
+            "monthly_recurring_revenue": 0,
+            "order_fulfillment_time_hours": 24,
+            "customer_support_tickets": 0,
+            "average_response_time_minutes": 60,
+            "calculated_at": "2025-06-11T21:10:03.463971"
+          }
+        ],
+        "metadata": {
+          "count": 1,
+          "query_type": "general",
+          "parameters": {},
+          "timestamp": "2025-06-18T17:12:13.740Z"
+        }
+      },
+      "responseTime": "N/A"
+    },
+    {
+      "test": "GET /customer-intelligence",
+      "status": "PASSED",
+      "response": {
+        "success": true,
+        "data": {
+          "totalCustomers": 12487,
+          "totalCustomersChange": 8.2,
+          "activeCustomers": 9654,
+          "activeCustomersChange": 5.7,
+          "averageLifetimeValue": 1247.5,
+          "averageLifetimeValueChange": 12.3,
+          "churnRisk": 284,
+          "churnRiskChange": -15.2,
+          "timestamp": "2025-06-18T17:12:14.273Z"
+        },
+        "meta": {
+          "action": "overview",
+          "dateRange": {
+            "startDate": null,
+            "endDate": null
+          },
+          "timestamp": "2025-06-18T17:12:14.273Z"
+        }
+      },
+      "responseTime": "N/A"
+    },
+    {
+      "test": "GET /marketing",
+      "status": "PASSED",
+      "response": {
+        "data": [
+          {
+            "id": "1",
+            "name": "Google Ads",
+            "spend": 15000,
+            "revenue": 45000,
+            "roi": 200,
+            "conversions": 150,
+            "cpa": 100,
+            "budget": 20000,
+            "budgetUsed": 75,
+            "performance": "excellent",
+            "impressions": 250000,
+            "clicks": 2500,
+            "ctr": 1,
+            "date": "2025-06-18"
+          },
+          {
+            "id": "2",
+            "name": "Facebook Ads",
+            "spend": 8000,
+            "revenue": 16000,
+            "roi": 100,
+            "conversions": 80,
+            "cpa": 100,
+            "budget": 10000,
+            "budgetUsed": 80,
+            "performance": "good",
+            "impressions": 180000,
+            "clicks": 1800,
+            "ctr": 1,
+            "date": "2025-06-18"
+          },
+          {
+            "id": "3",
+            "name": "LinkedIn Ads",
+            "spend": 5000,
+            "revenue": 8000,
+            "roi": 60,
+            "conversions": 25,
+            "cpa": 200,
+            "budget": 6000,
+            "budgetUsed": 83,
+            "performance": "average",
+            "impressions": 50000,
+            "clicks": 400,
+            "ctr": 0.8,
+            "date": "2025-06-18"
+          },
+          {
+            "id": "4",
+            "name": "YouTube Ads",
+            "spend": 3000,
+            "revenue": 2400,
+            "roi": -20,
+            "conversions": 12,
+            "cpa": 250,
+            "budget": 4000,
+            "budgetUsed": 75,
+            "performance": "poor",
+            "impressions": 120000,
+            "clicks": 360,
+            "ctr": 0.3,
+            "date": "2025-06-18"
+          },
+          {
+            "id": "5",
+            "name": "Instagram Ads",
+            "spend": 6000,
+            "revenue": 12000,
+            "roi": 100,
+            "conversions": 60,
+            "cpa": 100,
+            "budget": 8000,
+            "budgetUsed": 75,
+            "performance": "good",
+            "impressions": 200000,
+            "clicks": 1200,
+            "ctr": 0.6,
+            "date": "2025-06-18"
+          }
+        ],
+        "metadata": {
+          "count": 5,
+          "total_spend": 37000,
+          "total_revenue": 83400,
+          "average_roi": 88,
+          "timestamp": "2025-06-18T17:12:14.754Z"
+        }
+      },
+      "responseTime": "N/A"
+    },
+    {
+      "test": "GET /dashboard",
+      "status": "PASSED",
+      "response": {
+        "success": true,
+        "data": {
+          "overview": {
+            "totalRevenue": 125000,
+            "monthlyGrowth": 8.5,
+            "activeCustomers": 1250,
+            "conversionRate": 3.2,
+            "lastUpdated": "2025-06-18T17:12:15.344Z"
+          },
+          "kpis": {
+            "revenue": {
+              "current": 125000,
+              "target": 150000,
+              "variance": -16.7,
+              "trend": "up"
+            },
+            "customers": {
+              "current": 1250,
+              "target": 1500,
+              "variance": -16.7,
+              "trend": "up"
+            },
+            "satisfaction": {
+              "current": 4.2,
+              "target": 4.5,
+              "variance": -6.7,
+              "trend": "stable"
+            }
+          },
+          "recentActivities": [
+            {
+              "id": "1",
+              "type": "revenue",
+              "message": "New sale recorded: €2,500",
+              "timestamp": "2025-06-18T16:57:15.344Z"
+            },
+            {
+              "id": "2",
+              "type": "customer",
+              "message": "New customer registration",
+              "timestamp": "2025-06-18T16:42:15.344Z"
+            },
+            {
+              "id": "3",
+              "type": "system",
+              "message": "Monthly report generated",
+              "timestamp": "2025-06-18T16:12:15.344Z"
+            }
+          ],
+          "health": {
+            "apiStatus": "operational",
+            "databaseStatus": "operational",
+            "systemLoad": 45,
+            "responseTime": 120
+          }
+        },
+        "timestamp": "2025-06-18T17:12:15.436Z",
+        "message": "Dashboard data retrieved successfully"
+      },
+      "responseTime": "N/A"
+    },
+    {
+      "test": "GET /tracking/events",
+      "status": "PASSED",
+      "response": {
+        "success": true,
+        "message": "Tracking API is operational (optimized)",
+        "queue_size": 0,
+        "cache_entries": 0,
+        "endpoints": {
+          "POST": "/api/tracking/events - Track events (batched)",
+          "GET": "/api/tracking/events - API status (cached)"
+        },
+        "optimizations": {
+          "event_batching": true,
+          "response_caching": true,
+          "reduced_logging": true,
+          "batch_size": 50,
+          "flush_interval_ms": 5000
+        }
+      },
+      "responseTime": "N/A"
+    },
+    {
+      "test": "GET /content-roi",
+      "status": "PASSED",
+      "response": {
+        "data": {
+          "total_revenue": 480550,
+          "total_content_pieces": 9,
+          "average_roi": 3632.777777777778,
+          "top_performing_content": [
+            {
+              "content_id": "shop_004",
+              "content_title": "E-commerce Growth Strategies",
+              "content_type": "shopify_product",
+              "revenue": 62400,
+              "sales_count": 203,
+              "engagement_score": 100,
+              "roi_percentage": 6140,
+              "cost_per_acquisition": 4.926108374384237,
+              "conversion_rate": 5.7,
+              "period": "2025-05-19 to 2025-06-18",
+              "last_updated": "2025-06-18T17:12:16.668Z"
+            },
+            {
+              "content_id": "kaj_003",
+              "content_title": "Business Intelligence Fundamentals",
+              "content_type": "kajabi_course",
+              "revenue": 117800,
+              "sales_count": 589,
+              "engagement_score": 85.5,
+              "roi_percentage": 5790,
+              "cost_per_acquisition": 3.395585738539898,
+              "conversion_rate": 0.8692699490662139,
+              "period": "2025-05-19 to 2025-06-18",
+              "last_updated": "2025-06-18T17:12:17.380Z"
+            },
+            {
+              "content_id": "shop_002",
+              "content_title": "Marketing Automation Toolkit",
+              "content_type": "shopify_product",
+              "revenue": 46800,
+              "sales_count": 156,
+              "engagement_score": 100,
+              "roi_percentage": 4580,
+              "cost_per_acquisition": 6.410256410256411,
+              "conversion_rate": 4.8,
+              "period": "2025-05-19 to 2025-06-18",
+              "last_updated": "2025-06-18T17:12:16.668Z"
+            },
+            {
+              "content_id": "kaj_001",
+              "content_title": "Advanced Analytics Certification",
+              "content_type": "kajabi_course",
+              "revenue": 91200,
+              "sales_count": 456,
+              "engagement_score": 80,
+              "roi_percentage": 4460,
+              "cost_per_acquisition": 4.385964912280702,
+              "conversion_rate": 0.8486842105263158,
+              "period": "2025-05-19 to 2025-06-18",
+              "last_updated": "2025-06-18T17:12:17.380Z"
+            },
+            {
+              "content_id": "shop_005",
+              "content_title": "Social Media Mastery Program",
+              "content_type": "shopify_product",
+              "revenue": 35600,
+              "sales_count": 124,
+              "engagement_score": 100,
+              "roi_percentage": 3460,
+              "cost_per_acquisition": 8.064516129032258,
+              "conversion_rate": 3.9,
+              "period": "2025-05-19 to 2025-06-18",
+              "last_updated": "2025-06-18T17:12:16.668Z"
+            },
+            {
+              "content_id": "shop_001",
+              "content_title": "Premium Business Course Bundle",
+              "content_type": "shopify_product",
+              "revenue": 28750,
+              "sales_count": 87,
+              "engagement_score": 100,
+              "roi_percentage": 2775,
+              "cost_per_acquisition": 11.494252873563218,
+              "conversion_rate": 3.2,
+              "period": "2025-05-19 to 2025-06-18",
+              "last_updated": "2025-06-18T17:12:16.668Z"
+            },
+            {
+              "content_id": "kaj_002",
+              "content_title": "Content Creation Bootcamp",
+              "content_type": "kajabi_course",
+              "revenue": 46800,
+              "sales_count": 234,
+              "engagement_score": 68,
+              "roi_percentage": 2240,
+              "cost_per_acquisition": 8.547008547008547,
+              "conversion_rate": 0.8461538461538461,
+              "period": "2025-05-19 to 2025-06-18",
+              "last_updated": "2025-06-18T17:12:17.380Z"
+            },
+            {
+              "content_id": "shop_003",
+              "content_title": "Digital Leadership Masterclass",
+              "content_type": "shopify_product",
+              "revenue": 17800,
+              "sales_count": 67,
+              "engagement_score": 100,
+              "roi_percentage": 1680,
+              "cost_per_acquisition": 14.925373134328359,
+              "conversion_rate": 2.1,
+              "period": "2025-05-19 to 2025-06-18",
+              "last_updated": "2025-06-18T17:12:16.668Z"
+            },
+            {
+              "content_id": "kaj_004",
+              "content_title": "Digital Transformation Workshop",
+              "content_type": "kajabi_course",
+              "revenue": 33400,
+              "sales_count": 167,
+              "engagement_score": 74,
+              "roi_percentage": 1570,
+              "cost_per_acquisition": 11.976047904191617,
+              "conversion_rate": 0.8023952095808383,
+              "period": "2025-05-19 to 2025-06-18",
+              "last_updated": "2025-06-18T17:12:17.380Z"
+            }
+          ],
+          "underperforming_content": [
+            {
+              "content_id": "kaj_004",
+              "content_title": "Digital Transformation Workshop",
+              "content_type": "kajabi_course",
+              "revenue": 33400,
+              "sales_count": 167,
+              "engagement_score": 74,
+              "roi_percentage": 1570,
+              "cost_per_acquisition": 11.976047904191617,
+              "conversion_rate": 0.8023952095808383,
+              "period": "2025-05-19 to 2025-06-18",
+              "last_updated": "2025-06-18T17:12:17.380Z"
+            },
+            {
+              "content_id": "shop_003",
+              "content_title": "Digital Leadership Masterclass",
+              "content_type": "shopify_product",
+              "revenue": 17800,
+              "sales_count": 67,
+              "engagement_score": 100,
+              "roi_percentage": 1680,
+              "cost_per_acquisition": 14.925373134328359,
+              "conversion_rate": 2.1,
+              "period": "2025-05-19 to 2025-06-18",
+              "last_updated": "2025-06-18T17:12:16.668Z"
+            },
+            {
+              "content_id": "kaj_002",
+              "content_title": "Content Creation Bootcamp",
+              "content_type": "kajabi_course",
+              "revenue": 46800,
+              "sales_count": 234,
+              "engagement_score": 68,
+              "roi_percentage": 2240,
+              "cost_per_acquisition": 8.547008547008547,
+              "conversion_rate": 0.8461538461538461,
+              "period": "2025-05-19 to 2025-06-18",
+              "last_updated": "2025-06-18T17:12:17.380Z"
+            },
+            {
+              "content_id": "shop_001",
+              "content_title": "Premium Business Course Bundle",
+              "content_type": "shopify_product",
+              "revenue": 28750,
+              "sales_count": 87,
+              "engagement_score": 100,
+              "roi_percentage": 2775,
+              "cost_per_acquisition": 11.494252873563218,
+              "conversion_rate": 3.2,
+              "period": "2025-05-19 to 2025-06-18",
+              "last_updated": "2025-06-18T17:12:16.668Z"
+            },
+            {
+              "content_id": "shop_005",
+              "content_title": "Social Media Mastery Program",
+              "content_type": "shopify_product",
+              "revenue": 35600,
+              "sales_count": 124,
+              "engagement_score": 100,
+              "roi_percentage": 3460,
+              "cost_per_acquisition": 8.064516129032258,
+              "conversion_rate": 3.9,
+              "period": "2025-05-19 to 2025-06-18",
+              "last_updated": "2025-06-18T17:12:16.668Z"
+            }
+          ],
+          "roi_trend": [
+            {
+              "date": "2025-05-19",
+              "total_roi": 118.2,
+              "content_count": 10
+            },
+            {
+              "date": "2025-05-26",
+              "total_roi": 112.4,
+              "content_count": 5
+            },
+            {
+              "date": "2025-06-02",
+              "total_roi": 87.2,
+              "content_count": 13
+            },
+            {
+              "date": "2025-06-09",
+              "total_roi": 121.2,
+              "content_count": 6
+            },
+            {
+              "date": "2025-06-18",
+              "total_roi": 92.5,
+              "content_count": 8
+            }
+          ]
+        },
+        "status": "success",
+        "lastUpdated": "2025-06-18T17:12:17.383Z",
+        "connections": {
+          "shopify": true,
+          "kajabi": true,
+          "overall": true
+        }
+      },
+      "responseTime": "N/A"
+    },
+    {
+      "test": "GET /ai-configuration",
+      "status": "PASSED",
+      "response": {
+        "success": true,
+        "data": {
+          "activeProfile": {
+            "id": "default",
+            "name": "SKC BI Assistant",
+            "personality": "professional",
+            "systemPrompt": "You are a helpful BI dashboard assistant for SKC.",
+            "temperature": 0.7,
+            "maxTokens": 2048,
+            "model": "gpt-4"
+          },
+          "availableModels": [
+            {
+              "id": "gpt-4",
+              "name": "GPT-4",
+              "provider": "openai",
+              "status": "available",
+              "costPerToken": 0.00003
+            },
+            {
+              "id": "gpt-3.5-turbo",
+              "name": "GPT-3.5 Turbo",
+              "provider": "openai",
+              "status": "available",
+              "costPerToken": 0.000002
+            },
+            {
+              "id": "claude-3-sonnet",
+              "name": "Claude 3 Sonnet",
+              "provider": "anthropic",
+              "status": "available",
+              "costPerToken": 0.000015
+            }
+          ],
+          "settings": {
+            "enabledFeatures": [
+              "chat_assistant",
+              "content_generation",
+              "data_analysis",
+              "predictive_insights"
+            ],
+            "rateLimits": {
+              "requestsPerMinute": 60,
+              "tokensPerDay": 100000
+            },
+            "safety": {
+              "contentFiltering": true,
+              "piiDetection": true,
+              "moderationLevel": "standard"
+            }
+          },
+          "systemMessages": [
+            {
+              "id": "1",
+              "role": "system",
+              "content": "You are an expert BI analyst assistant.",
+              "active": true
+            },
+            {
+              "id": "2",
+              "role": "system",
+              "content": "Always provide data-driven insights.",
+              "active": true
+            }
+          ],
+          "status": {
+            "lastUpdated": "2025-06-18T17:12:17.785Z",
+            "configVersion": "1.0.0",
+            "health": "operational"
+          }
+        },
+        "timestamp": "2025-06-18T17:12:17.785Z",
+        "message": "AI configuration retrieved successfully"
+      },
+      "responseTime": "N/A"
+    }
+  ]
+}

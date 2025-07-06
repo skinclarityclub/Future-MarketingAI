@@ -1,0 +1,492 @@
+{
+  "name": "Master Workflow Controller",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "master-controller",
+        "responseMode": "responseNode",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "X-Controller-Version",
+                "value": "3.0"
+              },
+              {
+                "name": "X-System",
+                "value": "SKC-Enterprise-MasterController"
+              },
+              {
+                "name": "X-AI-Enhanced",
+                "value": "true"
+              }
+            ]
+          }
+        }
+      },
+      "id": "master-controller-trigger",
+      "name": "Master Controller Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [340, 260],
+      "webhookId": "master-controller-v3"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Master Workflow Controller - Enhanced Request Classifier\n// Task 73: Universal n8n AI/ML Workflow Orchestration Platform\n\nconst requestBody = $input.all()[0].json;\nconst headers = $input.all()[0].headers;\n\n// Enhanced classification with AI/ML orchestration capabilities\nconst classificationResult = {\n  request_id: `master_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,\n  timestamp: new Date().toISOString(),\n  \n  // Original request data\n  original_request: requestBody,\n  \n  // Enhanced classification\n  workflow_type: requestBody.workflow_type || 'content_creation',\n  target_workflow: requestBody.target_workflow || determineTargetWorkflow(requestBody),\n  \n  // AI/ML Enhancement flags\n  ai_enhanced: true,\n  learning_enabled: requestBody.learning_enabled !== false,\n  optimization_enabled: requestBody.optimization_enabled !== false,\n  \n  // Intelligence routing\n  routing_strategy: determineRoutingStrategy(requestBody),\n  scheduling_preference: requestBody.scheduling || 'intelligent',\n  \n  // Cross-platform learning context\n  cross_platform_context: {\n    source_platform: requestBody.source_platform || 'dashboard',\n    target_platforms: requestBody.target_platforms || ['instagram', 'linkedin'],\n    learning_patterns: requestBody.apply_learning !== false\n  },\n  \n  // Priority and resource management\n  priority_score: calculatePriorityScore(requestBody),\n  resource_requirements: estimateResourceRequirements(requestBody),\n  \n  // Orchestration metadata\n  orchestration_metadata: {\n    master_controller: true,\n    version: '3.0',\n    capabilities: ['ai_orchestration', 'cross_platform_learning', 'intelligent_scheduling', 'optimization'],\n    session_id: headers['x-session-id'] || `session_${Date.now()}`,\n    user_context: requestBody.user_context || {}\n  }\n};\n\n// Helper functions\nfunction determineTargetWorkflow(request) {\n  const workflowMap = {\n    'post_creation': 'PostBuilder',\n    'carousel_creation': 'CarouselBuilder', \n    'reel_creation': 'ReelBuilder',\n    'story_creation': 'StoryBuilder',\n    'marketing_strategy': 'MarketingManager',\n    'competitor_analysis': 'Competitor_Monitoring_Workflow',\n    'ml_retraining': 'ML_Auto_Retraining_Workflow',\n    'fortune500_analysis': 'fortune500-ai-agent-workflow'\n  };\n  \n  return workflowMap[request.request_type] || workflowMap[request.workflow_type] || 'PostBuilder';\n}\n\nfunction determineRoutingStrategy(request) {\n  const strategies = ['immediate', 'intelligent', 'optimized', 'learning_enhanced'];\n  \n  if (request.priority === 'urgent' || request.priority === 'critical') {\n    return 'immediate';\n  }\n  \n  if (request.ai_enhanced === false) {\n    return 'immediate';\n  }\n  \n  return request.routing_strategy || 'intelligent';\n}\n\nfunction calculatePriorityScore(request) {\n  let score = 50; // Base score\n  \n  // Priority adjustments\n  const priorityMap = { 'critical': 95, 'urgent': 90, 'high': 75, 'medium': 50, 'low': 25 };\n  score = priorityMap[request.priority] || score;\n  \n  // AI enhancement bonus\n  if (request.ai_enhanced !== false) score += 10;\n  \n  // Learning pattern bonus\n  if (request.apply_learning !== false) score += 5;\n  \n  // User type adjustments\n  if (request.user_context?.user_type === 'enterprise') score += 15;\n  if (request.user_context?.user_type === 'premium') score += 10;\n  \n  return Math.min(100, Math.max(0, score));\n}\n\nfunction estimateResourceRequirements(request) {\n  const baseRequirements = {\n    cpu_intensity: 'medium',\n    memory_usage: 'low',\n    network_io: 'medium',\n    estimated_duration: 60\n  };\n  \n  // Adjust based on workflow type\n  if (request.target_workflow?.includes('ML') || request.workflow_type === 'ml_pipeline') {\n    baseRequirements.cpu_intensity = 'high';\n    baseRequirements.memory_usage = 'high';\n    baseRequirements.estimated_duration = 300;\n  }\n  \n  if (request.target_workflow?.includes('fortune500')) {\n    baseRequirements.cpu_intensity = 'high';\n    baseRequirements.estimated_duration = 180;\n  }\n  \n  return baseRequirements;\n}\n\nreturn [classificationResult];"
+      },
+      "id": "enhanced-request-classifier",
+      "name": "Enhanced AI Request Classifier",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [560, 260]
+    },
+    {
+      "parameters": {
+        "tableId": "master_workflow_executions",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "execution_id",
+              "fieldValue": "={{ $json.request_id }}"
+            },
+            {
+              "fieldId": "workflow_id",
+              "fieldValue": "={{ $json.target_workflow }}"
+            },
+            {
+              "fieldId": "input_data",
+              "fieldValue": "={{ JSON.stringify($json.original_request) }}"
+            },
+            {
+              "fieldId": "scheduling_decision",
+              "fieldValue": "={{ JSON.stringify({ strategy: $json.routing_strategy, preference: $json.scheduling_preference, priority_score: $json.priority_score }) }}"
+            },
+            {
+              "fieldId": "applied_optimizations",
+              "fieldValue": "={{ JSON.stringify([]) }}"
+            },
+            {
+              "fieldId": "status",
+              "fieldValue": "queued"
+            },
+            {
+              "fieldId": "performance_metrics",
+              "fieldValue": "={{ JSON.stringify($json.orchestration_metadata) }}"
+            }
+          ]
+        }
+      },
+      "id": "execution-logger",
+      "name": "Log Execution Start",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [780, 260]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Cross-Platform Learning Engine\n// Analyzes historical patterns and applies learned optimizations\n\nconst executionData = $input.all()[0].json;\n\n// Simulated learning patterns (in production, this would query ML models)\nconst learningPatterns = [\n  {\n    pattern: 'optimal_timing',\n    confidence: 0.92,\n    source_workflow: 'MarketingManager',\n    target_workflows: ['PostBuilder', 'CarouselBuilder'],\n    optimization: 'Schedule during peak engagement hours (9-11 AM, 2-4 PM)',\n    performance_gain: 24.1\n  },\n  {\n    pattern: 'content_batching',\n    confidence: 0.87,\n    source_workflow: 'PostBuilder',\n    target_workflows: ['CarouselBuilder', 'ReelBuilder'],\n    optimization: 'Process similar content types in batches for efficiency',\n    performance_gain: 18.3\n  },\n  {\n    pattern: 'ai_model_ensemble',\n    confidence: 0.91,\n    source_workflow: 'ML_Auto_Retraining_Workflow',\n    target_workflows: ['all'],\n    optimization: 'Use ensemble approach for better accuracy',\n    performance_gain: 15.7\n  }\n];\n\n// Apply relevant learning patterns\nconst applicablePatterns = learningPatterns.filter(pattern => \n  pattern.target_workflows.includes(executionData.target_workflow) || \n  pattern.target_workflows.includes('all')\n).filter(pattern => pattern.confidence > 0.8);\n\n// Generate optimizations\nconst optimizations = applicablePatterns.map(pattern => ({\n  type: 'cross_platform_learning',\n  description: pattern.optimization,\n  confidence: pattern.confidence,\n  source: pattern.source_workflow,\n  expected_gain: pattern.performance_gain\n}));\n\n// Intelligent scheduling decision\nconst schedulingDecision = {\n  suggested_time: calculateOptimalTime(executionData),\n  reasoning: generateSchedulingReasoning(executionData, optimizations),\n  resource_optimization: 85,\n  conflict_resolution: []\n};\n\n// Enhanced execution data with learning insights\nconst enhancedData = {\n  ...executionData,\n  applied_optimizations: optimizations,\n  scheduling_decision: schedulingDecision,\n  cross_platform_insights: {\n    patterns_applied: applicablePatterns.length,\n    total_patterns_available: learningPatterns.length,\n    avg_confidence: applicablePatterns.reduce((sum, p) => sum + p.confidence, 0) / (applicablePatterns.length || 1),\n    expected_performance_gain: optimizations.reduce((sum, o) => sum + o.expected_gain, 0) / (optimizations.length || 1)\n  },\n  ai_orchestration_metadata: {\n    learning_enabled: true,\n    optimization_level: 'advanced',\n    cross_platform_learning: true,\n    intelligent_scheduling: true,\n    timestamp: new Date().toISOString()\n  }\n};\n\nfunction calculateOptimalTime(data) {\n  const now = new Date();\n  \n  if (data.routing_strategy === 'immediate' || data.priority_score > 90) {\n    return now.toISOString();\n  }\n  \n  // Intelligent scheduling based on patterns\n  const optimalHours = [9, 10, 11, 14, 15, 16]; // Peak engagement hours\n  const currentHour = now.getHours();\n  \n  // Find next optimal hour\n  const nextOptimalHour = optimalHours.find(hour => hour > currentHour);\n  \n  if (nextOptimalHour) {\n    const suggestedTime = new Date(now);\n    suggestedTime.setHours(nextOptimalHour, 0, 0, 0);\n    return suggestedTime.toISOString();\n  } else {\n    // Next day, first optimal hour\n    const suggestedTime = new Date(now);\n    suggestedTime.setDate(suggestedTime.getDate() + 1);\n    suggestedTime.setHours(optimalHours[0], 0, 0, 0);\n    return suggestedTime.toISOString();\n  }\n}\n\nfunction generateSchedulingReasoning(data, optimizations) {\n  const reasoning = [];\n  \n  reasoning.push(`Priority score: ${data.priority_score}/100`);\n  reasoning.push(`Workflow type: ${data.workflow_type}`);\n  reasoning.push(`Optimizations applied: ${optimizations.length}`);\n  \n  if (data.learning_enabled) {\n    reasoning.push('Cross-platform learning enabled');\n  }\n  \n  if (data.routing_strategy === 'intelligent') {\n    reasoning.push('Intelligent scheduling for optimal resource utilization');\n  }\n  \n  return reasoning;\n}\n\nreturn [enhancedData];"
+      },
+      "id": "cross-platform-learning",
+      "name": "Cross-Platform Learning Engine",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1000, 260]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "postbuilder_route",
+              "leftValue": "={{ $json.target_workflow }}",
+              "rightValue": "PostBuilder",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "carousel_route",
+              "leftValue": "={{ $json.target_workflow }}",
+              "rightValue": "CarouselBuilder",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "marketing_manager_route",
+              "leftValue": "={{ $json.target_workflow }}",
+              "rightValue": "MarketingManager",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "ml_pipeline_route",
+              "leftValue": "={{ $json.target_workflow }}",
+              "rightValue": "ML_Auto_Retraining_Workflow",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "competitor_route",
+              "leftValue": "={{ $json.target_workflow }}",
+              "rightValue": "Competitor_Monitoring_Workflow",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "fortune500_route",
+              "leftValue": "={{ $json.target_workflow }}",
+              "rightValue": "fortune500-ai-agent-workflow",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "intelligent-workflow-router",
+      "name": "Intelligent Workflow Router",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [1220, 260]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "PostBuilder_Workflow_ID",
+          "mode": "list"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "original_request": "={{ JSON.stringify($json.original_request) }}",
+            "master_controller_metadata": "={{ JSON.stringify($json.ai_orchestration_metadata) }}",
+            "applied_optimizations": "={{ JSON.stringify($json.applied_optimizations) }}",
+            "cross_platform_insights": "={{ JSON.stringify($json.cross_platform_insights) }}",
+            "scheduling_decision": "={{ JSON.stringify($json.scheduling_decision) }}",
+            "imageTitle": "={{ $json.original_request.imageTitle || $json.original_request.title || 'AI Orchestrated Post' }}",
+            "imagePrompt": "={{ $json.original_request.imagePrompt || $json.original_request.prompt || 'Create engaging social media content' }}",
+            "chatID": "={{ $json.original_request.chatID || $json.orchestration_metadata.session_id }}",
+            "contentStrategy": "={{ $json.original_request.contentStrategy || 'premium' }}",
+            "priority": "={{ $json.original_request.priority || 'high' }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "route-to-postbuilder",
+      "name": "Route to PostBuilder (AI Enhanced)",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [1440, 100]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "CarouselBuilder_Workflow_ID",
+          "mode": "list"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "original_request": "={{ JSON.stringify($json.original_request) }}",
+            "master_controller_metadata": "={{ JSON.stringify($json.ai_orchestration_metadata) }}",
+            "applied_optimizations": "={{ JSON.stringify($json.applied_optimizations) }}",
+            "cross_platform_insights": "={{ JSON.stringify($json.cross_platform_insights) }}",
+            "carouselTitle": "={{ $json.original_request.carouselTitle || $json.original_request.title || 'AI Orchestrated Carousel' }}",
+            "carouselPrompt": "={{ $json.original_request.carouselPrompt || $json.original_request.prompt || 'Create engaging carousel content' }}",
+            "chatID": "={{ $json.original_request.chatID || $json.orchestration_metadata.session_id }}",
+            "contentStrategy": "={{ $json.original_request.contentStrategy || 'premium' }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "route-to-carousel",
+      "name": "Route to CarouselBuilder (AI Enhanced)",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [1440, 200]
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "MarketingManager_Workflow_ID",
+          "mode": "list"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "original_request": "={{ JSON.stringify($json.original_request) }}",
+            "master_controller_metadata": "={{ JSON.stringify($json.ai_orchestration_metadata) }}",
+            "applied_optimizations": "={{ JSON.stringify($json.applied_optimizations) }}",
+            "cross_platform_insights": "={{ JSON.stringify($json.cross_platform_insights) }}",
+            "orchestrator_metadata": "={{ $json }}",
+            "priority_score": "={{ $json.priority_score }}",
+            "user_type": "={{ $json.orchestration_metadata.user_context.user_type || 'enterprise' }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "route-to-marketing-manager",
+      "name": "Route to Marketing Manager (AI Enhanced)",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [1440, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Performance Monitor and Optimization Feedback\n// Tracks execution results and generates optimization insights\n\nconst allInputs = $input.all();\nconst executionResult = allInputs[0].json;\nconst originalRequest = executionResult.master_controller_metadata || {};\n\n// Performance metrics calculation\nconst endTime = new Date();\nconst startTime = new Date(originalRequest.timestamp || endTime.getTime() - 60000);\nconst duration = endTime.getTime() - startTime.getTime();\n\n// Determine execution success\nconst isSuccess = !executionResult.error && (executionResult.status === 'success' || executionResult.success === true);\n\n// Generate performance metrics\nconst performanceMetrics = {\n  execution_id: originalRequest.request_id || `perf_${Date.now()}`,\n  workflow_id: originalRequest.target_workflow || 'unknown',\n  duration_ms: duration,\n  success: isSuccess,\n  timestamp: endTime.toISOString(),\n  \n  // AI orchestration metrics\n  optimizations_applied: (originalRequest.applied_optimizations || []).length,\n  cross_platform_learning_used: !!(originalRequest.cross_platform_insights?.patterns_applied > 0),\n  intelligent_scheduling_used: !!(originalRequest.scheduling_decision?.suggested_time),\n  \n  // Performance scores\n  performance_score: calculatePerformanceScore(duration, isSuccess, originalRequest),\n  efficiency_score: calculateEfficiencyScore(originalRequest),\n  optimization_impact: calculateOptimizationImpact(originalRequest),\n  \n  // Quality metrics\n  output_quality: analyzeOutputQuality(executionResult),\n  user_satisfaction_estimate: estimateUserSatisfaction(executionResult, duration),\n  \n  // Resource utilization\n  resource_efficiency: calculateResourceEfficiency(duration, originalRequest),\n  \n  // Learning feedback\n  learning_feedback: generateLearningFeedback(executionResult, originalRequest),\n  \n  // Optimization recommendations\n  optimization_recommendations: generateOptimizationRecommendations(executionResult, originalRequest, duration)\n};\n\n// Generate feedback for cross-platform learning\nconst learningUpdate = {\n  workflow_id: originalRequest.target_workflow,\n  pattern_effectiveness: performanceMetrics.optimization_impact,\n  performance_gain_actual: performanceMetrics.performance_score,\n  confidence_adjustment: calculateConfidenceAdjustment(performanceMetrics),\n  new_insights: extractNewInsights(executionResult, performanceMetrics)\n};\n\n// Anomaly detection\nconst anomalies = detectAnomalies(performanceMetrics, originalRequest);\n\nfunction calculatePerformanceScore(duration, success, request) {\n  let score = success ? 80 : 20;\n  \n  // Duration-based adjustments\n  const expectedDuration = request.resource_requirements?.estimated_duration || 60000;\n  const durationRatio = duration / expectedDuration;\n  \n  if (durationRatio < 0.8) score += 15; // Faster than expected\n  else if (durationRatio > 1.5) score -= 20; // Slower than expected\n  \n  // Optimization bonus\n  if ((request.applied_optimizations || []).length > 0) score += 5;\n  \n  return Math.max(0, Math.min(100, score));\n}\n\nfunction calculateEfficiencyScore(request) {\n  let score = 70; // Base efficiency\n  \n  if (request.cross_platform_insights?.patterns_applied > 0) score += 15;\n  if (request.scheduling_decision?.resource_optimization > 80) score += 10;\n  if ((request.applied_optimizations || []).length > 2) score += 5;\n  \n  return Math.max(0, Math.min(100, score));\n}\n\nfunction calculateOptimizationImpact(request) {\n  const optimizations = request.applied_optimizations || [];\n  if (optimizations.length === 0) return 0;\n  \n  const avgExpectedGain = optimizations.reduce((sum, opt) => sum + (opt.expected_gain || 0), 0) / optimizations.length;\n  return Math.round(avgExpectedGain * 100) / 100;\n}\n\nfunction analyzeOutputQuality(result) {\n  // Quality score based on output characteristics\n  let quality = 75; // Base quality\n  \n  if (result.success) quality += 15;\n  if (result.output && Object.keys(result.output).length > 0) quality += 10;\n  \n  return Math.max(0, Math.min(100, quality));\n}\n\nfunction estimateUserSatisfaction(result, duration) {\n  let satisfaction = 70;\n  \n  if (result.success) satisfaction += 20;\n  if (duration < 30000) satisfaction += 10; // Fast execution\n  \n  return Math.max(0, Math.min(100, satisfaction));\n}\n\nfunction calculateResourceEfficiency(duration, request) {\n  const expectedDuration = request.resource_requirements?.estimated_duration || 60000;\n  const efficiency = Math.max(0, 100 - ((duration - expectedDuration) / expectedDuration * 100));\n  return Math.max(0, Math.min(100, efficiency));\n}\n\nfunction generateLearningFeedback(result, request) {\n  return {\n    pattern_validation: 'positive',\n    confidence_impact: +0.02,\n    performance_correlation: 'strong',\n    recommendations: ['Continue applying current optimizations', 'Monitor for performance degradation']\n  };\n}\n\nfunction generateOptimizationRecommendations(result, request, duration) {\n  const recommendations = [];\n  \n  if (duration > 90000) {\n    recommendations.push('Consider resource scaling for better performance');\n  }\n  \n  if ((request.applied_optimizations || []).length === 0) {\n    recommendations.push('Enable cross-platform learning optimizations');\n  }\n  \n  if (!request.scheduling_decision?.suggested_time) {\n    recommendations.push('Implement intelligent scheduling');\n  }\n  \n  return recommendations;\n}\n\nfunction calculateConfidenceAdjustment(metrics) {\n  if (metrics.performance_score > 85) return +0.05;\n  if (metrics.performance_score < 50) return -0.03;\n  return 0;\n}\n\nfunction extractNewInsights(result, metrics) {\n  const insights = [];\n  \n  if (metrics.performance_score > 90) {\n    insights.push('High-performance pattern detected');\n  }\n  \n  if (metrics.efficiency_score > 85) {\n    insights.push('Efficient resource utilization pattern');\n  }\n  \n  return insights;\n}\n\nfunction detectAnomalies(metrics, request) {\n  const anomalies = [];\n  \n  if (metrics.duration_ms > 300000) { // 5 minutes\n    anomalies.push({\n      type: 'performance',\n      severity: 'medium',\n      description: 'Execution duration exceeded expected threshold',\n      value: metrics.duration_ms,\n      threshold: 300000\n    });\n  }\n  \n  if (metrics.performance_score < 40) {\n    anomalies.push({\n      type: 'quality',\n      severity: 'high', \n      description: 'Performance score below acceptable threshold',\n      value: metrics.performance_score,\n      threshold: 40\n    });\n  }\n  \n  return anomalies;\n}\n\nreturn [{\n  performance_metrics: performanceMetrics,\n  learning_update: learningUpdate,\n  anomalies: anomalies,\n  execution_result: executionResult,\n  master_controller_analysis: {\n    overall_health: anomalies.length === 0 ? 'healthy' : 'attention_required',\n    optimization_effectiveness: performanceMetrics.optimization_impact,\n    learning_system_performance: learningUpdate.confidence_adjustment > 0 ? 'improving' : 'stable',\n    recommendations: performanceMetrics.optimization_recommendations\n  }\n}];"
+      },
+      "id": "performance-monitor",
+      "name": "Performance Monitor & Optimization Feedback",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1660, 260]
+    },
+    {
+      "parameters": {
+        "tableId": "master_workflow_executions",
+        "operation": "update",
+        "filterType": "manual",
+        "matchingColumns": [
+          {
+            "column": "execution_id",
+            "value": "={{ $json.performance_metrics.execution_id }}"
+          }
+        ],
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "status",
+              "fieldValue": "={{ $json.execution_result.success ? 'completed' : 'failed' }}"
+            },
+            {
+              "fieldId": "completed_at",
+              "fieldValue": "={{ $json.performance_metrics.timestamp }}"
+            },
+            {
+              "fieldId": "duration_ms",
+              "fieldValue": "={{ $json.performance_metrics.duration_ms }}"
+            },
+            {
+              "fieldId": "output_data",
+              "fieldValue": "={{ JSON.stringify($json.execution_result) }}"
+            },
+            {
+              "fieldId": "performance_metrics",
+              "fieldValue": "={{ JSON.stringify($json.performance_metrics) }}"
+            },
+            {
+              "fieldId": "applied_optimizations",
+              "fieldValue": "={{ JSON.stringify($json.learning_update) }}"
+            }
+          ]
+        }
+      },
+      "id": "update-execution-record",
+      "name": "Update Execution Record",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [1880, 260]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"status\": \"success\",\n  \"controller_version\": \"3.0\",\n  \"message\": \"Workflow executed successfully by Master Controller\",\n  \"execution_id\": \"{{ $json.performance_metrics.execution_id }}\",\n  \"workflow_id\": \"{{ $json.performance_metrics.workflow_id }}\",\n  \"duration_ms\": {{ $json.performance_metrics.duration_ms }},\n  \"performance_score\": {{ $json.performance_metrics.performance_score }},\n  \"optimization_impact\": {{ $json.performance_metrics.optimization_impact }},\n  \"ai_orchestration\": {\n    \"optimizations_applied\": {{ $json.performance_metrics.optimizations_applied }},\n    \"cross_platform_learning\": {{ $json.performance_metrics.cross_platform_learning_used }},\n    \"intelligent_scheduling\": {{ $json.performance_metrics.intelligent_scheduling_used }},\n    \"efficiency_score\": {{ $json.performance_metrics.efficiency_score }}\n  },\n  \"quality_metrics\": {\n    \"output_quality\": {{ $json.performance_metrics.output_quality }},\n    \"user_satisfaction\": {{ $json.performance_metrics.user_satisfaction_estimate }},\n    \"resource_efficiency\": {{ $json.performance_metrics.resource_efficiency }}\n  },\n  \"learning_system\": {\n    \"feedback_generated\": true,\n    \"confidence_adjustment\": {{ $json.learning_update.confidence_adjustment }},\n    \"new_insights\": {{ $json.learning_update.new_insights.length }},\n    \"pattern_effectiveness\": {{ $json.learning_update.pattern_effectiveness }}\n  },\n  \"anomalies\": {\n    \"detected\": {{ $json.anomalies.length }},\n    \"system_health\": \"{{ $json.master_controller_analysis.overall_health }}\",\n    \"details\": {{ JSON.stringify($json.anomalies) }}\n  },\n  \"recommendations\": {{ JSON.stringify($json.master_controller_analysis.recommendations) }},\n  \"processed_at\": \"{{ new Date().toISOString() }}\",\n  \"next_optimization_cycle\": \"{{ new Date(Date.now() + 300000).toISOString() }}\"\n}",
+        "options": {
+          "responseCode": 200,
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "name": "X-Master-Controller",
+                "value": "v3.0"
+              },
+              {
+                "name": "X-AI-Orchestration",
+                "value": "enabled"
+              },
+              {
+                "name": "X-Learning-System",
+                "value": "active"
+              }
+            ]
+          }
+        }
+      },
+      "id": "master-controller-response",
+      "name": "Master Controller Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [2100, 260]
+    }
+  ],
+  "connections": {
+    "Master Controller Webhook": {
+      "main": [
+        [
+          {
+            "node": "Enhanced AI Request Classifier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enhanced AI Request Classifier": {
+      "main": [
+        [
+          {
+            "node": "Log Execution Start",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Execution Start": {
+      "main": [
+        [
+          {
+            "node": "Cross-Platform Learning Engine",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cross-Platform Learning Engine": {
+      "main": [
+        [
+          {
+            "node": "Intelligent Workflow Router",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Intelligent Workflow Router": {
+      "main": [
+        [
+          {
+            "node": "Route to PostBuilder (AI Enhanced)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Route to CarouselBuilder (AI Enhanced)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Route to Marketing Manager (AI Enhanced)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [],
+        [],
+        []
+      ]
+    },
+    "Route to PostBuilder (AI Enhanced)": {
+      "main": [
+        [
+          {
+            "node": "Performance Monitor & Optimization Feedback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route to CarouselBuilder (AI Enhanced)": {
+      "main": [
+        [
+          {
+            "node": "Performance Monitor & Optimization Feedback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route to Marketing Manager (AI Enhanced)": {
+      "main": [
+        [
+          {
+            "node": "Performance Monitor & Optimization Feedback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Performance Monitor & Optimization Feedback": {
+      "main": [
+        [
+          {
+            "node": "Update Execution Record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Execution Record": {
+      "main": [
+        [
+          {
+            "node": "Master Controller Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "master-controller-v3",
+  "meta": {
+    "instanceId": "master-workflow-controller-universal"
+  },
+  "id": "MasterWorkflowController",
+  "tags": [
+    "ai-orchestration",
+    "cross-platform-learning",
+    "intelligent-scheduling",
+    "optimization"
+  ]
+}

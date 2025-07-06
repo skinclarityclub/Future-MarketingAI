@@ -1,0 +1,448 @@
+# ====================================================================
+# High Availability Observability Stack - Docker Compose Configuration
+# Task 41.6: Enterprise-grade HA monitoring for 99.99% SLA compliance
+# ====================================================================
+
+version: "3.8"
+
+networks:
+  monitoring-ha:
+    driver: bridge
+  elastic-ha:
+    driver: bridge
+  monitoring-backend:
+    driver: bridge
+
+volumes:
+  prometheus_data_1:
+  prometheus_data_2:
+  grafana_data:
+  elasticsearch_data_1:
+  elasticsearch_data_2:
+  elasticsearch_data_3:
+  kibana_data:
+  jaeger_data_1:
+  jaeger_data_2:
+  filebeat_data:
+  redis_data:
+  alertmanager_data_1:
+  alertmanager_data_2:
+
+services:
+  # ====================================================================
+  # LOAD BALANCERS AND REVERSE PROXY
+  # ====================================================================
+
+  # Primary Load Balancer (HAProxy for monitoring services)
+  haproxy-monitoring:
+    image: haproxy:2.8-alpine
+    container_name: skc-haproxy-monitoring
+    restart: unless-stopped
+    ports:
+      - "9090:9090" # Prometheus
+      - "3000:3000" # Grafana
+      - "9093:9093" # Alertmanager
+      - "5601:5601" # Kibana
+      - "16686:16686" # Jaeger
+    volumes:
+      - ./monitoring/haproxy/haproxy-monitoring.cfg:/usr/local/etc/haproxy/haproxy.cfg
+    networks:
+      - monitoring-ha
+      - monitoring-backend
+    healthcheck:
+      test: ["CMD", "haproxy", "-f", "/usr/local/etc/haproxy/haproxy.cfg", "-c"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    depends_on:
+      - prometheus-1
+      - prometheus-2
+      - grafana
+      - alertmanager-1
+      - alertmanager-2
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.monitoring.rule=Host(`monitoring.localhost`)"
+
+  # ====================================================================
+  # PROMETHEUS CLUSTER - REDUNDANT INSTANCES
+  # ====================================================================
+
+  prometheus-1:
+    image: prom/prometheus:latest
+    container_name: skc-prometheus-1
+    restart: unless-stopped
+    ports:
+      - "9091:9090"
+    volumes:
+      - ./monitoring/prometheus/prometheus-ha.yml:/etc/prometheus/prometheus.yml
+      - ./monitoring/prometheus/rules:/etc/prometheus/rules
+      - prometheus_data_1:/prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--storage.tsdb.retention.time=30d"
+      - "--web.console.libraries=/etc/prometheus/console_libraries"
+      - "--web.console.templates=/etc/prometheus/consoles"
+      - "--web.enable-lifecycle"
+      - "--web.enable-admin-api"
+      - "--web.external-url=http://prometheus-1:9090"
+    networks:
+      - monitoring-backend
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://localhost:9090/-/healthy",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  prometheus-2:
+    image: prom/prometheus:latest
+    container_name: skc-prometheus-2
+    restart: unless-stopped
+    ports:
+      - "9092:9090"
+    volumes:
+      - ./monitoring/prometheus/prometheus-ha.yml:/etc/prometheus/prometheus.yml
+      - ./monitoring/prometheus/rules:/etc/prometheus/rules
+      - prometheus_data_2:/prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--storage.tsdb.retention.time=30d"
+      - "--web.console.libraries=/etc/prometheus/console_libraries"
+      - "--web.console.templates=/etc/prometheus/consoles"
+      - "--web.enable-lifecycle"
+      - "--web.enable-admin-api"
+      - "--web.external-url=http://prometheus-2:9090"
+    networks:
+      - monitoring-backend
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://localhost:9090/-/healthy",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # ====================================================================
+  # ALERTMANAGER CLUSTER - HIGH AVAILABILITY
+  # ====================================================================
+
+  alertmanager-1:
+    image: prom/alertmanager:v0.25.0
+    container_name: skc-alertmanager-1
+    restart: unless-stopped
+    ports:
+      - "9094:9093"
+      - "9095:9094"
+    volumes:
+      - ./monitoring/alertmanager/alertmanager-ha.yml:/etc/alertmanager/alertmanager.yml
+      - ./monitoring/alertmanager/templates:/etc/alertmanager/templates
+      - alertmanager_data_1:/alertmanager
+    command:
+      - "--config.file=/etc/alertmanager/alertmanager.yml"
+      - "--storage.path=/alertmanager"
+      - "--web.external-url=http://alertmanager-1:9093"
+      - "--cluster.listen-address=0.0.0.0:9094"
+      - "--cluster.peer=alertmanager-2:9094"
+      - "--log.level=info"
+    networks:
+      - monitoring-backend
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://localhost:9093/-/healthy",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  alertmanager-2:
+    image: prom/alertmanager:v0.25.0
+    container_name: skc-alertmanager-2
+    restart: unless-stopped
+    ports:
+      - "9096:9093"
+      - "9097:9094"
+    volumes:
+      - ./monitoring/alertmanager/alertmanager-ha.yml:/etc/alertmanager/alertmanager.yml
+      - ./monitoring/alertmanager/templates:/etc/alertmanager/templates
+      - alertmanager_data_2:/alertmanager
+    command:
+      - "--config.file=/etc/alertmanager/alertmanager.yml"
+      - "--storage.path=/alertmanager"
+      - "--web.external-url=http://alertmanager-2:9093"
+      - "--cluster.listen-address=0.0.0.0:9094"
+      - "--cluster.peer=alertmanager-1:9094"
+      - "--log.level=info"
+    networks:
+      - monitoring-backend
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://localhost:9093/-/healthy",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # ====================================================================
+  # GRAFANA WITH REDIS SESSION STORE
+  # ====================================================================
+
+  redis-grafana:
+    image: redis:7-alpine
+    container_name: skc-redis-grafana
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes --maxmemory 256mb
+    networks:
+      - monitoring-backend
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: skc-grafana-ha
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/grafana-ha.ini:/etc/grafana/grafana.ini
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin123
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_SESSION_PROVIDER=redis
+      - GF_SESSION_PROVIDER_CONFIG=addr=redis-grafana:6379,pool_size=100,db=0
+    depends_on:
+      - redis-grafana
+      - prometheus-1
+      - prometheus-2
+    networks:
+      - monitoring-backend
+      - monitoring-ha
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/api/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # ====================================================================
+  # ELASTICSEARCH CLUSTER
+  # ====================================================================
+
+  elasticsearch-master:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.10.0
+    container_name: skc-elasticsearch-master
+    restart: unless-stopped
+    environment:
+      - node.name=elasticsearch-master
+      - cluster.name=skc-monitoring-cluster
+      - discovery.seed_hosts=elasticsearch-data1
+      - cluster.initial_master_nodes=elasticsearch-master
+      - node.roles=master,ingest
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+    ports:
+      - "9200:9200"
+    networks:
+      - elastic-ha
+      - monitoring-backend
+    healthcheck:
+      test:
+        ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  elasticsearch-data1:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.10.0
+    container_name: skc-elasticsearch-data1
+    restart: unless-stopped
+    environment:
+      - node.name=elasticsearch-data1
+      - cluster.name=skc-monitoring-cluster
+      - discovery.seed_hosts=elasticsearch-master
+      - cluster.initial_master_nodes=elasticsearch-master
+      - node.roles=data,ingest
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+    ports:
+      - "9201:9200"
+    volumes:
+      - elasticsearch_data_1:/usr/share/elasticsearch/data
+    depends_on:
+      - elasticsearch-master
+    networks:
+      - elastic-ha
+      - monitoring-backend
+    healthcheck:
+      test:
+        ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # ====================================================================
+  # SLA MONITORING SERVICES
+  # ====================================================================
+
+  sla-monitor:
+    image: prom/blackbox-exporter:latest
+    container_name: skc-sla-monitor
+    restart: unless-stopped
+    ports:
+      - "9115:9115"
+    volumes:
+      - ./monitoring/sla/blackbox-sla.yml:/etc/blackbox_exporter/config.yml
+    networks:
+      - monitoring-backend
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "wget --no-verbose --tries=1 --spider http://localhost:9115/ || exit 1",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # ====================================================================
+  # MONITORING STACK HEALTH CHECKER
+  # ====================================================================
+
+  stack-healthcheck:
+    image: prom/prometheus:latest
+    container_name: skc-stack-healthcheck
+    restart: unless-stopped
+    ports:
+      - "9098:9090"
+    volumes:
+      - ./monitoring/healthcheck/prometheus-healthcheck.yml:/etc/prometheus/prometheus.yml
+      - ./monitoring/healthcheck/rules:/etc/prometheus/rules
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--storage.tsdb.retention.time=7d"
+      - "--web.enable-lifecycle"
+      - "--web.external-url=http://stack-healthcheck.localhost:9098"
+    networks:
+      - monitoring-backend
+    depends_on:
+      - prometheus-1
+      - prometheus-2
+      - grafana
+      - elasticsearch-master
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://localhost:9090/-/healthy",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # ====================================================================
+  # EXPORTERS
+  # ====================================================================
+
+  node-exporter:
+    image: prom/node-exporter:v1.6.0
+    container_name: skc-node-exporter-ha
+    restart: unless-stopped
+    ports:
+      - "9100:9100"
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - "--path.procfs=/host/proc"
+      - "--path.rootfs=/rootfs"
+      - "--path.sysfs=/host/sys"
+      - "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)"
+    networks:
+      - monitoring-backend
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://localhost:9100/metrics",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # cAdvisor - Container Metrics
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.47.2
+    container_name: skc-cadvisor-ha
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    devices:
+      - /dev/kmsg
+    privileged: true
+    networks:
+      - monitoring-backend
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://localhost:8080/healthz",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 5

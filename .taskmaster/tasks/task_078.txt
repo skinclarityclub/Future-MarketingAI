@@ -1,0 +1,73 @@
+# Task ID: 78
+# Title: Live Data Integration & Mock Data Replacement for MarketingMachine
+# Status: pending
+# Dependencies: 33, 54, 53
+# Priority: high
+# Description: Replace all mock data with live data sources and fully integrate real-time workflows, social media, ClickUp, and analytics into the MarketingMachine platform.
+# Details:
+1. Analyze all JSON workflow files in the /workflows directory and map their data requirements to corresponding live sources. 2. Replace mock data endpoints and fixtures with real-time integrations for each workflow, leveraging n8n for orchestrating data flows and automating content creation, scheduling, and publishing across Instagram, LinkedIn, Facebook, Twitter/X, and TikTok using their respective APIs (e.g., Facebook Graph API, Instagram Graph API, LinkedIn API, Twitter API, TikTok for Developers). 3. Integrate ClickUp for live project and task data, ensuring bidirectional sync and real-time updates. 4. Optimize Supabase database schema and queries for high-volume, real-time data ingestion and retrieval. 5. Implement robust data validation, error handling, and fallback mechanisms for all live integrations. 6. Set up automated backup and disaster recovery strategies for all critical data flows. 7. Build a monitoring dashboard to track data health, workflow execution, and system performance under real data loads. 8. Populate the analytics dashboard and content calendar with actual metrics and planning data from live sources. 9. Document all data sources, integration points, and error handling strategies. 10. Prepare a live demo environment showcasing the fully operational platform with real data.
+
+# Test Strategy:
+1. Verify that all workflows in /workflows operate exclusively on live data, with no mock data present. 2. Test social media integrations by posting to each connected platform and confirming successful publication and data retrieval. 3. Validate real-time n8n workflow execution and data propagation across all modules. 4. Confirm ClickUp integration by syncing tasks and projects and checking for real-time updates in both systems. 5. Stress-test Supabase with production-level data volumes and monitor for performance bottlenecks. 6. Simulate data source failures to ensure error handling and fallback mechanisms work as intended. 7. Review backup and disaster recovery procedures by performing test restores. 8. Inspect analytics dashboard and content calendar to ensure they display accurate, live metrics and planning data. 9. Conduct a live demo walkthrough to demonstrate end-to-end functionality with real data. 10. Review documentation for completeness and clarity.
+
+# Subtasks:
+## 1. Audit and Map Workflow Data Requirements [pending]
+### Dependencies: None
+### Description: Analyze all JSON workflow files in the /workflows directory to identify and document each workflow's data requirements and current mock data usage.
+### Details:
+Review each workflow file, list all data fields, endpoints, and fixtures currently using mock data, and map them to the type of live data needed.
+
+## 2. Select and Configure Social Media API Integrations [pending]
+### Dependencies: 78.1
+### Description: Identify, authenticate, and configure integrations for Instagram, Facebook, LinkedIn, Twitter/X, and TikTok APIs to replace mock data endpoints.
+### Details:
+Set up API credentials, permissions, and endpoints for each platform, ensuring compliance with platform requirements and MarketingMachine needs.
+
+## 3. Integrate ClickUp for Real-Time Project and Task Data [pending]
+### Dependencies: 78.1
+### Description: Implement ClickUp API integration to enable live project and task data synchronization, including bidirectional updates.
+### Details:
+Configure ClickUp API, map project/task fields, and ensure real-time sync with MarketingMachine workflows.
+
+## 4. Replace Mock Data Endpoints with Live Data in Workflows [pending]
+### Dependencies: 78.2, 78.3
+### Description: Update all workflow files to remove mock data endpoints and fixtures, replacing them with live data integrations via n8n.
+### Details:
+Modify workflow logic to fetch, process, and use live data from social media and ClickUp APIs using n8n nodes.
+
+## 5. Optimize Supabase Database for Real-Time Data [pending]
+### Dependencies: 78.4
+### Description: Review and enhance Supabase schema and queries to support high-volume, real-time data ingestion and retrieval from all integrated sources.
+### Details:
+Refactor tables, indexes, and queries for scalability and performance under real data loads.
+
+## 6. Implement Data Validation and Error Handling [pending]
+### Dependencies: 78.4
+### Description: Develop robust validation, error handling, and fallback mechanisms for all live data integrations and workflows.
+### Details:
+Add validation rules, error logging, and fallback logic to handle API failures, rate limits, and data inconsistencies.
+
+## 7. Set Up Automated Backup and Disaster Recovery [pending]
+### Dependencies: 78.5
+### Description: Establish automated backup routines and disaster recovery strategies for all critical data flows and the Supabase database.
+### Details:
+Configure scheduled backups, offsite storage, and recovery procedures for both workflow data and database records.
+
+## 8. Build Monitoring Dashboard for Data Health and Performance [pending]
+### Dependencies: 78.6, 78.7
+### Description: Develop a dashboard to monitor data health, workflow execution status, and system performance under live data conditions.
+### Details:
+Implement real-time metrics, alerts, and visualizations for API status, workflow errors, and database performance.
+
+## 9. Populate Analytics Dashboard and Content Calendar with Live Data [pending]
+### Dependencies: None
+### Description: Feed actual metrics and planning data from live sources into the analytics dashboard and content calendar modules.
+### Details:
+Connect analytics endpoints, aggregate metrics, and update UI components to reflect real-time data.
+
+## 10. Document Integrations and Prepare Live Demo Environment [pending]
+### Dependencies: None
+### Description: Document all data sources, integration points, error handling strategies, and set up a live demo environment showcasing the fully operational platform.
+### Details:
+Create comprehensive documentation and configure a demo instance with real data for stakeholder review.
+

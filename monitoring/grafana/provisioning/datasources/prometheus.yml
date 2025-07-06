@@ -1,0 +1,146 @@
+# ====================================================================
+# Grafana Datasource Provisioning Configuration
+# Task 41.2: Automatic Prometheus datasource setup
+# ====================================================================
+
+apiVersion: 1
+
+datasources:
+  # Primary Prometheus datasource
+  - name: prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+    uid: prometheus
+    editable: true
+    orgId: 1
+    version: 1
+    basicAuth: false
+    withCredentials: false
+    tlsAuth: false
+    tlsAuthWithCACert: false
+    tlsSkipVerify: true
+
+    # Custom HTTP headers
+    httpHeaderName1: "Cache-Control"
+    httpHeaderValue1: "no-cache"
+
+    # JSON data configuration
+    jsonData:
+      httpMethod: POST
+      queryTimeout: "60s"
+      timeInterval: "15s"
+
+      # Additional Prometheus settings
+      manageAlerts: true
+      alertmanagerUid: alertmanager
+      prometheusType: Prometheus
+      prometheusVersion: "2.45.0"
+
+      # Query options
+      disableMetricsLookup: false
+      customQueryParameters: ""
+
+      # Performance tuning
+      incrementalQuerying: true
+      incrementalQueryOverlapWindow: "10m"
+
+      # Exemplars configuration
+      exemplarTraceIdDestinations:
+        - name: trace_id
+          datasourceUid: jaeger
+          url: "http://jaeger:16686/trace/$${__value.raw}"
+          urlDisplayLabel: "View Trace"
+
+  # Alertmanager datasource
+  - name: alertmanager
+    type: alertmanager
+    access: proxy
+    url: http://alertmanager:9093
+    uid: alertmanager
+    editable: true
+    orgId: 1
+    version: 1
+    basicAuth: false
+
+    jsonData:
+      implementation: prometheus
+      handleGrafanaManagedAlerts: true
+
+  # Jaeger for distributed tracing
+  - name: jaeger
+    type: jaeger
+    access: proxy
+    url: http://jaeger:16686
+    uid: jaeger
+    editable: true
+    orgId: 1
+    version: 1
+    basicAuth: false
+
+    jsonData:
+      tracesToLogs:
+        datasourceUid: "loki"
+        tags: ["job", "instance", "pod", "namespace"]
+        mappedTags: [{ key: "service.name", value: "service" }]
+        mapTagNamesEnabled: false
+        spanStartTimeShift: "1h"
+        spanEndTimeShift: "1h"
+        filterByTraceID: false
+        filterBySpanID: false
+
+      # Node graph configuration
+      nodeGraph:
+        enabled: true
+
+  # Elasticsearch for logs (if using ELK instead of Loki)
+  - name: elasticsearch
+    type: elasticsearch
+    access: proxy
+    url: http://elasticsearch:9200
+    uid: elasticsearch
+    editable: true
+    orgId: 1
+    version: 1
+    basicAuth: false
+    database: "logstash-*"
+
+    jsonData:
+      esVersion: "8.0.0"
+      timeField: "@timestamp"
+      interval: "Daily"
+      logMessageField: "message"
+      logLevelField: "level"
+
+      # Index settings
+      includeFrozen: false
+      maxConcurrentShardRequests: 5
+
+  # Loki for logs (alternative to Elasticsearch)
+  - name: loki
+    type: loki
+    access: proxy
+    url: http://loki:3100
+    uid: loki
+    editable: true
+    orgId: 1
+    version: 1
+    basicAuth: false
+
+    jsonData:
+      # Derived fields for trace correlation
+      derivedFields:
+        - datasourceUid: jaeger
+          matcherRegex: "traceID=(\\w+)"
+          name: "TraceID"
+          url: "$${__value.raw}"
+
+      # Performance settings
+      maxLines: 1000
+      timeout: "60s"
+
+# Global settings
+deleteDatasources:
+  - name: TestData DB
+    orgId: 1
