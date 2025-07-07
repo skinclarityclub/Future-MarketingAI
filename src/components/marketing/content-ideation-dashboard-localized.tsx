@@ -27,7 +27,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useLocale } from "@/lib/i18n/context";
+import { useTranslation } from "@/lib/i18n/client-provider";
 import {
   Lightbulb,
   TrendingUp,
@@ -126,7 +126,7 @@ interface ContentStrategy {
 }
 
 export default function ContentIdeationDashboardLocalized() {
-  const { t } = useLocale();
+  const { t } = useTranslation();
   const [ideas, setIdeas] = useState<ContentIdea[]>([]);
   const [strategy, setStrategy] = useState<ContentStrategy | null>(null);
   const [loading, setLoading] = useState(false);

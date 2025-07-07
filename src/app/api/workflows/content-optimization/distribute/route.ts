@@ -3,8 +3,8 @@ import { createClient } from "@/lib/supabase/server";
 import { AutomaticContentOptimizationService } from "@/lib/ml/automatic-content-optimization-service";
 import { NotificationService } from "@/lib/approval/notification-service";
 
-const optimizationService = new AutomaticContentOptimizationService();
-const notificationService = new NotificationService();
+const _optimizationService = new AutomaticContentOptimizationService();
+const _notificationService = new NotificationService();
 
 interface DistributionRequest {
   content_id: string;
@@ -44,7 +44,7 @@ interface DistributionResponse {
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = createClient();
+    const supabase = await createClient();
     const body: DistributionRequest = await request.json();
 
     // Validate required fields
@@ -86,8 +86,8 @@ export async function POST(request: NextRequest) {
       s => s.priority === "critical"
     );
     const highSuggestions = suggestions.filter(s => s.priority === "high");
-    const mediumSuggestions = suggestions.filter(s => s.priority === "medium");
-    const lowSuggestions = suggestions.filter(s => s.priority === "low");
+    const _mediumSuggestions = suggestions.filter(s => s.priority === "medium");
+    const _lowSuggestions = suggestions.filter(s => s.priority === "low");
 
     // Determine distribution type based on suggestion priorities
     const distributionType =
@@ -139,11 +139,16 @@ export async function POST(request: NextRequest) {
     });
 
     // Initialize delivery status
-    const deliveryStatus = {
-      email: { sent: false, recipients: [], error: undefined },
-      slack: { sent: false, channels: [], error: undefined },
-      dashboard: { sent: false, users: 0, error: undefined },
-      webhook: { sent: false, endpoints: 0, error: undefined },
+    const deliveryStatus: {
+      email: { sent: boolean; recipients: string[]; error?: string };
+      slack: { sent: boolean; channels: string[]; error?: string };
+      dashboard: { sent: boolean; users: number; error?: string };
+      webhook: { sent: boolean; endpoints: number; error?: string };
+    } = {
+      email: { sent: false, recipients: [] },
+      slack: { sent: false, channels: [] },
+      dashboard: { sent: false, users: 0 },
+      webhook: { sent: false, endpoints: 0 },
     };
 
     // Execute distribution through selected channels
@@ -304,8 +309,8 @@ export async function POST(request: NextRequest) {
 
 // Helper function to get stakeholder contact information
 async function getStakeholderContacts(
-  supabase: any,
-  stakeholderGroups: string[]
+  _supabase: any,
+  _stakeholderGroups: string[]
 ) {
   // Mock data - in production, this would query the database for stakeholder preferences
   const mockData = {
@@ -464,7 +469,7 @@ async function distributeViaWebhook(
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = createClient();
+    const supabase = await createClient();
     const { searchParams } = new URL(request.url);
     const distributionId = searchParams.get("distribution_id");
     const contentId = searchParams.get("content_id");

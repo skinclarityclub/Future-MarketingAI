@@ -1,6 +1,7 @@
-import { Metadata } from "next";
+"use client";
+
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion } from "@/components/ui/motion";
 import {
   Globe,
   Search,
@@ -8,27 +9,12 @@ import {
   Users,
   Target,
   ArrowRight,
-  CheckCircle,
   Zap,
   Clock,
   Brain,
   BarChart3,
   Eye,
 } from "lucide-react";
-
-export const metadata: Metadata = {
-  title: "Market Research Hub | SKC Business Intelligence",
-  description:
-    "Comprehensive market intelligence platform voor groeiende bedrijven. Competitor analysis, market trends en opportunity identification.",
-  keywords: [
-    "Market Research",
-    "Competitive Intelligence",
-    "Market Trends",
-    "Industry Analysis",
-    "Opportunity Identification",
-    "Market Intelligence",
-  ],
-};
 
 export default function MarketResearchPage() {
   const features = [
@@ -144,25 +130,15 @@ export default function MarketResearchPage() {
             {/* Content */}
             <div>
               {/* Badge */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                className="mb-8"
-              >
+              <div className="mb-8">
                 <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-orange-500/10 text-orange-400 border border-orange-500/20">
                   <Globe className="w-4 h-4 mr-2" />
                   Market Research Hub
                 </span>
-              </motion.div>
+              </div>
 
               {/* Title */}
-              <motion.h1
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.1 }}
-                className="text-2xl sm:text-4xl md:text-6xl lg:text-7xl font-bold mb-6"
-              >
+              <h1 className="text-2xl sm:text-4xl md:text-6xl lg:text-7xl font-bold mb-6">
                 <span className="bg-gradient-to-r from-white via-orange-100 to-red-100 bg-clip-text text-transparent">
                   Market
                 </span>
@@ -170,19 +146,14 @@ export default function MarketResearchPage() {
                 <span className="bg-gradient-to-r from-orange-400 to-red-400 bg-clip-text text-transparent">
                   Intelligence
                 </span>
-              </motion.h1>
+              </h1>
 
               {/* Subtitle */}
-              <motion.p
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                className="text-lg sm:text-xl text-slate-300 mb-8"
-              >
+              <p className="text-lg sm:text-xl text-slate-300 mb-8">
                 Comprehensive market research platform met competitive
                 intelligence, trend analysis en opportunity identification voor
                 strategic advantage.
-              </motion.p>
+              </p>
 
               {/* CTA Buttons */}
               <motion.div
@@ -217,7 +188,7 @@ export default function MarketResearchPage() {
               <h3 className="text-xl font-bold text-white mb-4">
                 Trending Markets
               </h3>
-              {insights.map((insight, index) => (
+              {insights.map((insight, _index) => (
                 <div
                   key={insight.category}
                   className="p-4 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10"

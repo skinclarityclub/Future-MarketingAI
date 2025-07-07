@@ -1,29 +1,31 @@
 "use client";
 
-import React, { useState } from "react";
-import { cn } from "@/lib/utils";
-import {
-  Search,
-  Bell,
-  Settings,
-  User,
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
+import NormalButton from "@/components/ui/normal-button";
+import { 
+  Menu, 
+  Bell, 
+  Search, 
+  User, 
+  Settings, 
+  Globe, 
   ChevronDown,
-  Globe,
-  Menu,
-  Sparkles,
+  Zap
 } from "lucide-react";
-import { useLocale } from "@/lib/i18n/context";
+import { useTranslation } from "@/lib/i18n/client-provider";
+import { useState } from "react";
+import React from "react";
+import { cn } from "@/lib/utils";
 
 interface UltraPremiumHeaderProps {
   onMenuToggle?: () => void;
   className?: string;
 }
 
-export function UltraPremiumHeader({
-  onMenuToggle,
-  className,
-}: UltraPremiumHeaderProps) {
-  const { t, locale, setLocale } = useLocale();
+export function UltraPremiumHeader({ onMenuToggle, className }: UltraPremiumHeaderProps) {
+  const { t, locale } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);

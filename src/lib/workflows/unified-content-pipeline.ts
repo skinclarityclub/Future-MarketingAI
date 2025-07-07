@@ -163,7 +163,12 @@ export class UnifiedContentPipeline extends EventEmitter {
   private publishingQueue = new PublishingQueueEngine();
   private publishingHub = new MultiPlatformPublishingHub();
   private approvalService = new ApprovalWorkflowService();
-  private mlOptimizer = new SelfLearningContentOptimizer();
+  private mlOptimizer = new SelfLearningContentOptimizer({
+    enableRealTimeLearning: true,
+    retrainingInterval: 86400000, // 24 hours in ms
+    confidenceThreshold: 0.8,
+    maxModels: 10,
+  });
 
   private activePipelines: Map<string, ContentPipelineItem> = new Map();
   private stageProcessors: Map<PipelineStage, Function> = new Map();

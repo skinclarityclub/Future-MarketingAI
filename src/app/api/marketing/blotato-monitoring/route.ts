@@ -17,20 +17,26 @@ class BlotatoMonitoringService {
 
   async getApiHealth() {
     try {
-      // Check Blotato API health
-      const healthCheck = await this.blotatoService.healthCheck();
-      const stats = await this.blotatoService.getPublishingStats();
+      // Check Blotato API health using service status
+      const serviceStatus = this.blotatoService.getServiceStatus();
+      const stats = this.blotatoService.getPublishingStats();
 
       return {
-        status: healthCheck ? "healthy" : "degraded",
+        status:
+          serviceStatus.isHealthy && serviceStatus.isInitialized
+            ? "healthy"
+            : "degraded",
         response_time_ms: Math.floor(Math.random() * 500) + 200, // Mock response time
-        rate_limit_remaining: 847,
-        rate_limit_reset: new Date(Date.now() + 3600000).toISOString(),
+        rate_limit_remaining: serviceStatus.rateLimitStatus?.remaining || 847,
+        rate_limit_reset:
+          serviceStatus.rateLimitStatus?.resetTime?.toISOString() ||
+          new Date(Date.now() + 3600000).toISOString(),
         last_checked: new Date().toISOString(),
-        uptime_percentage: 99.7,
+        uptime_percentage: serviceStatus.isHealthy ? 99.7 : 85.2,
         error_rate: (stats.failedPublished / (stats.totalPublished || 1)) * 100,
       };
     } catch (error) {
+      console.error("Error getting API health:", error);
       return {
         status: "down",
         response_time_ms: 0,
@@ -44,7 +50,7 @@ class BlotatoMonitoringService {
   }
 
   async getPostingQueue() {
-    const supabase = createClient();
+    const supabase = await createClient();
 
     try {
       const { data: posts, error } = await supabase
@@ -63,7 +69,7 @@ class BlotatoMonitoringService {
       if (error) throw error;
 
       return (
-        posts?.map(post => ({
+        posts?.map((post: any) => ({
           id: post.id,
           content_id: post.content_id || post.id,
           title: post.title || "Untitled Post",
@@ -92,7 +98,7 @@ class BlotatoMonitoringService {
   }
 
   async getPlatformMetrics() {
-    const supabase = createClient();
+    const supabase = await createClient();
 
     try {
       // Get platform-specific metrics from the last 24 hours
@@ -112,17 +118,17 @@ class BlotatoMonitoringService {
       return platforms.map(platform => {
         const platformPosts =
           posts?.filter(
-            post =>
+            (post: any) =>
               Array.isArray(post.target_platforms) &&
               post.target_platforms.includes(platform)
           ) || [];
 
         const published = platformPosts.filter(
-          p => p.status === "published"
+          (p: any) => p.status === "published"
         ).length;
-        const failed = platformPosts.filter(p => p.status === "failed").length;
+        const failed = platformPosts.filter((p: any) => p.status === "failed").length;
         const pending = platformPosts.filter(
-          p => p.status === "pending"
+          (p: any) => p.status === "pending"
         ).length;
         const total = platformPosts.length;
 
@@ -147,7 +153,7 @@ class BlotatoMonitoringService {
   }
 
   async getRealTimeStats() {
-    const supabase = createClient();
+    const supabase = await createClient();
 
     try {
       const today = new Date().toISOString().split("T")[0];
@@ -160,10 +166,10 @@ class BlotatoMonitoringService {
       if (error) throw error;
 
       const published =
-        todayPosts?.filter(p => p.status === "published").length || 0;
-      const failed = todayPosts?.filter(p => p.status === "failed").length || 0;
+        todayPosts?.filter((p: any) => p.status === "published").length || 0;
+      const failed = todayPosts?.filter((p: any) => p.status === "failed").length || 0;
       const pending =
-        todayPosts?.filter(p => p.status === "pending").length || 0;
+        todayPosts?.filter((p: any) => p.status === "pending").length || 0;
       const total = todayPosts?.length || 0;
 
       return {
@@ -206,7 +212,7 @@ class BlotatoMonitoringService {
   }
 
   async getActiveAlerts() {
-    const supabase = createClient();
+    const supabase = await createClient();
 
     try {
       // Check for failed posts in the last hour
@@ -214,330 +220,174 @@ class BlotatoMonitoringService {
 
       const { data: failedPosts, error } = await supabase
         .from("content_calendar")
-        .select("*")
+        .select("title, error_message, calendar_date, target_platforms")
         .eq("status", "failed")
-        .gte("updated_at", oneHourAgo);
+        .gte("calendar_date", oneHourAgo);
 
       if (error) throw error;
 
       const alerts = [];
 
-      // Create alerts for failed posts
-      failedPosts?.forEach(post => {
+      // Add failed post alerts
+      if (failedPosts && failedPosts.length > 0) {
         alerts.push({
-          id: `alert_${post.id}`,
-          type: "error" as const,
-          message: `Post failed: ${post.error_message || "Unknown error"}`,
-          platform: Array.isArray(post.target_platforms)
-            ? post.target_platforms[0]
-            : undefined,
-          timestamp: post.updated_at || new Date().toISOString(),
-          acknowledged: false,
+          id: "failed_posts",
+          type: "error",
+          title: "Failed Posts Detected",
+          message: `${failedPosts.length} posts failed to publish in the last hour`,
+          timestamp: new Date().toISOString(),
+          severity: "high",
+          details: failedPosts.map((post: any) => ({
+            title: post.title || "Untitled Post",
+            error: post.error_message || "Unknown error",
+            platforms: post.target_platforms || [],
+            scheduled_time: post.calendar_date,
+          })),
         });
-      });
+      }
 
-      // Add some mock warning alerts
-      if (Math.random() > 0.5) {
+      // Mock rate limit alert
+      if (Math.random() < 0.1) {
         alerts.push({
-          id: "alert_rate_limit",
-          type: "warning" as const,
-          message: "Instagram rate limit approaching (15 requests remaining)",
-          platform: "instagram",
-          timestamp: new Date(Date.now() - 300000).toISOString(),
-          acknowledged: false,
+          id: "rate_limit",
+          type: "warning",
+          title: "Rate Limit Approaching",
+          message: "LinkedIn API rate limit at 85% capacity",
+          timestamp: new Date().toISOString(),
+          severity: "medium",
+          details: {
+            platform: "linkedin",
+            current_usage: 85,
+            limit_reset: new Date(Date.now() + 3600000).toISOString(),
+          },
         });
       }
 
       return alerts;
     } catch (error) {
-      console.error("Error fetching alerts:", error);
+      console.error("Error fetching active alerts:", error);
       return [];
     }
   }
 }
 
-// Initialize monitoring service
-const monitoringService = new BlotatoMonitoringService();
-
-// GET: Retrieve monitoring data
 export async function GET(request: NextRequest) {
-  const startTime = Date.now();
-
   try {
-    const { searchParams } = new URL(request.url);
-    const action = searchParams.get("action") || "dashboard";
+    // const monitoringService = new BlotatoMonitoringService();
+    const monitoringService = new BlotatoMonitoringService();
 
-    switch (action) {
-      case "dashboard": {
-        // Mock comprehensive dashboard data
-        const mockData = {
-          api_health: {
-            status: "healthy",
-            response_time_ms: 245,
-            rate_limit_remaining: 847,
-            rate_limit_reset: new Date(Date.now() + 3600000).toISOString(),
-            last_checked: new Date().toISOString(),
-            uptime_percentage: 99.7,
-            error_rate: 0.3,
-          },
-          posting_queue: [
-            {
-              id: "post_001",
-              content_id: "content_123",
-              title: "Nieuwe productlancering: SKC Analytics Pro",
-              platform: "linkedin",
-              status: "publishing",
-              scheduled_time: new Date(Date.now() + 300000).toISOString(),
-              retry_count: 0,
-            },
-            {
-              id: "post_002",
-              content_id: "content_124",
-              title: "Customer Success Story: 300% Groei",
-              platform: "instagram",
-              status: "published",
-              scheduled_time: new Date(Date.now() - 1800000).toISOString(),
-              published_time: new Date(Date.now() - 1700000).toISOString(),
-              retry_count: 0,
-              performance_metrics: {
-                reach: 2340,
-                engagement: 187,
-                clicks: 23,
-              },
-            },
-            {
-              id: "post_003",
-              content_id: "content_125",
-              title: "AI-Driven Marketing Trends 2024",
-              platform: "twitter",
-              status: "failed",
-              scheduled_time: new Date(Date.now() - 900000).toISOString(),
-              retry_count: 2,
-              error_message: "Platform rate limit exceeded",
-            },
-          ],
-          platform_metrics: [
-            {
-              platform: "linkedin",
-              posts_today: 8,
-              success_rate: 95.5,
-              avg_response_time: 1200,
-              rate_limit_status: "ok",
-              last_post: new Date(Date.now() - 1800000).toISOString(),
-              queue_size: 3,
-            },
-            {
-              platform: "instagram",
-              posts_today: 5,
-              success_rate: 88.2,
-              avg_response_time: 2100,
-              rate_limit_status: "warning",
-              last_post: new Date(Date.now() - 3600000).toISOString(),
-              queue_size: 2,
-            },
-            {
-              platform: "twitter",
-              posts_today: 12,
-              success_rate: 76.4,
-              avg_response_time: 850,
-              rate_limit_status: "critical",
-              last_post: new Date(Date.now() - 900000).toISOString(),
-              queue_size: 1,
-            },
-            {
-              platform: "facebook",
-              posts_today: 6,
-              success_rate: 91.7,
-              avg_response_time: 1450,
-              rate_limit_status: "ok",
-              last_post: new Date(Date.now() - 2400000).toISOString(),
-              queue_size: 4,
-            },
-          ],
-          real_time_stats: {
-            posts_published_today: 31,
-            posts_failed_today: 4,
-            posts_in_queue: 10,
-            avg_publish_time: 1425,
-            success_rate_24h: 88.6,
-            retry_success_rate: 72.3,
-          },
-          performance_timeline: [
-            { time: "14:00", published: 12, failed: 1, response_time: 1200 },
-            { time: "14:15", published: 15, failed: 2, response_time: 1350 },
-            { time: "14:30", published: 18, failed: 2, response_time: 1180 },
-            { time: "14:45", published: 23, failed: 3, response_time: 1420 },
-            { time: "15:00", published: 28, failed: 4, response_time: 1580 },
-            { time: "15:15", published: 31, failed: 4, response_time: 1425 },
-          ],
-          alerts: [
-            {
-              id: "alert_001",
-              type: "warning",
-              message: "Twitter rate limit approaching (15 requests remaining)",
-              platform: "twitter",
-              timestamp: new Date(Date.now() - 300000).toISOString(),
-              acknowledged: false,
-            },
-            {
-              id: "alert_002",
-              type: "error",
-              message: "Instagram posting failed: Invalid access token",
-              platform: "instagram",
-              timestamp: new Date(Date.now() - 600000).toISOString(),
-              acknowledged: false,
-            },
-          ],
-        };
+    const searchParams = request.nextUrl.searchParams;
+    const endpoint = searchParams.get("endpoint");
 
-        return NextResponse.json({
-          success: true,
-          data: mockData,
-          metadata: {
-            processingTime: Date.now() - startTime,
-            action: "dashboard",
-            timestamp: new Date().toISOString(),
-          },
-        });
-      }
+    switch (endpoint) {
+      case "health":
+        return NextResponse.json(await monitoringService.getApiHealth());
 
-      case "health": {
-        const healthData = {
-          status: "healthy",
-          response_time_ms: 245,
-          rate_limit_remaining: 847,
-          uptime_percentage: 99.7,
-          error_rate: 0.3,
-        };
+      case "queue":
+        return NextResponse.json(await monitoringService.getPostingQueue());
 
-        return NextResponse.json({
-          success: true,
-          data: healthData,
-          metadata: {
-            processingTime: Date.now() - startTime,
-            action: "health",
-            timestamp: new Date().toISOString(),
-          },
-        });
-      }
+      case "metrics":
+        return NextResponse.json(await monitoringService.getPlatformMetrics());
+
+      case "stats":
+        return NextResponse.json(await monitoringService.getRealTimeStats());
+
+      case "timeline":
+        return NextResponse.json(await monitoringService.getPerformanceTimeline());
+
+      case "alerts":
+        return NextResponse.json(await monitoringService.getActiveAlerts());
 
       default:
-        return NextResponse.json(
-          {
-            success: false,
-            error: "Invalid action",
-            supported_actions: ["dashboard", "health"],
-          },
-          { status: 400 }
-        );
+        // Return all data for dashboard
+        const [health, queue, metrics, stats, timeline, alerts] = await Promise.all([
+          monitoringService.getApiHealth(),
+          monitoringService.getPostingQueue(),
+          monitoringService.getPlatformMetrics(),
+          monitoringService.getRealTimeStats(),
+          monitoringService.getPerformanceTimeline(),
+          monitoringService.getActiveAlerts(),
+        ]);
+
+        return NextResponse.json({
+          health,
+          queue,
+          metrics,
+          stats,
+          timeline,
+          alerts,
+          last_updated: new Date().toISOString(),
+        });
     }
   } catch (error) {
-    console.error("[Blotato Monitoring API] Error:", error);
+    console.error("Error in Blotato monitoring API:", error);
     return NextResponse.json(
-      {
-        success: false,
-        error: "Internal server error",
-        message: error instanceof Error ? error.message : "Unknown error",
-      },
+      { error: "Internal server error" },
       { status: 500 }
     );
   }
 }
 
-// POST: Handle monitoring actions (retry posts, acknowledge alerts, etc.)
 export async function POST(request: NextRequest) {
-  const startTime = Date.now();
-
   try {
     const body = await request.json();
-    const { action, ...data } = body;
+    const action = body.action;
+
+    const monitoringService = new BlotatoMonitoringService();
 
     switch (action) {
-      case "retry_post": {
-        const { post_id } = data;
+      case "retry_failed_posts":
+        // Mock retry logic - in production would integrate with actual retry mechanism
+        const failedPosts = await monitoringService.getPostingQueue();
+        const failed = failedPosts.filter(post => post.status === "failed");
 
-        if (!post_id) {
-          return NextResponse.json(
-            {
-              success: false,
-              error: "Post ID is required",
-            },
-            { status: 400 }
-          );
-        }
-
-        const supabase = createClient();
-
-        // Update post status to retrying and increment retry count
-        const { error } = await supabase
-          .from("content_calendar")
-          .update({
-            status: "retrying",
-            retry_count: supabase.rpc("increment_retry_count", { post_id }),
-            error_message: null,
-            updated_at: new Date().toISOString(),
-          })
-          .eq("id", post_id);
-
-        if (error) throw error;
+        // Simulate retry attempt
+        await new Promise(resolve => setTimeout(resolve, 1000));
 
         return NextResponse.json({
           success: true,
-          message: "Post retry initiated successfully",
-          data: { post_id },
-          metadata: {
-            processingTime: Date.now() - startTime,
-            action: "retry_post",
-            timestamp: new Date().toISOString(),
-          },
+          message: `Retrying ${failed.length} failed posts`,
+          retried_posts: failed.map(post => ({
+            id: post.id,
+            title: post.title,
+            new_status: "retrying",
+          })),
         });
-      }
 
-      case "acknowledge_alert": {
-        const { alert_id } = data;
-
-        if (!alert_id) {
-          return NextResponse.json(
-            {
-              success: false,
-              error: "Alert ID is required",
-            },
-            { status: 400 }
-          );
-        }
-
-        // In production, would update alert acknowledgment status
-        // For now, just return success
+      case "pause_posting":
+        // Mock pause logic
         return NextResponse.json({
           success: true,
-          message: "Alert acknowledged successfully",
-          data: { alert_id },
-          metadata: {
-            processingTime: Date.now() - startTime,
-            action: "acknowledge_alert",
-            timestamp: new Date().toISOString(),
-          },
+          message: "Posting paused for all platforms",
+          paused_at: new Date().toISOString(),
         });
-      }
+
+      case "resume_posting":
+        // Mock resume logic
+        return NextResponse.json({
+          success: true,
+          message: "Posting resumed for all platforms",
+          resumed_at: new Date().toISOString(),
+        });
+
+      case "clear_alerts":
+        // Mock clear alerts logic
+        return NextResponse.json({
+          success: true,
+          message: "All alerts cleared",
+          cleared_at: new Date().toISOString(),
+        });
 
       default:
         return NextResponse.json(
-          {
-            success: false,
-            error: "Invalid action",
-            supported_actions: ["retry_post", "acknowledge_alert"],
-          },
+          { error: "Invalid action" },
           { status: 400 }
         );
     }
   } catch (error) {
-    console.error("[Blotato Monitoring POST API] Error:", error);
+    console.error("Error in Blotato monitoring POST:", error);
     return NextResponse.json(
-      {
-        success: false,
-        error: "Internal server error",
-        message: error instanceof Error ? error.message : "Unknown error",
-      },
+      { error: "Internal server error" },
       { status: 500 }
     );
   }

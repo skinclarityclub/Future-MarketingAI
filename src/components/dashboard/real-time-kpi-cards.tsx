@@ -22,7 +22,8 @@ import {
 import { ExportControls } from "./export-controls";
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
-import { useLocale } from "@/lib/i18n/context";
+import { useTranslation } from "@/lib/i18n/client-provider";
+import NormalButton from "@/components/ui/normal-button";
 import {
   formatCurrency as formatCurrencyI18n,
   formatPercentage as formatPercentageI18n,
@@ -50,7 +51,7 @@ function PremiumKPICard({
   isLoading: boolean;
   isPrimary?: boolean;
 }) {
-  const { t, locale } = useLocale();
+  const { t, locale } = useTranslation();
   const IconComponent =
     iconMap[metric.icon as keyof typeof iconMap] || BarChart3;
   const isPercentage =

@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { Suspense } from "react";
 import {
   UltraPremiumDashboardLayout,
   UltraPremiumSection,
@@ -8,7 +8,14 @@ import {
 import { ReportsCharts } from "@/components/reports/reports-charts";
 import { useLocale } from "@/lib/i18n/context";
 
-export default function ReportsPage() {
+// Force dynamic rendering
+export const dynamic = "force-dynamic";
+
+interface ReportsPageProps {
+  params: Promise<{ locale: string }>;
+}
+
+function ReportsPageContent() {
   const { t } = useLocale();
 
   return (
@@ -21,5 +28,19 @@ export default function ReportsPage() {
         <ReportsCharts />
       </UltraPremiumSection>
     </UltraPremiumDashboardLayout>
+  );
+}
+
+export default function ReportsPage({ params: _params }: ReportsPageProps) {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="text-center">Loading...</div>
+        </div>
+      }
+    >
+      <ReportsPageContent />
+    </Suspense>
   );
 }

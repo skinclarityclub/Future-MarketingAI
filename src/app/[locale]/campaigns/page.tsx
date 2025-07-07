@@ -20,7 +20,14 @@ import {
 } from "lucide-react";
 import { CrossPlatformCampaign } from "@/lib/workflows/cross-platform-content-manager";
 
-export default function CampaignsPage() {
+// Force dynamic rendering
+export const dynamic = "force-dynamic";
+
+interface CampaignsPageProps {
+  params: Promise<{ locale: string }>;
+}
+
+export default function CampaignsPage({ params: _params }: CampaignsPageProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [campaigns, setCampaigns] = useState<Partial<CrossPlatformCampaign>[]>(
     []

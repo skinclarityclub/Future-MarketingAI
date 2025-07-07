@@ -47,7 +47,11 @@ class EnterpriseCircuitBreaker {
       return result;
     } catch (error) {
       this.onFailure();
-      if (fallback && this.state === "OPEN") return await fallback();
+      // After onFailure, check if circuit is now open and fallback is available
+      const currentState = this.state as "CLOSED" | "OPEN" | "HALF_OPEN";
+      if (fallback && currentState === "OPEN") {
+        return await fallback();
+      }
       throw error;
     }
   }
@@ -547,7 +551,6 @@ const circuitBreaker = new EnterpriseCircuitBreaker();
 // Enterprise middleware
 async function enterpriseMiddleware(request: NextRequest) {
   const headersList = await headers();
-  const clientIp = headersList.get("x-forwarded-for") || "unknown";
   const tenantId = headersList.get("x-tenant-id") || "default";
   const apiKey = headersList.get("x-api-key");
 
@@ -595,12 +598,14 @@ export async function POST(request: NextRequest) {
   const requestId = `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
   const startTime = Date.now();
   let lockId: string | null = null;
+  let bodyAction: string | null = null;
 
   try {
     const middlewareResponse = await enterpriseMiddleware(request);
     if (middlewareResponse) return middlewareResponse;
 
     const body = await request.json();
+    bodyAction = body.action;
     const headersList = await headers();
     const tenantId = headersList.get("x-tenant-id") || "default";
 
@@ -624,7 +629,7 @@ export async function POST(request: NextRequest) {
       lockId = lockResult.lockId!;
     }
 
-    // Execute with circuit breaker
+    // Execute with circuit breaker  
     const result = await circuitBreaker.execute(
       async () => {
         switch (body.action) {
@@ -641,16 +646,6 @@ export async function POST(request: NextRequest) {
           default:
             throw new Error(`Unsupported action: ${body.action}`);
         }
-      },
-      async () => {
-        return NextResponse.json(
-          {
-            success: false,
-            error: "Service temporarily degraded",
-            fallback: true,
-          },
-          { status: 503 }
-        );
       }
     );
 
@@ -672,9 +667,9 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   } finally {
-    if (lockId && body?.action) {
+    if (lockId && bodyAction) {
       const tenantId = (await headers()).get("x-tenant-id") || "default";
-      DistributedLockManager.release(`${body.action}:${tenantId}`, lockId);
+      DistributedLockManager.release(`${bodyAction}:${tenantId}`, lockId);
     }
   }
 }
@@ -779,7 +774,6 @@ async function handleEnterpriseSchedule(
     {
       scheduledTime: scheduledTime.toISOString(),
       enableOptimization: true,
-      aiOptimized: !!aiAnalysis,
     }
   );
 

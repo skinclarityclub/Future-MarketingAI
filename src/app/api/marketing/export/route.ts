@@ -137,7 +137,7 @@ const generatePDF = async (
 
         const widgetData = data[widget];
         Object.entries(widgetData).forEach(([key, value]) => {
-          if (typeof value === "object" && !Array.isArray(value)) {
+          if (typeof value === "object" && !Array.isArray(value) && value !== null) {
             doc.fontSize(14).text(`${formatKey(key)}:`);
             Object.entries(value).forEach(([subKey, subValue]) => {
               doc
@@ -198,7 +198,7 @@ const generateExcel = async (
         sheet.addRow(["Metric", "Value"]);
 
         entries.forEach(([key, value]) => {
-          if (typeof value === "object" && !Array.isArray(value)) {
+          if (typeof value === "object" && !Array.isArray(value) && value !== null) {
             sheet.addRow([formatKey(key), ""]);
             Object.entries(value).forEach(([subKey, subValue]) => {
               sheet.addRow([`  ${formatKey(subKey)}`, formatValue(subValue)]);
@@ -213,7 +213,7 @@ const generateExcel = async (
     }
   });
 
-  return (await workbook.xlsx.writeBuffer()) as Buffer;
+  return (await workbook.xlsx.writeBuffer()) as unknown as Buffer;
 };
 
 const generateCSV = (data: any, options: ExportRequest): string => {
@@ -223,7 +223,7 @@ const generateCSV = (data: any, options: ExportRequest): string => {
     if (data[widget]) {
       const widgetData = data[widget];
       Object.entries(widgetData).forEach(([key, value]) => {
-        if (typeof value === "object" && !Array.isArray(value)) {
+        if (typeof value === "object" && !Array.isArray(value) && value !== null) {
           Object.entries(value).forEach(([subKey, subValue]) => {
             csv += `"${getWidgetTitle(widget)}","${formatKey(key)} - ${formatKey(subKey)}","${formatValue(subValue)}"\n`;
           });

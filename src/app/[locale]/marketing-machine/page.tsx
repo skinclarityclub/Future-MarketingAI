@@ -1,6 +1,5 @@
 "use client";
 
-import { Metadata } from "next";
 import Link from "next/link";
 import { motion } from "@/components/ui/motion";
 import {
@@ -15,24 +14,9 @@ import {
   CheckCircle,
   Zap,
   Clock,
-  Eye,
   MessageSquare,
   TrendingUp,
 } from "lucide-react";
-
-export const metadata: Metadata = {
-  title: "MarketingMachine AI Platform | SKC Business Intelligence",
-  description:
-    "Complete AI-powered marketing platform voor groeiende bedrijven. Van research tot publishing met intelligente automatisering.",
-  keywords: [
-    "AI Marketing Platform",
-    "Marketing Automation",
-    "AI Content Creation",
-    "Marketing Intelligence",
-    "Automated Publishing",
-    "Smart Marketing",
-  ],
-};
 
 export default function MarketingMachinePage() {
   const features = [
@@ -272,7 +256,7 @@ export default function MarketingMachinePage() {
           </div>
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-            {metrics.map((metric, index) => (
+            {metrics.map((metric, _index) => (
               <div
                 key={metric.label}
                 className="text-center p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10"
@@ -305,7 +289,7 @@ export default function MarketingMachinePage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {features.map((feature, index) => (
+            {features.map((feature, _index) => (
               <div key={feature.title} className="group">
                 <Link href={feature.href}>
                   <div className="relative p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:border-white/20 transition-all duration-300 h-full">
@@ -360,7 +344,7 @@ export default function MarketingMachinePage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {workflow.map((step, index) => (
+            {workflow.map((step, _index) => (
               <div key={step.step} className="text-center">
                 <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-gradient-to-r from-purple-500 to-blue-500 flex items-center justify-center">
                   <span className="text-white font-bold text-lg">
@@ -401,7 +385,7 @@ export default function MarketingMachinePage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {benefits.map((benefit, index) => (
+            {benefits.map((benefit, _index) => (
               <div
                 key={benefit.title}
                 className="text-center p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10"

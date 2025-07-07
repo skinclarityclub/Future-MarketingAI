@@ -9,7 +9,7 @@ import {
   analyzeErrorPatterns,
   getErrorMetrics,
 } from "../../../lib/error-handling/error-detection-engine";
-import { errorDetectionMiddleware } from "../../../lib/error-handling/error-detection-middleware";
+// import { errorDetectionMiddleware } from "../../../lib/error-handling/error-detection-middleware";
 import { logger, LogCategory } from "../../../lib/logger";
 
 export async function GET(request: NextRequest) {
@@ -58,10 +58,14 @@ export async function GET(request: NextRequest) {
         );
     }
   } catch (error) {
-    logger.error("Error in error detection API", error, {
-      category: LogCategory.SYSTEM,
-      component: "error_detection_api",
-    });
+    logger.error(
+      "Error in error detection API",
+      error instanceof Error ? error : new Error(String(error)),
+      {
+        category: LogCategory.SYSTEM,
+        component: "error_detection_api",
+      }
+    );
 
     return NextResponse.json(
       {
@@ -107,10 +111,11 @@ export async function POST(request: NextRequest) {
       case "update_config":
         // Update middleware configuration
         if (data.config) {
-          errorDetectionMiddleware.updateConfig(data.config);
+          // TODO: Implement updateConfig method in ErrorDetectionMiddleware
+          // errorDetectionMiddleware.updateConfig(data.config);
           return NextResponse.json({
-            success: true,
-            message: "Configuration updated",
+            success: false,
+            message: "Configuration update not yet implemented",
           });
         }
         break;
@@ -129,10 +134,14 @@ export async function POST(request: NextRequest) {
         );
     }
   } catch (error) {
-    logger.error("Error in error detection API POST", error, {
-      category: LogCategory.SYSTEM,
-      component: "error_detection_api",
-    });
+    logger.error(
+      "Error in error detection API POST",
+      error instanceof Error ? error : new Error(String(error)),
+      {
+        category: LogCategory.SYSTEM,
+        component: "error_detection_api",
+      }
+    );
 
     return NextResponse.json(
       {

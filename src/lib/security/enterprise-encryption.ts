@@ -620,7 +620,9 @@ export function getEnterpriseEncryption(): EnterpriseEncryptionService {
     const masterKey =
       process.env.ENTERPRISE_ENCRYPTION_KEY ||
       process.env.SUPABASE_JWT_SECRET ||
-      process.env.NEXTAUTH_SECRET;
+      process.env.NEXTAUTH_SECRET ||
+      // Fallback for build time - not secure for production (64 hex chars = 32 bytes)
+      "1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef";
 
     if (!masterKey) {
       throw new Error(

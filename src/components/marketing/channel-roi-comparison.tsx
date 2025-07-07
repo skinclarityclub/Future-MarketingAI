@@ -17,7 +17,7 @@ import {
   Cell,
 } from "recharts";
 import { ChannelROI } from "@/lib/marketing/campaign-roi-service";
-import { useLocale } from "@/lib/i18n/context";
+import { useTranslation } from "@/lib/i18n/client-provider";
 
 interface ChannelROIComparisonProps {
   channelData: ChannelROI[];
@@ -39,7 +39,7 @@ export function ChannelROIComparison({
   dateRange: _dateRange,
   attributionModel: _attributionModel,
 }: ChannelROIComparisonProps) {
-  const { t } = useLocale();
+  const { t } = useTranslation();
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("en-US", {

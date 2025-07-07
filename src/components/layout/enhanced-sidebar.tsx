@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useIsAdmin } from "@/hooks/use-rbac";
-import { useLocale } from "@/lib/i18n/context";
+import { useTranslation } from "@/lib/i18n/client-provider";
 import {
   BarChart3,
   DollarSign,
@@ -374,7 +374,7 @@ export function EnhancedSidebar({
 }: EnhancedSidebarProps) {
   const pathname = usePathname();
   const { isAdmin } = useIsAdmin();
-  const { locale } = useLocale();
+  const { locale } = useTranslation();
   // In demo/development mode, allow access to admin features
   const isDemoMode =
     process.env.NODE_ENV === "development" ||

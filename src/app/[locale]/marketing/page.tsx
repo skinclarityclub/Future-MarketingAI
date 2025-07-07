@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import {
   UltraPremiumDashboardLayout,
   UltraPremiumSection,
@@ -9,7 +10,6 @@ import {
 } from "@/components/layout/ultra-premium-dashboard-layout";
 import MarketingOptimization from "@/components/dashboard/marketing-optimization";
 import ContentPerformanceOverview from "@/components/dashboard/content-performance-overview";
-import { useLocale } from "@/lib/i18n/context";
 import {
   Target,
   Zap,
@@ -22,8 +22,6 @@ import {
 } from "lucide-react";
 
 export default function MarketingOverviewPage() {
-  const { t } = useLocale();
-
   const breadcrumbItems = [
     { label: "Marketing", href: "/marketing", current: true },
   ];
@@ -144,34 +142,34 @@ export default function MarketingOverviewPage() {
             colSpan={4}
           >
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <a
+              <Link
                 href="/campaigns"
                 className="flex flex-col items-center p-4 rounded-lg bg-purple-600 hover:bg-purple-700 text-white transition-all duration-300 group"
               >
                 <Zap className="h-6 w-6 mb-2 group-hover:scale-110 transition-transform" />
                 <span className="text-sm font-medium">Campaign Analytics</span>
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/customer-insights"
                 className="flex flex-col items-center p-4 rounded-lg bg-blue-600 hover:bg-blue-700 text-white transition-all duration-300 group"
               >
                 <Users className="h-6 w-6 mb-2 group-hover:scale-110 transition-transform" />
                 <span className="text-sm font-medium">Customer Insights</span>
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/content"
                 className="flex flex-col items-center p-4 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white transition-all duration-300 group"
               >
                 <Eye className="h-6 w-6 mb-2 group-hover:scale-110 transition-transform" />
                 <span className="text-sm font-medium">Content Performance</span>
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/market-analysis"
                 className="flex flex-col items-center p-4 rounded-lg bg-orange-600 hover:bg-orange-700 text-white transition-all duration-300 group"
               >
                 <BarChart3 className="h-6 w-6 mb-2 group-hover:scale-110 transition-transform" />
                 <span className="text-sm font-medium">Market Analysis</span>
-              </a>
+              </Link>
             </div>
           </UltraPremiumCard>
         </UltraPremiumGrid>

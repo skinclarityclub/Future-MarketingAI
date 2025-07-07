@@ -21,18 +21,7 @@ import {
 } from "@/lib/marketing/csv-content-manager";
 import { UsageTrackingMiddleware } from "@/middleware/usage-tracking-middleware";
 
-// Initialize middleware
-const trackingMiddleware = UsageTrackingMiddleware.create({
-  enableUsageTracking: true,
-  enableRateLimiting: true,
-  trackingOptions: {
-    trackApiCalls: true,
-    trackAiTokens: false,
-    trackContentGeneration: true,
-    trackStorage: true,
-    trackBandwidth: true,
-  },
-});
+// Note: Using static UsageTrackingMiddleware.withTracking method
 
 // Request schemas
 const importRequestSchema = z.object({
@@ -110,9 +99,8 @@ async function validateRequest(request: NextRequest) {
 }
 
 // POST - Import, Validate, Template Generation
-export async function POST(request: NextRequest) {
-  return trackingMiddleware.withTracking(request, async req => {
-    const startTime = Date.now();
+export const POST = UsageTrackingMiddleware.withTracking(async (req: NextRequest) => {
+  const startTime = Date.now();
 
     try {
       const body = await req.json();
@@ -440,11 +428,9 @@ export async function POST(request: NextRequest) {
       );
     }
   });
-}
 
 // GET - Export content to various formats
-export async function GET(request: NextRequest) {
-  return trackingMiddleware.withTracking(request, async req => {
+export const GET = UsageTrackingMiddleware.withTracking(async (req: NextRequest) => {
     const startTime = Date.now();
 
     try {
@@ -575,11 +561,9 @@ export async function GET(request: NextRequest) {
       );
     }
   });
-}
 
 // PUT - Bulk update operations
-export async function PUT(request: NextRequest) {
-  return trackingMiddleware.withTracking(request, async req => {
+export const PUT = UsageTrackingMiddleware.withTracking(async (req: NextRequest) => {
     const startTime = Date.now();
 
     try {
@@ -737,11 +721,9 @@ export async function PUT(request: NextRequest) {
       );
     }
   });
-}
 
 // DELETE - Bulk delete operations
-export async function DELETE(request: NextRequest) {
-  return trackingMiddleware.withTracking(request, async req => {
+export const DELETE = UsageTrackingMiddleware.withTracking(async (req: NextRequest) => {
     const startTime = Date.now();
 
     try {
@@ -814,4 +796,3 @@ export async function DELETE(request: NextRequest) {
       );
     }
   });
-}

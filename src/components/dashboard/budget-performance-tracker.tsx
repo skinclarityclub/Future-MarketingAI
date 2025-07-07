@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useLocale } from "@/lib/i18n/context";
+// import { useLocale } from "@/lib/i18n/context"; // Removed for pages outside locale directory
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import NormalButton from "@/components/ui/normal-button";
@@ -325,7 +325,7 @@ const mockVarianceAlerts: VarianceAlert[] = [
 ];
 
 export default function BudgetPerformanceTracker() {
-  const { t } = useLocale();
+  // const { t } = useLocale(); // Removed for pages outside locale directory
   const [budgetData, setBudgetData] = useState<BudgetItem[]>(mockBudgetData);
   const [forecastData] = useState<ForecastData[]>(mockForecastData);
   const [alerts] = useState<VarianceAlert[]>(mockVarianceAlerts);
@@ -497,7 +497,7 @@ export default function BudgetPerformanceTracker() {
           <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-blue-800">
-                {t("dashboard.budgeted")}
+                                          Budgeted
               </CardTitle>
               <Target className="h-4 w-4 text-blue-600" />
             </CardHeader>
@@ -517,7 +517,7 @@ export default function BudgetPerformanceTracker() {
           <Card className="bg-gradient-to-br from-green-50 to-green-100 border-green-200">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-green-800">
-                {t("dashboard.actual")}
+                                          Actual
               </CardTitle>
               <DollarSign className="h-4 w-4 text-green-600" />
             </CardHeader>

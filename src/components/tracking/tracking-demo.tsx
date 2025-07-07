@@ -12,6 +12,7 @@ import {
   useTrackExperiment,
 } from "@/lib/analytics/behavior-tracking-provider";
 import { useLocale } from "@/lib/i18n/context";
+import NormalButton from "@/components/ui/normal-button";
 
 export function TrackingDemo() {
   const { t } = useLocale();

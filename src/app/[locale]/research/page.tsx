@@ -1,28 +1,24 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import {
   UltraPremiumDashboardLayout,
   UltraPremiumSection,
   UltraPremiumGrid,
   UltraPremiumCard,
 } from "@/components/layout/ultra-premium-dashboard-layout";
-import { useLocale } from "@/lib/i18n/context";
 import {
   Search,
   TrendingUp,
   Target,
   Brain,
-  BarChart3,
   Users,
-  Eye,
   Lightbulb,
-  Globe,
-  Zap,
 } from "lucide-react";
 
 export default function ResearchDashboardPage() {
-  const { t } = useLocale();
+  // const { t } = useTranslation(); // Translation not currently used
 
   const breadcrumbItems = [
     { label: "Research", href: "/research", current: true },
@@ -221,34 +217,34 @@ export default function ResearchDashboardPage() {
           colSpan={4}
         >
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <a
+            <Link
               href="/research/trends"
               className="flex flex-col items-center p-4 rounded-lg bg-orange-600 hover:bg-orange-700 text-white transition-all duration-300 group"
             >
               <TrendingUp className="h-6 w-6 mb-2 group-hover:scale-110 transition-transform" />
               <span className="text-sm font-medium">Trend Analysis</span>
-            </a>
-            <a
+            </Link>
+            <Link
               href="/research/competitors"
               className="flex flex-col items-center p-4 rounded-lg bg-blue-600 hover:bg-blue-700 text-white transition-all duration-300 group"
             >
               <Users className="h-6 w-6 mb-2 group-hover:scale-110 transition-transform" />
               <span className="text-sm font-medium">Competitor Analysis</span>
-            </a>
-            <a
+            </Link>
+            <Link
               href="/research/insights"
               className="flex flex-col items-center p-4 rounded-lg bg-purple-600 hover:bg-purple-700 text-white transition-all duration-300 group"
             >
               <Lightbulb className="h-6 w-6 mb-2 group-hover:scale-110 transition-transform" />
               <span className="text-sm font-medium">Market Insights</span>
-            </a>
-            <a
+            </Link>
+            <Link
               href="/research/data-mining"
               className="flex flex-col items-center p-4 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white transition-all duration-300 group"
             >
               <Search className="h-6 w-6 mb-2 group-hover:scale-110 transition-transform" />
               <span className="text-sm font-medium">Data Mining</span>
-            </a>
+            </Link>
           </div>
         </UltraPremiumCard>
 

@@ -15,7 +15,7 @@ import {
   InfoIcon,
 } from "lucide-react";
 import { BudgetOptimization } from "@/lib/marketing/campaign-roi-service";
-import { useLocale } from "@/lib/i18n/context";
+import { useTranslation } from "@/lib/i18n/client-provider";
 
 interface BudgetOptimizationRecommendationsProps {
   dateRange: { startDate: string; endDate: string };
@@ -26,7 +26,7 @@ export function BudgetOptimizationRecommendations({
   dateRange,
   attributionModel,
 }: BudgetOptimizationRecommendationsProps) {
-  const { t } = useLocale();
+  const { t } = useTranslation();
   const [recommendations, setRecommendations] = useState<BudgetOptimization[]>(
     []
   );

@@ -240,7 +240,7 @@ async function getSeedingStatus(supabase: any): Promise<SeedingStatusResponse> {
 
     // Convert database data to expected format
     const engineStatuses: any = {};
-    let overallStatus = "idle";
+    let overallStatus: "idle" | "running" | "completed" | "failed" = "idle";
 
     if (statusData && statusData.length > 0) {
       // Check if any engine is currently running

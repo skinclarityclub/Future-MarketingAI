@@ -9,27 +9,12 @@ import {
   PieChart,
   BarChart3,
   ArrowRight,
-  CheckCircle,
   Zap,
   Clock,
   Brain,
   Target,
   Calculator,
 } from "lucide-react";
-
-export const metadata: Metadata = {
-  title: "Financial Intelligence Dashboard | SKC Business Intelligence",
-  description:
-    "Complete financial intelligence platform voor groeiende bedrijven. Revenue analytics, forecasting en financial performance monitoring.",
-  keywords: [
-    "Financial Intelligence",
-    "Revenue Analytics",
-    "Financial Forecasting",
-    "Cost Analysis",
-    "Profit Optimization",
-    "Financial Dashboard",
-  ],
-};
 
 export default function FinancialIntelligencePage() {
   const features = [
@@ -215,7 +200,7 @@ export default function FinancialIntelligencePage() {
               transition={{ duration: 0.8, delay: 0.4 }}
               className="grid grid-cols-1 sm:grid-cols-2 gap-4"
             >
-              {kpis.map((kpi, index) => (
+              {kpis.map((kpi, _index) => (
                 <div
                   key={kpi.name}
                   className="p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10"

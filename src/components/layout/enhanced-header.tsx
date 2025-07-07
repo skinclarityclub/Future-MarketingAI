@@ -15,10 +15,13 @@ import {
   BarChart3,
   Zap,
   Shield,
+  ChevronDown,
+  Globe,
+  Sparkles,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { LocaleSwitcher } from "@/components/locale-switcher";
-import { useLocale } from "@/lib/i18n/context";
+import { useTranslation } from "@/lib/i18n/client-provider";
 import { useIsAdmin } from "@/hooks/use-rbac";
 import NormalButton from "@/components/ui/normal-button";
 import { Badge } from "@/components/ui/badge";
@@ -95,7 +98,7 @@ export function EnhancedHeader({
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
-  const { t } = useLocale();
+  const { t } = useTranslation();
   const { isAdmin } = useIsAdmin();
   // In demo/development mode, allow access to admin features
   const isDemoMode =

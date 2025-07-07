@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import {
   AlertTriangle,
   Shield,
@@ -11,7 +11,6 @@ import {
   Database,
   CheckCircle,
   XCircle,
-  Clock,
   Users,
   Trash2,
   RefreshCw,
@@ -19,36 +18,22 @@ import {
   Pause,
   Play,
   RotateCcw,
-  Eye,
-  EyeOff,
   AlertOctagon,
   Globe,
-  Mail,
-  MessageSquare,
   FileText,
-  Save,
-  X,
-  Check,
   Info,
   Loader2,
   Search,
-  Filter,
-  MoreVertical,
   Edit,
-  Plus,
-  Minus,
   Lock,
   UserCheck,
   MapPin,
   Calendar,
-  TrendingUp,
-  TrendingDown,
   ExternalLink,
   FileCheck,
   AlertCircle,
   Monitor,
   Smartphone,
-  Laptop,
   Zap,
   Upload,
 } from "lucide-react";
@@ -65,16 +50,7 @@ import { Progress } from "@/components/ui/progress";
 import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -610,37 +586,37 @@ export function OperationalControlsInterface() {
     const term = searchTerm.toLowerCase();
     switch (selectedTab) {
       case "kill-switches":
-        return killSwitches.filter(
+        return (killSwitches || []).filter(
           item =>
             item.name.toLowerCase().includes(term) &&
             (filterCategory === "all" || item.category === filterCategory)
         );
       case "feature-flags":
-        return featureFlags.filter(
+        return (featureFlags || []).filter(
           item =>
             item.name.toLowerCase().includes(term) &&
             (filterCategory === "all" || item.category === filterCategory)
         );
       case "maintenance":
-        return maintenanceModes.filter(
+        return (maintenanceModes || []).filter(
           item =>
             item.name.toLowerCase().includes(term) &&
             (filterCategory === "all" || item.type === filterCategory)
         );
       case "bulk-operations":
-        return bulkOperations.filter(
+        return (bulkOperations || []).filter(
           item =>
             item.name.toLowerCase().includes(term) &&
             (filterCategory === "all" || item.type === filterCategory)
         );
       case "export":
-        return exportOperations.filter(
+        return (exportOperations || []).filter(
           item =>
             item.name.toLowerCase().includes(term) &&
             (filterCategory === "all" || item.type === filterCategory)
         );
       case "security-compliance":
-        return securityIncidents.filter(
+        return (securityIncidents || []).filter(
           item =>
             item.title.toLowerCase().includes(term) &&
             (filterCategory === "all" || item.severity === filterCategory)
@@ -812,7 +788,7 @@ export function OperationalControlsInterface() {
                       Affected Systems:
                     </Label>
                     <div className="flex flex-wrap gap-1 mt-1">
-                      {killSwitch.systems.map(system => (
+                      {(killSwitch.systems || []).map(system => (
                         <Badge
                           key={system}
                           variant="outline"
@@ -827,7 +803,7 @@ export function OperationalControlsInterface() {
                   {killSwitch.lastTriggered && (
                     <div className="text-sm text-gray-400">
                       Last triggered:{" "}
-                      {new Date(killSwitch.lastTriggered).toLocaleString()}
+                      {killSwitch.lastTriggered && new Date(killSwitch.lastTriggered).toLocaleString()}
                       {killSwitch.triggeredBy &&
                         ` by ${killSwitch.triggeredBy}`}
                     </div>
@@ -863,7 +839,7 @@ export function OperationalControlsInterface() {
                                 ? "trigger"
                                 : "activate"}{" "}
                               "{killSwitch.name}"? This action will affect the
-                              following systems: {killSwitch.systems.join(", ")}
+                              following systems: {(killSwitch.systems || []).join(", ")}
                               .
                             </AlertDialogDescription>
                           </AlertDialogHeader>
@@ -1038,7 +1014,7 @@ export function OperationalControlsInterface() {
                       <div>
                         <Label className="text-gray-400">Start Time:</Label>
                         <div className="font-medium">
-                          {new Date(maintenance.startTime).toLocaleString()}
+                          {maintenance.startTime && new Date(maintenance.startTime).toLocaleString()}
                         </div>
                       </div>
                     )}
@@ -1046,7 +1022,7 @@ export function OperationalControlsInterface() {
                       <div>
                         <Label className="text-gray-400">End Time:</Label>
                         <div className="font-medium">
-                          {new Date(maintenance.endTime).toLocaleString()}
+                          {maintenance.endTime && new Date(maintenance.endTime).toLocaleString()}
                         </div>
                       </div>
                     )}
@@ -1057,7 +1033,7 @@ export function OperationalControlsInterface() {
                       Affected Systems:
                     </Label>
                     <div className="flex flex-wrap gap-1 mt-1">
-                      {maintenance.affectedSystems.map(system => (
+                      {(maintenance.affectedSystems || []).map(system => (
                         <Badge
                           key={system}
                           variant="outline"
@@ -1071,7 +1047,7 @@ export function OperationalControlsInterface() {
 
                   <div className="flex justify-between items-center">
                     <div className="text-xs text-gray-500">
-                      Allowed users: {maintenance.allowedUsers.join(", ")}
+                      Allowed users: {(maintenance.allowedUsers || []).join(", ")}
                     </div>
                     <div className="flex gap-2">
                       <Button variant="outline" size="sm">
@@ -1137,19 +1113,19 @@ export function OperationalControlsInterface() {
                     <div>
                       <Label className="text-gray-400">Total Items:</Label>
                       <div className="font-medium">
-                        {operation.totalItems.toLocaleString()}
+                        {(operation.totalItems || 0).toLocaleString()}
                       </div>
                     </div>
                     <div>
                       <Label className="text-gray-400">Processed:</Label>
                       <div className="font-medium text-green-400">
-                        {operation.processedItems.toLocaleString()}
+                        {(operation.processedItems || 0).toLocaleString()}
                       </div>
                     </div>
                     <div>
                       <Label className="text-gray-400">Failed:</Label>
                       <div className="font-medium text-red-400">
-                        {operation.failedItems.toLocaleString()}
+                        {(operation.failedItems || 0).toLocaleString()}
                       </div>
                     </div>
                     <div>
@@ -1172,9 +1148,9 @@ export function OperationalControlsInterface() {
                     <div>Initiated by: {operation.initiatedBy}</div>
                     <div>
                       {operation.startTime &&
-                        `Started: ${new Date(operation.startTime).toLocaleString()}`}
+                        `Started: ${operation.startTime && new Date(operation.startTime).toLocaleString()}`}
                       {operation.estimatedCompletion &&
-                        ` • ETA: ${new Date(operation.estimatedCompletion).toLocaleString()}`}
+                        ` • ETA: ${operation.estimatedCompletion && new Date(operation.estimatedCompletion).toLocaleString()}`}
                     </div>
                   </div>
 
@@ -1438,7 +1414,7 @@ export function OperationalControlsInterface() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                {securityIncidents.map(incident => (
+                {(securityIncidents || []).map(incident => (
                   <div
                     key={incident.id}
                     className="p-4 bg-gray-900/50 rounded-lg border border-gray-700"
@@ -1507,7 +1483,7 @@ export function OperationalControlsInterface() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                {loginActivities.map(login => (
+                {(loginActivities || []).map(login => (
                   <div
                     key={login.id}
                     className="p-4 bg-gray-900/50 rounded-lg border border-gray-700"
@@ -1610,7 +1586,7 @@ export function OperationalControlsInterface() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                {complianceMetrics.map(metric => (
+                {(complianceMetrics || []).map(metric => (
                   <div
                     key={metric.id}
                     className="p-4 bg-gray-900/50 rounded-lg border border-gray-700"
@@ -1692,7 +1668,7 @@ export function OperationalControlsInterface() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
-                {securityAlerts.map(alert => (
+                {(securityAlerts || []).map(alert => (
                   <div
                     key={alert.id}
                     className="p-3 bg-gray-900/50 rounded-lg border border-gray-700"
@@ -1752,7 +1728,7 @@ export function OperationalControlsInterface() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
-                {auditLogs.map(log => (
+                {(auditLogs || []).map(log => (
                   <div
                     key={log.id}
                     className="p-3 bg-gray-900/50 rounded-lg border border-gray-700"
@@ -1788,7 +1764,7 @@ export function OperationalControlsInterface() {
                         {new Date(log.timestamp).toLocaleString()}
                       </span>
                       <div className="flex gap-1">
-                        {log.complianceTags.map(tag => (
+                        {(log.complianceTags || []).map(tag => (
                           <Badge
                             key={tag}
                             variant="outline"

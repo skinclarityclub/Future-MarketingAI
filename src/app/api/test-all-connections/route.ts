@@ -35,8 +35,8 @@ export async function GET(request: NextRequest) {
         id: provider.id,
         name: provider.name,
         status: "untested",
-        error: null,
-        data: null,
+        error: null as string | null,
+        data: null as any,
         hasAccessToken: false,
       };
 

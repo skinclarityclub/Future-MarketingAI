@@ -74,7 +74,7 @@ export function PredictiveDashboard({
   >("medium");
   const [selectedMetric, setSelectedMetric] = useState<string>("revenue");
   const [showConfidenceIntervals, setShowConfidenceIntervals] = useState(true);
-  const [predictions, setPredictions] = useState<PredictiveModel[]>([]);
+  // const [predictions, setPredictions] = useState<any[]>([]);
 
   // Filter forecasts by selected timeframe
   const filteredForecasts = useMemo(
@@ -170,53 +170,50 @@ export function PredictiveDashboard({
     }
   };
 
-  if (model.accuracy_trend) {
-    const formatXAxis = (tickItem: unknown, _index: number) => {
-      if (typeof tickItem === "string") {
-        return tickItem.slice(0, 10);
-      }
-      return String(tickItem);
-    };
-  }
+  // Utility functions for chart formatting
+  const formatXAxis = (tickItem: unknown, _index: number) => {
+    if (typeof tickItem === "string") {
+      return tickItem.slice(0, 10);
+    }
+    return String(tickItem);
+  };
 
-  if (model.feature_importance) {
-    const RADIAN = Math.PI / 180;
-    const renderCustomizedLabel = ({
-      cx,
-      cy,
-      midAngle,
-      innerRadius,
-      outerRadius,
-      percent,
-    }: unknown) => {
-      if (
-        typeof cx !== "number" ||
-        typeof cy !== "number" ||
-        typeof midAngle !== "number" ||
-        typeof innerRadius !== "number" ||
-        typeof outerRadius !== "number" ||
-        typeof percent !== "number"
-      ) {
-        return null;
-      }
+  const RADIAN = Math.PI / 180;
+  const renderCustomizedLabel = ({
+    cx,
+    cy,
+    midAngle,
+    innerRadius,
+    outerRadius,
+    percent,
+  }: any) => {
+    if (
+      typeof cx !== "number" ||
+      typeof cy !== "number" ||
+      typeof midAngle !== "number" ||
+      typeof innerRadius !== "number" ||
+      typeof outerRadius !== "number" ||
+      typeof percent !== "number"
+    ) {
+      return null;
+    }
 
-      const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-      const x = cx + radius * Math.cos(-midAngle * RADIAN);
-      const y = cy + radius * Math.sin(-midAngle * RADIAN);
+    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+    const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
-      return (
-        <text
-          x={x}
-          y={y}
-          fill="white"
-          textAnchor={x > cx ? "start" : "end"}
-          dominantBaseline="central"
-        >
-          {`${(percent * 100).toFixed(0)}%`}
-        </text>
-      );
-    };
-  }
+    return (
+      <text
+        x={x}
+        y={y}
+        fill="white"
+        textAnchor={x > cx ? "start" : "end"}
+        dominantBaseline="central"
+      >
+        {`${(percent * 100).toFixed(0)}%`}
+      </text>
+    );
+  };
 
   return (
     <div className={`space-y-6 ${className}`}>

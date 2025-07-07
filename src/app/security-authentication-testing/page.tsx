@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import SecurityAuthenticationTestingSuite from "@/components/testing/security-authentication-testing-suite";
 

@@ -43,7 +43,9 @@ export async function POST(request: NextRequest) {
     const chatId = determineChatId(webhook);
 
     // Send message to Telegram
-    await telegramClient.sendMessage(chatId, message, {
+    await telegramClient.sendMessage({
+      chat_id: chatId,
+      text: message,
       parse_mode: "Markdown",
       disable_web_page_preview: true,
     });

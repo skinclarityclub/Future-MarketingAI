@@ -9,7 +9,7 @@ import { logger } from "@/lib/logger";
 /**
  * GET - Get status of trending hashtag analyzer
  */
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     logger.info("Trending Hashtag Analyzer API - GET request received");
 
@@ -30,7 +30,10 @@ export async function GET(request: NextRequest) {
       ],
     });
   } catch (error) {
-    logger.error("Error in Trending Hashtag Analyzer GET", { error });
+    logger.error(
+      "Error in Trending Hashtag Analyzer GET",
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(
       { success: false, error: "Failed to get analyzer status" },
       { status: 500 }
@@ -132,10 +135,10 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     const executionTime = Date.now() - startTime;
-    logger.error("❌ Trending hashtag analysis failed", {
-      error: error instanceof Error ? error.message : String(error),
-      executionTime: `${executionTime}ms`,
-    });
+    logger.error(
+      "❌ Trending hashtag analysis failed",
+      error instanceof Error ? error : new Error(String(error))
+    );
 
     return NextResponse.json(
       {

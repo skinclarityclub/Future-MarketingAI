@@ -2,6 +2,7 @@
 
 import { useTranslation } from "@/lib/i18n/client-provider";
 import { LocaleSwitcher } from "@/components/locale-switcher";
+import NormalButton from "@/components/ui/normal-button";
 import {
   Card,
   CardContent,

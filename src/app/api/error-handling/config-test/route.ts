@@ -33,7 +33,13 @@ export async function GET(request: NextRequest) {
         perplexity: process.env.PERPLEXITY_API_KEY ? "✅ Set" : "❌ Missing",
       },
       errorHandlingConfig: defaultErrorConfig,
-      recommendations: [],
+      recommendations: [] as Array<{
+        priority: string;
+        category: string;
+        message: string;
+        action: string;
+        example?: any;
+      }>,
     };
 
     // Generate recommendations based on missing config

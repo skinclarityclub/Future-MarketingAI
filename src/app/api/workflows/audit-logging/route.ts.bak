@@ -644,7 +644,7 @@ async function simulateError(body: any) {
     execution_id: `sim_${Date.now()}`,
     node_id: `node_${error_category}`,
     node_name: `Test ${error_category} Node`,
-    error: simulatedErrors[error_category] || new Error("Simulated error"),
+    error: simulatedErrors[error_category as keyof typeof simulatedErrors] || new Error("Simulated error"),
     retry_count: 0,
     max_retries: 3,
     timestamp: new Date().toISOString(),

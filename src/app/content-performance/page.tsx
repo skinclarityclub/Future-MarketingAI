@@ -1,24 +1,29 @@
+"use client";
+
 import { Suspense } from "react";
 import ContentPerformanceOverview from "@/components/dashboard/content-performance-overview";
+import { LocaleProvider } from "@/lib/i18n/client-provider";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function ContentPerformancePage() {
   return (
-    <div className="container mx-auto py-6 space-y-6">
-      <div className="flex flex-col space-y-2">
-        <h1 className="text-3xl font-bold tracking-tight">
-          Content Performance Dashboard
-        </h1>
-        <p className="text-muted-foreground">
-          Track ROI, analyze performance metrics, and optimize your content
-          strategy
-        </p>
-      </div>
+    <LocaleProvider>
+      <div className="container mx-auto py-6 space-y-6">
+        <div className="flex flex-col space-y-2">
+          <h1 className="text-3xl font-bold tracking-tight">
+            Content Performance Dashboard
+          </h1>
+          <p className="text-muted-foreground">
+            Track ROI, analyze performance metrics, and optimize your content
+            strategy
+          </p>
+        </div>
 
-      <Suspense fallback={<ContentPerformanceLoading />}>
-        <ContentPerformanceOverview />
-      </Suspense>
-    </div>
+        <Suspense fallback={<ContentPerformanceLoading />}>
+          <ContentPerformanceOverview />
+        </Suspense>
+      </div>
+    </LocaleProvider>
   );
 }
 

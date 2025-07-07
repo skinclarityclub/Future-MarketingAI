@@ -23,7 +23,7 @@ import { CampaignROI, ChannelROI } from "@/lib/marketing/campaign-roi-service";
 import { ChannelROIComparison } from "./channel-roi-comparison";
 import { ROITrendsChart } from "./roi-trends-chart";
 import { BudgetOptimizationRecommendations } from "./budget-optimization-recommendations";
-import { useLocale } from "@/lib/i18n/context";
+import { useTranslation } from "@/lib/i18n/client-provider";
 
 interface CampaignROIOverviewProps {
   className?: string;
@@ -32,7 +32,7 @@ interface CampaignROIOverviewProps {
 export function CampaignROIOverview({
   className = "",
 }: CampaignROIOverviewProps) {
-  const { t } = useLocale();
+  const { t } = useTranslation();
   const [campaignROI, setCampaignROI] = useState<CampaignROI[]>([]);
   const [channelROI, setChannelROI] = useState<ChannelROI[]>([]);
   const [loading, setLoading] = useState(true);

@@ -2,10 +2,10 @@
 
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useLocale } from "@/lib/i18n/context";
+import { useTranslation } from "@/lib/i18n/client-provider";
 
 export default function PerformanceMetricsTable() {
-  const { t } = useLocale();
+  const { t } = useTranslation();
 
   const mockData = [
     {

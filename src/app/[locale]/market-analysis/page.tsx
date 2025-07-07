@@ -7,19 +7,9 @@ import {
   UltraPremiumGrid,
   UltraPremiumCard,
 } from "@/components/layout/ultra-premium-dashboard-layout";
-import { useLocale } from "@/lib/i18n/context";
-import {
-  BarChart3,
-  TrendingUp,
-  Target,
-  Globe,
-  Users,
-  PieChart,
-} from "lucide-react";
+import { TrendingUp, Target, Globe, Users, PieChart } from "lucide-react";
 
 export default function MarketAnalysisPage() {
-  const { t } = useLocale();
-
   const marketMetrics = [
     {
       title: "Market Share",

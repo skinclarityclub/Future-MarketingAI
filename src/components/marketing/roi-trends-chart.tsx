@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useLocale } from "@/lib/i18n/context";
+import { useTranslation } from "@/lib/i18n/client-provider";
 import {
   Select,
   SelectContent,
@@ -32,7 +32,7 @@ export function ROITrendsChart({
   dateRange,
   attributionModel,
 }: ROITrendsChartProps) {
-  const { t } = useLocale();
+  const { t } = useTranslation();
   const [trends, setTrends] = useState<ROITrend[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

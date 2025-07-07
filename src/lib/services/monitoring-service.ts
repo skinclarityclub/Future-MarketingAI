@@ -17,16 +17,14 @@ import type {
 } from "@/lib/supabase/types";
 
 export class MonitoringService {
-  private supabase;
-
-  constructor() {
-    this.supabase = createServerClient(
+  private async getSupabaseClient() {
+    const cookieStore = await cookies();
+    return createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.SUPABASE_SERVICE_ROLE_KEY!,
       {
         cookies: {
           async get(name: string) {
-            const cookieStore = await cookies();
             return cookieStore.get(name)?.value;
           },
         },
@@ -38,7 +36,8 @@ export class MonitoringService {
   async recordHealthMetric(
     metric: InsertSystemHealthMetric
   ): Promise<SystemHealthMetric> {
-    const { data, error } = await this.supabase
+    const supabase = await this.getSupabaseClient();
+    const { data, error } = await supabase
       .from("system_health_metrics")
       .insert(metric)
       .select()
@@ -53,7 +52,8 @@ export class MonitoringService {
     metricType?: MetricType,
     limit = 100
   ): Promise<SystemHealthMetric[]> {
-    let query = this.supabase
+    const supabase = await this.getSupabaseClient();
+    let query = supabase
       .from("system_health_metrics")
       .select("*")
       .order("timestamp", { ascending: false })
@@ -75,7 +75,8 @@ export class MonitoringService {
   async getLatestHealthMetrics(
     serviceName: string
   ): Promise<SystemHealthMetric[]> {
-    const { data, error } = await this.supabase
+    const supabase = await this.getSupabaseClient();
+    const { data, error } = await supabase
       .from("system_health_metrics")
       .select("*")
       .eq("service_name", serviceName)
@@ -90,7 +91,8 @@ export class MonitoringService {
   async recordDataQualityIndicator(
     indicator: InsertDataQualityIndicator
   ): Promise<DataQualityIndicator> {
-    const { data, error } = await this.supabase
+    const supabase = await this.getSupabaseClient();
+    const { data, error } = await supabase
       .from("data_quality_indicators")
       .insert(indicator)
       .select()
@@ -105,7 +107,8 @@ export class MonitoringService {
     tableName?: string,
     limit = 100
   ): Promise<DataQualityIndicator[]> {
-    let query = this.supabase
+    const supabase = await this.getSupabaseClient();
+    let query = supabase
       .from("data_quality_indicators")
       .select("*")
       .order("timestamp", { ascending: false })
@@ -130,7 +133,8 @@ export class MonitoringService {
     issueCount: number;
     bySource: Record<string, { score: number; status: QualityStatus }>;
   }> {
-    const { data, error } = await this.supabase
+    const supabase = await this.getSupabaseClient();
+    const { data, error } = await supabase
       .from("data_quality_indicators")
       .select("*")
       .order("created_at", { ascending: false });
@@ -167,7 +171,8 @@ export class MonitoringService {
 
   // System Alerts
   async createAlert(alert: InsertSystemAlert): Promise<SystemAlert> {
-    const { data, error } = await this.supabase
+    const supabase = await this.getSupabaseClient();
+    const { data, error } = await supabase
       .from("system_alerts")
       .insert(alert)
       .select()
@@ -178,7 +183,8 @@ export class MonitoringService {
   }
 
   async getActiveAlerts(severity?: AlertSeverity): Promise<SystemAlert[]> {
-    let query = this.supabase
+    const supabase = await this.getSupabaseClient();
+    let query = supabase
       .from("system_alerts")
       .select("*")
       .eq("status", "active")
@@ -194,7 +200,8 @@ export class MonitoringService {
   }
 
   async acknowledgeAlert(alertId: string, acknowledgedBy: string) {
-    const { data, error } = await this.supabase
+    const supabase = await this.getSupabaseClient();
+    const { data, error } = await supabase
       .from("system_alerts")
       .update({
         status: "acknowledged",
@@ -211,7 +218,8 @@ export class MonitoringService {
   }
 
   async resolveAlert(alertId: string): Promise<SystemAlert> {
-    const { data, error } = await this.supabase
+    const supabase = await this.getSupabaseClient();
+    const { data, error } = await supabase
       .from("system_alerts")
       .update({ status: "resolved", resolved_at: new Date().toISOString() })
       .eq("id", alertId)
@@ -226,7 +234,8 @@ export class MonitoringService {
   async logPerformance(
     log: InsertSystemPerformanceLog
   ): Promise<SystemPerformanceLog> {
-    const { data, error } = await this.supabase
+    const supabase = await this.getSupabaseClient();
+    const { data, error } = await supabase
       .from("system_performance_logs")
       .insert(log)
       .select()
@@ -241,7 +250,8 @@ export class MonitoringService {
     operation?: string,
     limit: number = 100
   ): Promise<SystemPerformanceLog[]> {
-    let query = this.supabase
+    const supabase = await this.getSupabaseClient();
+    let query = supabase
       .from("system_performance_logs")
       .select("*")
       .order("timestamp", { ascending: false })
@@ -261,11 +271,12 @@ export class MonitoringService {
   }
 
   // Real-time subscriptions
-  subscribeToHealthMetrics(
+  async subscribeToHealthMetrics(
     callback: (payload: any) => void,
     serviceName?: string
   ) {
-    const channel = this.supabase.channel("health_metrics").on(
+    const supabase = await this.getSupabaseClient();
+    const channel = supabase.channel("health_metrics").on(
       "postgres_changes",
       {
         event: "*",
@@ -279,11 +290,12 @@ export class MonitoringService {
     return channel;
   }
 
-  subscribeToDataQuality(
+  async subscribeToDataQuality(
     callback: (payload: any) => void,
     dataSource?: string
   ) {
-    const channel = this.supabase.channel("data_quality").on(
+    const supabase = await this.getSupabaseClient();
+    const channel = supabase.channel("data_quality").on(
       "postgres_changes",
       {
         event: "*",
@@ -297,8 +309,9 @@ export class MonitoringService {
     return channel;
   }
 
-  subscribeToAlerts(callback: (payload: any) => void) {
-    const channel = this.supabase.channel("system_alerts").on(
+  async subscribeToAlerts(callback: (payload: any) => void) {
+    const supabase = await this.getSupabaseClient();
+    const channel = supabase.channel("system_alerts").on(
       "postgres_changes",
       {
         event: "*",

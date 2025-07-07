@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
     // Initialize quality analyzer and normalizer
     const qualityAnalyzer = new EnhancedDataQualityAnalyzer();
     const dataNormalizer = new AdvancedDataNormalizer();
-    const cleaningEngine = new DataCleaningEngine();
+    // const cleaningEngine = new DataCleaningEngine(); // Unused in GET route
 
     // Get quality monitoring summary
     const qualitySummary = await qualityAnalyzer.getQualityMonitoringSummary();
@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
     const normalizationSummary = await dataNormalizer.getNormalizationSummary();
 
     // Get cleaning summary for the specified timeframe
-    const cleaningSummary = await cleaningEngine.getCleaningSummary("day");
+    // const cleaningSummary = await cleaningEngine.getCleaningSummary("day");
 
     // Mock data source statuses (would typically come from real monitoring)
     const dataSourceStatuses = [
@@ -517,7 +517,7 @@ export async function POST(request: NextRequest) {
           );
         }
 
-        const cleaningResults = await cleaningEngine.cleanData([
+        const cleaningResults = await cleaningEngine.cleanDataBatch([
           {
             source: source || "unknown",
             data: data,
@@ -551,7 +551,7 @@ export async function POST(request: NextRequest) {
         }
 
         // Step 1: Clean data
-        const cleaningResults = await cleaningEngine.cleanData([
+        const cleaningResults = await cleaningEngine.cleanDataBatch([
           {
             source: source || "unknown",
             data: data,

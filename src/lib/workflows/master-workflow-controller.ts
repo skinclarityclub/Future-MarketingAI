@@ -14,7 +14,6 @@ import { createClient } from "@supabase/supabase-js";
 import { logger } from "@/lib/logger";
 import {
   N8nWebhookOrchestrator,
-  WebhookEvent,
 } from "@/lib/webhooks/n8n-webhook-orchestrator";
 import { N8nWorkflowService } from "@/lib/marketing/n8n-workflow-service";
 
@@ -316,7 +315,7 @@ export class MasterWorkflowController {
    */
   private async applyCrossPlatformLearning(
     workflowId: string,
-    inputData: Record<string, any>
+    _inputData: Record<string, any>
   ): Promise<Array<{ type: string; description: string; confidence: number }>> {
     try {
       const learningPatterns = this.learningSystem.get(workflowId) || [];
@@ -645,11 +644,55 @@ export class MasterWorkflowController {
     }
   }
 
+  /**
+   * Initialize the cross-platform learning system
+   */
   private async initializeCrossPlatformLearning(): Promise<void> {
-    // Initialize cross-platform learning system
-    // This would load existing learning patterns and set up the learning engine
+    // Implementation for cross-platform learning initialization
+    logger.logSystem("Cross-platform learning system initialized", "info");
   }
 
+  /**
+   * Initialize the intelligent scheduling system
+   */
+  private async initializeIntelligentScheduling(): Promise<void> {
+    try {
+      // Load existing scheduling configurations
+      const { data: schedulingConfigs, error } = await this.supabase
+        .from("intelligent_scheduling")
+        .select("*")
+        .eq("active", true);
+
+      if (error && error.code !== "42P01") { // Table doesn't exist
+        logger.logSystem("Error loading scheduling configs", "warn", { error });
+      }
+
+      // Initialize scheduling engine for each workflow
+      for (const [workflowId, config] of this.workflows) {
+        if (config.scheduling?.type === "intelligent") {
+          const scheduling: IntelligentScheduling = {
+            workflowId,
+            suggestedTime: new Date(Date.now() + 60000).toISOString(), // Default 1 minute from now
+            reasoning: ["Default intelligent scheduling initialized"],
+            resourceOptimization: 0.8,
+            conflictResolution: []
+          };
+          this.schedulingEngine.set(workflowId, scheduling);
+        }
+      }
+
+      logger.logSystem("Intelligent scheduling system initialized", "info", {
+        scheduledWorkflows: this.schedulingEngine.size
+      });
+    } catch (error) {
+      logger.logSystem("Failed to initialize intelligent scheduling", "error", { error });
+      // Don't throw - allow controller to continue without intelligent scheduling
+    }
+  }
+
+  /**
+   * Initialize the workflow learning for a specific workflow
+   */
   private async initializeWorkflowLearning(workflowId: string): Promise<void> {
     // Initialize learning patterns for a specific workflow
     this.learningSystem.set(workflowId, []);

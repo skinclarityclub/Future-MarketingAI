@@ -62,7 +62,10 @@ export async function GET(request: NextRequest) {
       { status: 400 }
     );
   } catch (error) {
-    logger.error("Data Cleaning API GET error:", error);
+    logger.error(
+      "Data Cleaning API GET error:",
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(
       {
         success: false,
@@ -164,7 +167,10 @@ export async function POST(request: NextRequest) {
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    logger.error("Data Cleaning API POST error:", error);
+    logger.error(
+      "Data Cleaning API POST error:",
+      error instanceof Error ? error : new Error(String(error))
+    );
     return NextResponse.json(
       {
         success: false,

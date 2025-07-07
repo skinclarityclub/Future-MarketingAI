@@ -16,7 +16,8 @@ import { useExport } from "@/lib/dashboard/hooks/use-export";
 import type { KPIMetric } from "@/lib/dashboard/hooks/use-kpi-metrics";
 import type { ExportFormat } from "@/lib/dashboard/export-utils";
 import { cn } from "@/lib/utils";
-import { useLocale } from "@/lib/i18n/context";
+import { useTranslation } from "@/lib/i18n/client-provider";
+import NormalButton from "@/components/ui/normal-button";
 
 interface ExportControlsProps {
   metrics?: KPIMetric[];
@@ -29,7 +30,7 @@ export function ExportControls({
   className,
   variant = "dropdown",
 }: ExportControlsProps) {
-  const { t } = useLocale();
+  const { t } = useTranslation();
   const [showOptions, setShowOptions] = useState(false);
   const [showSuccess, setShowSuccess] = useState<ExportFormat | null>(null);
 

@@ -1,6 +1,7 @@
-import { Metadata } from "next";
+"use client";
+
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion } from "@/components/ui/motion";
 import {
   Zap,
   Settings,
@@ -8,27 +9,12 @@ import {
   Users,
   Target,
   ArrowRight,
-  CheckCircle,
   Clock,
   Brain,
   Shield,
   BarChart3,
   Workflow,
 } from "lucide-react";
-
-export const metadata: Metadata = {
-  title: "Command Center | SKC Business Intelligence",
-  description:
-    "Ultimate marketing operations command center voor groeiende bedrijven. Campaign orchestration, workflow automation en real-time monitoring.",
-  keywords: [
-    "Command Center",
-    "Marketing Operations",
-    "Campaign Orchestration",
-    "Workflow Automation",
-    "Real-time Monitoring",
-    "Marketing Control",
-  ],
-};
 
 export default function CommandCenterPage() {
   const features = [

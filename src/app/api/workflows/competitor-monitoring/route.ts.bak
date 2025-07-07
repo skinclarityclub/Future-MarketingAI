@@ -322,15 +322,15 @@ async function getCompetitorDashboard(supabase: any) {
       summary: {
         total_competitors: competitors?.length || 0,
         active_competitors:
-          competitors?.filter(c => c.status === "active").length || 0,
+          competitors?.filter((c: CompetitorData) => c.status === "active").length || 0,
         pending_alerts: alerts?.length || 0,
         critical_alerts:
-          alerts?.filter(a => a.severity === "critical").length || 0,
+          alerts?.filter((a: CompetitorAlert) => a.severity === "critical").length || 0,
       },
       top_performers:
         competitors
           ?.sort(
-            (a, b) => b.metrics.engagement_rate - a.metrics.engagement_rate
+            (a: CompetitorData, b: CompetitorData) => b.metrics.engagement_rate - a.metrics.engagement_rate
           )
           .slice(0, 5) || [],
       recent_alerts: alerts?.slice(0, 10) || [],
@@ -575,8 +575,8 @@ async function checkForAlerts(
     if (result.metrics.engagement_rate > thresholds.engagement_spike) {
       alerts.push({
         competitor_id: result.id,
-        alert_type: "performance_spike",
-        severity: "high",
+        alert_type: "performance_spike" as const,
+        severity: "high" as const,
         message: `${result.name} heeft een engagement spike van ${result.metrics.engagement_rate}%`,
         threshold_value: thresholds.engagement_spike,
         current_value: result.metrics.engagement_rate,

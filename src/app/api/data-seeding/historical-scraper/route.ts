@@ -127,7 +127,10 @@ export async function POST(request: NextRequest) {
       });
     }
   } catch (error) {
-    logger.error("❌ Historical Content Scraper API error", { error });
+    logger.error(
+      "❌ Historical Content Scraper API error",
+      error instanceof Error ? error : new Error(String(error))
+    );
 
     return NextResponse.json(
       {
@@ -141,7 +144,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     // Get endpoint voor status check
     return NextResponse.json({
@@ -160,7 +163,10 @@ export async function GET(request: NextRequest) {
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    logger.error("❌ Historical Content Scraper status check error", { error });
+    logger.error(
+      "❌ Historical Content Scraper status check error",
+      error instanceof Error ? error : new Error(String(error))
+    );
 
     return NextResponse.json(
       {

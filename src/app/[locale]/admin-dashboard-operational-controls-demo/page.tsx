@@ -33,6 +33,9 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 
+// Make this page dynamic to prevent static generation
+export const dynamic = "force-dynamic";
+
 export default function OperationalControlsDemoPage() {
   return (
     <div className="dark min-h-screen bg-gray-900 p-6 space-y-8">

@@ -14,7 +14,7 @@ import { ChurnPredictionDashboard } from "@/components/customer-intelligence/chu
 import { CustomerSegmentation } from "@/components/customer-intelligence/customer-segmentation";
 import { CustomerJourney as CustomerJourneyComponent } from "@/components/customer-intelligence/customer-journey";
 import { Eye, BarChart3, AlertTriangle, Users, Route } from "lucide-react";
-import { useLocale } from "@/lib/i18n/context";
+import { useTranslation } from "@/lib/i18n/client-provider";
 
 // Mock data
 const customerOverview = {
@@ -29,7 +29,7 @@ const customerOverview = {
 };
 
 function CustomerOverviewCards() {
-  const { t } = useLocale();
+  const { t } = useTranslation();
 
   return (
     <UltraPremiumGrid>
@@ -97,7 +97,7 @@ function CustomerOverviewCards() {
 }
 
 function CustomerSegments() {
-  const { t } = useLocale();
+  const { t } = useTranslation();
 
   const segments = [
     {
@@ -148,7 +148,7 @@ function CustomerSegments() {
 }
 
 function CustomerJourney() {
-  const { t } = useLocale();
+  const { t } = useTranslation();
 
   const journeyStages = [
     {
@@ -206,7 +206,7 @@ function CustomerJourney() {
 }
 
 export default function CustomerIntelligencePage() {
-  const { t } = useLocale();
+  const { t } = useTranslation();
 
   const [activeTab, setActiveTab] = useState<
     "overview" | "analytics" | "churn" | "segments" | "journey"

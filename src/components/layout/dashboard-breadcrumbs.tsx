@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { ChevronRight, Home } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useLocale } from "@/lib/i18n/context";
+import { useTranslation } from "@/lib/i18n/client-provider";
 
 interface BreadcrumbItem {
   label: string;
@@ -21,7 +21,7 @@ export function DashboardBreadcrumbs({
   items,
   className,
 }: DashboardBreadcrumbsProps) {
-  const { locale } = useLocale();
+  const { locale } = useTranslation();
 
   // Helper function to add locale prefix to routes
   const withLocale = (href: string) => {

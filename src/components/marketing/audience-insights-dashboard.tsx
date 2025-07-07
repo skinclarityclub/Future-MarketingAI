@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useLocale } from "@/lib/i18n/context";
+import { useTranslation } from "@/lib/i18n/client-provider";
 import NormalButton from "@/components/ui/normal-button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -68,7 +68,7 @@ interface BudgetRecommendation {
 // const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8"];
 
 export default function AudienceInsightsDashboard() {
-  const { t } = useLocale();
+  const { t } = useTranslation();
   const [insights, setInsights] = useState<AudienceInsight[]>([]);
   const [budgetRecommendations, setBudgetRecommendations] = useState<
     BudgetRecommendation[]

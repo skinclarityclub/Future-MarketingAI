@@ -3,7 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = createClient();
+    const supabase = await createClient();
     const body = await request.json();
 
     // Validate required fields
@@ -135,7 +135,15 @@ export async function POST(request: NextRequest) {
     ];
 
     // Send to enabled webhooks
-    const webhookResults = [];
+    const webhookResults: Array<{
+      webhook: string;
+      url: string | undefined;
+      status: string;
+      statusCode?: number;
+      statusText?: string;
+      error?: string;
+      sentAt: string;
+    }> = [];
     const webhookPromises = webhookConfigs
       .filter(config => config.enabled)
       .map(async config => {

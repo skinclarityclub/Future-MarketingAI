@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useLocale } from "@/lib/i18n/context";
+import { useTranslation } from "@/lib/i18n/client-provider";
 import {
   Card,
   CardContent,
@@ -81,7 +81,7 @@ const formatCurrency = (value: any): string => {
 };
 
 export default function FinancialIntelligenceDashboard() {
-  const { t } = useLocale();
+  const { t } = useTranslation();
   const [financialData, setFinancialData] = useState<FinancialData | null>(
     null
   );

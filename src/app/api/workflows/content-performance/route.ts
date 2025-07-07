@@ -51,7 +51,7 @@ export async function GET(request: NextRequest) {
           );
         }
 
-        const metrics = await getContentMetrics(contentId, platform);
+        const metrics = await getContentMetrics(contentId, platform || undefined);
         return NextResponse.json({
           success: true,
           data: metrics,

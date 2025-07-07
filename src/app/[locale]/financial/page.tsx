@@ -8,9 +8,8 @@ import {
   UltraPremiumCard,
 } from "@/components/layout/ultra-premium-dashboard-layout";
 import FinancialIntelligenceDashboard from "@/components/dashboard/financial-intelligence-dashboard";
-import FinancialIntelligence from "@/components/dashboard/financial-intelligence";
 import BudgetPerformanceTracker from "@/components/dashboard/budget-performance-tracker";
-import { useLocale } from "@/lib/i18n/context";
+import Link from "next/link";
 import {
   DollarSign,
   TrendingUp,
@@ -21,8 +20,6 @@ import {
 } from "lucide-react";
 
 export default function FinancialOverviewPage() {
-  const { t } = useLocale();
-
   // Mock financial data
   const financialKPIs = [
     {
@@ -133,34 +130,34 @@ export default function FinancialOverviewPage() {
             colSpan={4}
           >
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <a
+              <Link
                 href="/revenue-analytics"
                 className="flex flex-col items-center p-4 rounded-lg bg-blue-600 hover:bg-blue-700 text-white transition-all duration-300 group"
               >
                 <BarChart3 className="h-6 w-6 mb-2 group-hover:scale-110 transition-transform" />
                 <span className="text-sm font-medium">Revenue Analytics</span>
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/budget"
                 className="flex flex-col items-center p-4 rounded-lg bg-purple-600 hover:bg-purple-700 text-white transition-all duration-300 group"
               >
                 <PieChart className="h-6 w-6 mb-2 group-hover:scale-110 transition-transform" />
                 <span className="text-sm font-medium">Budget Management</span>
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/cash-flow"
                 className="flex flex-col items-center p-4 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white transition-all duration-300 group"
               >
                 <TrendingDown className="h-6 w-6 mb-2 group-hover:scale-110 transition-transform" />
                 <span className="text-sm font-medium">Cash Flow</span>
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/reports"
                 className="flex flex-col items-center p-4 rounded-lg bg-orange-600 hover:bg-orange-700 text-white transition-all duration-300 group"
               >
                 <BarChart3 className="h-6 w-6 mb-2 group-hover:scale-110 transition-transform" />
                 <span className="text-sm font-medium">Financial Reports</span>
-              </a>
+              </Link>
             </div>
           </UltraPremiumCard>
         </UltraPremiumGrid>

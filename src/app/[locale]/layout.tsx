@@ -9,6 +9,9 @@ import { ThemeProvider } from "@/components/ui/light-theme-provider";
 import { DashboardModeProvider } from "@/lib/contexts/dashboard-mode-context";
 import { AssetOptimizationInit } from "@/components/ui/asset-optimization-init";
 
+// Force dynamic rendering for all locale pages
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "FutureMarketingAI - Transform Business Growth. Fortune 500 Powered.",
   description:

@@ -562,6 +562,7 @@ export async function POST(request: NextRequest) {
           shared_by,
           {
             space_id: resourceSpaceId,
+            shared_by,
             name: resourceName,
             type: resourceType,
             url,
